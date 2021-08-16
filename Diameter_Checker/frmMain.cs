@@ -636,28 +636,28 @@ namespace Diameter_Checker
         private void controlAlarm_A1ResetAlarm()
         {
             Communication.enableConnectToControlBox = true;
-            this.serialPort1.Write("2");
+            //this.serialPort1.Write("2");s
             Communication.enableConnectToControlBox = false;
         }
 
         private void controlAlarm_A1SetAlarm()
         {
             Communication.enableConnectToControlBox = true;
-            this.serialPort1.Write("1");
+            //this.serialPort1.Write("1");
             Communication.enableConnectToControlBox = false;
         }
 
         private void controlAlarm_A2ResetAlarm()
         {
             Communication.enableConnectToControlBox = true;
-            this.serialPort1.Write("4");
+            //this.serialPort1.Write("4");
             Communication.enableConnectToControlBox = false;
         }
 
         private void controlAlarm_A2SetAlarm()
         {
             Communication.enableConnectToControlBox = true;
-            this.serialPort1.Write("3");
+            //this.serialPort1.Write("3");
             Communication.enableConnectToControlBox = false;
         }
 
@@ -759,12 +759,12 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //if (DateTime.Today.Year.ToString() != "2021")
-            //{
-            //    MessageBox.Show("System Error!");
-            //    base.Close();
-            //}
-            this.serialPort1.Open();
+            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2022)
+            {
+                MessageBox.Show("System Error!");
+                base.Close();
+            }
+            //this.serialPort1.Open();
             this.controlAlarm_A1ResetAlarm();
             this.controlAlarm_A2ResetAlarm();
             this.AdjustLayout();
