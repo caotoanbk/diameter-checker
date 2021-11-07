@@ -77,6 +77,9 @@
     <Compile Include="SettingLogin.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="ComSetting.resx">
+      <DependentUpon>ComSetting.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>

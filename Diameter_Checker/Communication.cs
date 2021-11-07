@@ -32,10 +32,12 @@ namespace Diameter_Checker
         public static bool enableClearData;
 
         public static string comPort;
-
         public static string baudrate;
+        public static string comPort2;
+        public static string baudrate2;
 
         public static string serialData;
+        public static string serialDataA3;
 
         public static int totalPASS;
 
@@ -72,14 +74,25 @@ namespace Diameter_Checker
         public static string A2Result;
 
         public static bool A2EnableSave;
+        public static string A3MeasuredValue;
+
+        public static string A3MaximumValue;
+
+        public static string A3MinimumValue;
+
+        public static string A3Result;
+
+        public static bool A3EnableSave;
 
         public static bool A1enableStopTest;
 
         public static bool A2enableStopTest;
+        public static bool A3enableStopTest;
 
         public static bool A1RecevingData;
 
         public static bool A2RecevingData;
+        public static bool A3RecevingData;
 
         public static string A1Average;
 
@@ -114,10 +127,12 @@ namespace Diameter_Checker
         public static bool A1Detected;
 
         public static bool A2Detected;
+        public static bool A3Detected;
 
         public static string A1DetectionLevel;
 
         public static string A2DetectionLevel;
+        public static string A3DetectionLevel;
 
         public static string A1MaximumOffset;
 
@@ -127,6 +142,10 @@ namespace Diameter_Checker
 
         public static string A2MinimumOffset;
 
+        public static string A3MaximumOffset;
+
+        public static string A3MinimumOffset;
+
         public static float detectionOffset;
 
         public static bool closeComport;
@@ -134,6 +153,7 @@ namespace Diameter_Checker
         public static bool subformIsOpen;
 
         public static SerialPort serialport;
+        public static SerialPort serialportA3;
 
         public static SqlConnection connect;
 
@@ -163,23 +183,30 @@ namespace Diameter_Checker
             Communication.A2EnableSave = false;
             Communication.A1enableStopTest = false;
             Communication.A2enableStopTest = false;
+            Communication.A3enableStopTest = false;
             Communication.A1RecevingData = false;
             Communication.A2RecevingData = false;
+            Communication.A3RecevingData = false;
             Communication.loginUser = "Admin";
             Communication.processorIDAdmin = "BFEBFBFF000406E3";
             Communication.processorID = "BFEBFBFF000906E9";
             Communication.A1Detected = false;
             Communication.A2Detected = false;
+            Communication.A3Detected = false;
             Communication.A1DetectionLevel = "10";
             Communication.A2DetectionLevel = "10";
+            Communication.A3DetectionLevel = "10";
             Communication.A1MaximumOffset = " ";
             Communication.A1MinimumOffset = " ";
             Communication.A2MaximumOffset = " ";
             Communication.A2MinimumOffset = " ";
+            Communication.A3MaximumOffset = " ";
+            Communication.A3MinimumOffset = " ";
             Communication.detectionOffset = 1f;
             Communication.closeComport = false;
             Communication.subformIsOpen = false;
             Communication.serialport = new SerialPort();
+            Communication.serialportA3 = new SerialPort();
             Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
         }
 
@@ -222,6 +249,19 @@ namespace Diameter_Checker
             return (!Communication.serialport.IsOpen ? false : true);
         }
 
+        public static bool ConnectSerialA3(string comportName_, string baudrate)
+        {
+            Communication.serialportA3.BaudRate = Convert.ToInt32(baudrate);
+            Communication.serialportA3.Parity = Parity.None;
+            Communication.serialportA3.StopBits = StopBits.One;
+            Communication.serialportA3.DataBits = 8;
+            Communication.serialportA3.Handshake = Handshake.None;
+            Communication.serialportA3.RtsEnable = true;
+            Communication.serialportA3.PortName = comportName_;
+            Communication.serialportA3.Open();
+            return (!Communication.serialportA3.IsOpen ? false : true);
+        }
+
         public static bool load_ComSetting()
         {
             Communication.connectDatabase();
@@ -231,6 +271,8 @@ namespace Diameter_Checker
             {
                 Communication.comPort = myReader["comPort"].ToString();
                 Communication.baudrate = myReader["baudrate"].ToString();
+                Communication.comPort2 = myReader["comPort2"].ToString();
+                Communication.baudrate2 = myReader["baudrate2"].ToString();
             }
             Communication.connect.Close();
             return true;
