@@ -380,7 +380,7 @@ namespace Diameter_Checker
                 Communication.stop = false;
                 Communication.enableReceiveData = true;
                 //set lai so luong da pass
-                if(Communication.totalPASS >= Int32.Parse(this.txtNumProducts.Text))
+                if (Communication.totalPASS >= Int32.Parse(this.txtNumProducts.Text))
                 {
                     Communication.totalPASS = 0;
                 }
@@ -519,6 +519,7 @@ namespace Diameter_Checker
 
         private void chartA1Setting()
         {
+            if (string.IsNullOrWhiteSpace(Communication.A1MaximumOffset) || string.IsNullOrWhiteSpace(Communication.A1MinimumOffset)) return;
             frmMain.i = 0;
             ChartArea chart1 = this.chartA1.ChartAreas[0];
             this.chartA1.Series.Clear();
@@ -570,6 +571,7 @@ namespace Diameter_Checker
 
         private void chartA2Setting()
         {
+            if (string.IsNullOrWhiteSpace(Communication.A2MaximumOffset) || string.IsNullOrWhiteSpace(Communication.A2MinimumOffset)) return;
             frmMain.j = 0;
             ChartArea chart2 = this.chartA2.ChartAreas[0];
             this.chartA2.Series.Clear();
@@ -616,6 +618,7 @@ namespace Diameter_Checker
         }
         private void chartA3Setting()
         {
+            if (string.IsNullOrWhiteSpace(Communication.A3MaximumOffset) || string.IsNullOrWhiteSpace(Communication.A3MinimumOffset)) return;
             frmMain.k = 0;
             ChartArea chart3 = this.chartA3.ChartAreas[0];
             this.chartA3.Series.Clear();
@@ -852,8 +855,8 @@ namespace Diameter_Checker
             //this.controlAlarm_A1ResetAlarm();
             //this.controlAlarm_A2ResetAlarm();
             this.AdjustLayout();        /// căn chỉnh app giữa màn hình
-            this.RefreshMainForm();
             Communication.load_ComSetting();    /// luu ten cong com, baurate vao class communication
+            this.RefreshMainForm(); //
             this.loadProductSetting();
             this.loadData();
             this.COM_Connect();
@@ -2628,7 +2631,7 @@ namespace Diameter_Checker
             {
                 base.Show();
             }
-            if (!Communication.serialport.IsOpen)
+            if (!Communication.serialport.IsOpen || !Communication.serialportA3.IsOpen)
             {
                 this.lblConnectStatus.Text = "Not Connected";
                 this.lblConnectStatus.ForeColor = Color.Red;
@@ -2642,9 +2645,9 @@ namespace Diameter_Checker
 
         public void RowsColor()
         {
-            for (int i = 0; i < this.dataGridView1.Rows.Count-1; i++)
+            for (int i = 0; i < this.dataGridView1.Rows.Count - 1; i++)
             {
-                 if (this.dataGridView1.Rows[i].Cells[4].Value.ToString().Trim() == "NG")
+                if (this.dataGridView1.Rows[i].Cells[4].Value.ToString().Trim() == "NG")
                 {
                     this.dataGridView1.Rows[i].Cells[4].Style.ForeColor = Color.Red;
                 }
@@ -2753,6 +2756,9 @@ namespace Diameter_Checker
             this.txtA1MaximumOffset.Text = null;
             this.txtA2MinimumOffset.Text = null;
             this.txtA2MaximumOffset.Text = null;
+            this.txtA3DetectionLevel.Text = null;
+            this.txtA3MinimumOffset.Text = null;
+            this.txtA3MaximumOffset.Text = null;
             try
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
@@ -2945,7 +2951,7 @@ namespace Diameter_Checker
 
         private void tmrConnectionStatus_Tick(object sender, EventArgs e)
         {
-            if ( !Communication.serialport.IsOpen || !Communication.serialportA3.IsOpen)
+            if (!Communication.serialport.IsOpen || !Communication.serialportA3.IsOpen)
             {
                 this.lblConnectStatus.Text = "Not Connected";
                 this.lblConnectStatus.ForeColor = Color.Red;
@@ -2959,8 +2965,8 @@ namespace Diameter_Checker
             {
                 try
                 {
-                    if ( Communication.ConnectSerial(Communication.comPort, Communication.baudrate) 
-                        && Communication.ConnectSerialA3(Communication.comPort2, Communication.baudrate2) )
+                    if (Communication.ConnectSerial(Communication.comPort, Communication.baudrate)
+                        && Communication.ConnectSerialA3(Communication.comPort2, Communication.baudrate2))
                     {
                         this.lblConnectStatus.Text = "Connected";
                         this.lblConnectStatus.ForeColor = Color.GreenYellow;
@@ -3285,7 +3291,7 @@ namespace Diameter_Checker
                     this.calculatePPandPPKvalue();
 
                     //dung neu so luong vuot qua 
-                    if(Communication.totalPASS >= Int32.Parse(this.txtNumProducts.Text))
+                    if (Communication.totalPASS >= Int32.Parse(this.txtNumProducts.Text))
                     {
                         this.btnStart.Text = "Start";
                         this.btnStart.ForeColor = Color.Teal;
