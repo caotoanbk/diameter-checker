@@ -40,6 +40,7 @@ namespace Diameter_Checker
         public static string serialDataA3;
 
         public static int totalPASS;
+        public static int totalPASSInSet;
 
         public static int totalFAIL;
 
