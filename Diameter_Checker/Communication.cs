@@ -39,6 +39,8 @@ namespace Diameter_Checker
 
         public static int totalPASS;
 
+        public static int cntProductInSet;
+
         public static int totalFAIL;
 
         public static int totalProcessed;
