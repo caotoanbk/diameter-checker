@@ -46,8 +46,6 @@ namespace Diameter_Checker
 
         private ToolStripMenuItem communicatiomToolStripMenuItem;
 
-        private ToolStripMenuItem instructionToolStripMenuItem;
-
         private Label lblStatus;
 
         private Panel panel2;
@@ -184,34 +182,6 @@ namespace Diameter_Checker
 
         private DataGridView dataGridView1;
 
-        private DataGridViewTextBoxColumn ID;
-
-        private DataGridViewTextBoxColumn model;
-
-        private DataGridViewTextBoxColumn A1MaxValue;
-
-        private DataGridViewTextBoxColumn A1MinValue;
-
-        private DataGridViewTextBoxColumn A1Result;
-
-        private DataGridViewTextBoxColumn A2MaxValue;
-
-        private DataGridViewTextBoxColumn A2MinValue;
-
-        private DataGridViewTextBoxColumn A2Result;
-
-        private DataGridViewTextBoxColumn Date;
-
-        private DataGridViewTextBoxColumn Time;
-
-        private DataGridViewTextBoxColumn Judge;
-
-        private DataGridViewTextBoxColumn TotalProcessed;
-
-        private DataGridViewTextBoxColumn TotalPASS;
-
-        private DataGridViewTextBoxColumn TotalFAIL;
-
         private Chart chartA2;
 
         private Chart chartA1;
@@ -243,6 +213,21 @@ namespace Diameter_Checker
         private Label label21;
         private Button btnCntProduct;
         private NumericUpDown numProductInSet;
+        private DataGridViewTextBoxColumn ID;
+        private DataGridViewTextBoxColumn QrCode;
+        private DataGridViewTextBoxColumn model;
+        private DataGridViewTextBoxColumn A1MaxValue;
+        private DataGridViewTextBoxColumn A1MinValue;
+        private DataGridViewTextBoxColumn A1Result;
+        private DataGridViewTextBoxColumn A2MaxValue;
+        private DataGridViewTextBoxColumn A2MinValue;
+        private DataGridViewTextBoxColumn A2Result;
+        private DataGridViewTextBoxColumn Date;
+        private DataGridViewTextBoxColumn Time;
+        private DataGridViewTextBoxColumn Judge;
+        private DataGridViewTextBoxColumn TotalProcessed;
+        private DataGridViewTextBoxColumn TotalPASS;
+        private DataGridViewTextBoxColumn TotalFAIL;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -909,22 +894,23 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.numProductInSet = new System.Windows.Forms.NumericUpDown();
             this.btnCntProduct = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.txtQrCode = new System.Windows.Forms.TextBox();
@@ -952,6 +938,7 @@ namespace Diameter_Checker
             this.btnJudge = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1000,7 +987,6 @@ namespace Diameter_Checker
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.communicatiomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.instructionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblStatus = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblConnectStatus = new System.Windows.Forms.Label();
@@ -1029,10 +1015,10 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.numProductInSet = new System.Windows.Forms.NumericUpDown();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -1049,7 +1035,6 @@ namespace Diameter_Checker
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelResult.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.SuspendLayout();
             // 
             // panel3
@@ -1093,6 +1078,19 @@ namespace Diameter_Checker
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "QR code";
             // 
+            // numProductInSet
+            // 
+            this.numProductInSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numProductInSet.Location = new System.Drawing.Point(127, 50);
+            this.numProductInSet.Name = "numProductInSet";
+            this.numProductInSet.Size = new System.Drawing.Size(100, 26);
+            this.numProductInSet.TabIndex = 5;
+            this.numProductInSet.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // btnCntProduct
             // 
             this.btnCntProduct.BackColor = System.Drawing.Color.White;
@@ -1122,6 +1120,7 @@ namespace Diameter_Checker
             this.txtQrCode.Name = "txtQrCode";
             this.txtQrCode.Size = new System.Drawing.Size(100, 26);
             this.txtQrCode.TabIndex = 1;
+            this.txtQrCode.TextChanged += new System.EventHandler(this.txtQrCode_TextChanged);
             // 
             // label21
             // 
@@ -1265,56 +1264,56 @@ namespace Diameter_Checker
             // 
             // chartA1
             // 
-            chartArea5.AxisY.Title = "A1 Air Pressure";
-            chartArea5.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea5.Name = "ChartArea1";
-            chartArea5.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea5);
-            legend5.DockedToChartArea = "ChartArea1";
-            legend5.Enabled = false;
-            legend5.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend5.IsTextAutoFit = false;
-            legend5.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend5.Name = "Legend1";
-            this.chartA1.Legends.Add(legend5);
+            chartArea3.AxisY.Title = "A1 Air Pressure";
+            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea3.Name = "ChartArea1";
+            chartArea3.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea3);
+            legend3.DockedToChartArea = "ChartArea1";
+            legend3.Enabled = false;
+            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend3.IsTextAutoFit = false;
+            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend3.Name = "Legend1";
+            this.chartA1.Legends.Add(legend3);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series5.BorderWidth = 2;
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series5.Legend = "Legend1";
-            series5.Name = "A2";
-            this.chartA1.Series.Add(series5);
+            series3.BorderWidth = 2;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series3.Legend = "Legend1";
+            series3.Name = "A2";
+            this.chartA1.Series.Add(series3);
             this.chartA1.Size = new System.Drawing.Size(753, 314);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea6.AxisY.Title = "A2 Air Pressure";
-            chartArea6.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea6.Name = "ChartArea1";
-            chartArea6.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea6);
-            legend6.DockedToChartArea = "ChartArea1";
-            legend6.Enabled = false;
-            legend6.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend6.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend6.Name = "Legend1";
-            this.chartA2.Legends.Add(legend6);
+            chartArea4.AxisY.Title = "A2 Air Pressure";
+            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea4.Name = "ChartArea1";
+            chartArea4.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea4);
+            legend4.DockedToChartArea = "ChartArea1";
+            legend4.Enabled = false;
+            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend4.Name = "Legend1";
+            this.chartA2.Legends.Add(legend4);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series6.BorderWidth = 2;
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series6.IsXValueIndexed = true;
-            series6.Legend = "Legend1";
-            series6.Name = "A2";
-            this.chartA2.Series.Add(series6);
+            series4.BorderWidth = 2;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series4.IsXValueIndexed = true;
+            series4.Legend = "Legend1";
+            series4.Name = "A2";
+            this.chartA2.Series.Add(series4);
             this.chartA2.Size = new System.Drawing.Size(774, 314);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
@@ -1411,27 +1410,28 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle16.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
+            this.QrCode,
             this.model,
             this.A1MaxValue,
             this.A1MinValue,
@@ -1445,31 +1445,31 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dataGridView1.Location = new System.Drawing.Point(0, 449);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle20;
-            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle21.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridView1.Size = new System.Drawing.Size(1904, 480);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
@@ -1479,26 +1479,31 @@ namespace Diameter_Checker
             // 
             this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle10;
             this.ID.FillWeight = 120F;
             this.ID.HeaderText = "ID";
             this.ID.MinimumWidth = 100;
             this.ID.Name = "ID";
             this.ID.ReadOnly = true;
             // 
+            // QrCode
+            // 
+            this.QrCode.HeaderText = "QrCode";
+            this.QrCode.Name = "QrCode";
+            // 
             // model
             // 
             this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.model.DataPropertyName = "model";
-            dataGridViewCellStyle18.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle11;
             this.model.FillWeight = 120F;
             this.model.HeaderText = "Model";
             this.model.MinimumWidth = 100;
@@ -1986,8 +1991,7 @@ namespace Diameter_Checker
             // MenuConfig
             // 
             this.MenuConfig.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.communicatiomToolStripMenuItem,
-            this.instructionToolStripMenuItem});
+            this.communicatiomToolStripMenuItem});
             this.MenuConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MenuConfig.Name = "MenuConfig";
             this.MenuConfig.Size = new System.Drawing.Size(81, 20);
@@ -1999,13 +2003,6 @@ namespace Diameter_Checker
             this.communicatiomToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.communicatiomToolStripMenuItem.Text = "&Communication";
             this.communicatiomToolStripMenuItem.Click += new System.EventHandler(this.communicatiomToolStripMenuItem_Click);
-            // 
-            // instructionToolStripMenuItem
-            // 
-            this.instructionToolStripMenuItem.Name = "instructionToolStripMenuItem";
-            this.instructionToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.instructionToolStripMenuItem.Text = "&Instruction";
-            this.instructionToolStripMenuItem.Click += new System.EventHandler(this.instructionToolStripMenuItem_Click);
             // 
             // lblStatus
             // 
@@ -2273,19 +2270,6 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // numProductInSet
-            // 
-            this.numProductInSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.numProductInSet.Location = new System.Drawing.Point(127, 50);
-            this.numProductInSet.Name = "numProductInSet";
-            this.numProductInSet.Size = new System.Drawing.Size(100, 26);
-            this.numProductInSet.TabIndex = 5;
-            this.numProductInSet.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2302,6 +2286,7 @@ namespace Diameter_Checker
             this.panel6.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -2328,14 +2313,8 @@ namespace Diameter_Checker
             this.panel4.PerformLayout();
             this.panelResult.ResumeLayout(false);
             this.panelResult.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.ResumeLayout(false);
 
-        }
-
-        private void instructionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Please contact to us via Phone No. (+84) 913.183.822 or Liemdtvt@gmail.com");
         }
 
         private void label13_Click(object sender, EventArgs e)
@@ -2563,11 +2542,11 @@ namespace Diameter_Checker
             }
             else if (Communication.start)
             {
-                if (string.IsNullOrWhiteSpace(this.txtQrCode.Text))
-                {
-                    this.txtSystemMessage.Text = "Chưa nhập QR code!";
-                    return;
-                }
+                //if (string.IsNullOrWhiteSpace(this.txtQrCode.Text))
+                //{
+                //    this.txtSystemMessage.Text = "Chưa nhập QR code!";
+                //    return;
+                //}
                 if (this.InputData.Length >= Communication.charNumberOfCom_data)
                 {
                     this.charNumberOfFirstString = this.InputData.IndexOf("A1");
@@ -2736,7 +2715,7 @@ namespace Diameter_Checker
         {
             bool flag;
             bool flag1;
-            bool flag2;
+            //bool flag2;
             this.tmrDisplayData.Enabled = false;
             if (Communication.subformIsOpen)
             {
@@ -2913,65 +2892,74 @@ namespace Diameter_Checker
                         Communication.A2RecevingData = false;
                     }
                 }
-                if (!Communication.A1EnableSave || !Communication.A2EnableSave || Communication.A1Detected || Communication.A2Detected || !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
-                {
-                    flag2 = false;
-                }
-                else
-                {
-                    flag2 = (this.txtA2Result.Text == "OK" ? true : this.txtA2Result.Text == "NG");
-                }
-                if (flag2)
-                {
-                    if ((this.txtA1Result.Text != "OK" ? true : this.txtA2Result.Text != "OK"))
-                    {
-                        Communication.Judge = "FAIL";
-                        this.btnJudge.ForeColor = Color.Red;
-                        Communication.totalFAIL++;
-                        this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
-                    }
-                    else
-                    {
-                        Communication.Judge = "PASS";
-                        this.btnJudge.ForeColor = Color.ForestGreen;
-                        Communication.totalPASS++;
-                        this.txtTotalPass.Text = Communication.totalPASS.ToString();
-                        Communication.cntProductInSet++;
-                        if(Communication.cntProductInSet >= this.numProductInSet.Value)
-                        {
-                            this.btnStart.Text = "Start";
-                            this.btnStart.ForeColor = Color.Teal;
-                            this.txtSystemMessage.Text = "STOPPED!";
-                            Communication.start = false;
-                            Communication.stop = true;
-                            Communication.enableReceiveData = false;
-                        }
-                    }
-                    Communication.A1Result = this.txtA1Result.Text;
-                    Communication.A2Result = this.txtA2Result.Text;
-                    this.tmrDisplayJudge.Enabled = true;
-                    Communication.totalProcessed++;
-                    this.txtTotalProcessed.Text = Communication.totalProcessed.ToString();
-                    Communication.ID = string.Concat("HL", Communication.totalProcessed);
-                    this.saveData();
-                    Communication.A1EnableSave = false;
-                    Communication.A2EnableSave = false;
-                    Communication.A1MaximumValue = null;
-                    Communication.A1MinimumValue = null;
-                    Communication.A2MaximumValue = null;
-                    Communication.A2MinimumValue = null;
-                    Communication.enableClearData = true;
-                    this.txtQrCode.Text = "";
-                    this.loadData();
-                    this.tmrEnableReadA1Data.Enabled = false;
-                    this.tmrEnableReadA2Data.Enabled = false;
-                    this.calculatePPandPPKvalue();
-                }
+
+                CheckAndMakeDecision();         //Check QrCode, A1, A2 result to make decision
+
                 if ((Communication.A1Detected ? false : !Communication.A2Detected))
                 {
                     this.txtSystemMessage.Text = "None Object Detected!";
                 }
             }
+        }
+
+        private void CheckAndMakeDecision()
+        {
+            bool flag2;
+            if (this.txtQrCode.Text.Trim().Length != 5 || !Communication.A1EnableSave || !Communication.A2EnableSave || Communication.A1Detected || Communication.A2Detected || !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
+            {
+                flag2 = false;
+            }
+            else
+            {
+                flag2 = (this.txtA2Result.Text == "OK" ? true : this.txtA2Result.Text == "NG");
+            }
+            if (flag2)
+            {
+                if ((this.txtA1Result.Text != "OK" ? true : this.txtA2Result.Text != "OK"))
+                {
+                    Communication.Judge = "FAIL";
+                    this.btnJudge.ForeColor = Color.Red;
+                    Communication.totalFAIL++;
+                    this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
+                }
+                else
+                {
+                    Communication.Judge = "PASS";
+                    this.btnJudge.ForeColor = Color.ForestGreen;
+                    Communication.totalPASS++;
+                    this.txtTotalPass.Text = Communication.totalPASS.ToString();
+                    Communication.cntProductInSet++;
+                    if (Communication.cntProductInSet >= this.numProductInSet.Value)
+                    {
+                        this.btnStart.Text = "Start";
+                        this.btnStart.ForeColor = Color.Teal;
+                        this.txtSystemMessage.Text = "STOPPED!";
+                        Communication.start = false;
+                        Communication.stop = true;
+                        Communication.enableReceiveData = false;
+                    }
+                }
+                Communication.A1Result = this.txtA1Result.Text;
+                Communication.A2Result = this.txtA2Result.Text;
+                this.tmrDisplayJudge.Enabled = true;
+                Communication.totalProcessed++;
+                this.txtTotalProcessed.Text = Communication.totalProcessed.ToString();
+                Communication.ID = string.Concat("HL", Communication.totalProcessed);
+                this.saveData();
+                Communication.A1EnableSave = false;
+                Communication.A2EnableSave = false;
+                Communication.A1MaximumValue = null;
+                Communication.A1MinimumValue = null;
+                Communication.A2MaximumValue = null;
+                Communication.A2MinimumValue = null;
+                Communication.enableClearData = true;
+                this.txtQrCode.Text = "";
+                this.loadData();
+                this.tmrEnableReadA1Data.Enabled = false;
+                this.tmrEnableReadA2Data.Enabled = false;
+                this.calculatePPandPPKvalue();
+            }
+
         }
 
         private void tmrEnableReadA1Data_Tick(object sender, EventArgs e)
@@ -3036,5 +3024,10 @@ namespace Diameter_Checker
         }
 
         private delegate void SetTextCallback(string text);
+
+        private void txtQrCode_TextChanged(object sender, EventArgs e)
+        {
+             CheckAndMakeDecision();
+        }
     }
 }
