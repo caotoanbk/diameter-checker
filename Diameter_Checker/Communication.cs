@@ -8,18 +8,22 @@ namespace Diameter_Checker
     public class Communication
     {
         public static int test;
+        public static int test2;
 
         public static int charNumberOfCom_data;
+        public static int charNumberOfCom_data2;
 
         public static int counter;
 
         public static int timer;
+        public static int timer2;
 
         public static bool enableReceiveData;
 
         public static bool enableReadData;
 
         public static bool AutoReconnect;
+        public static bool AutoReconnect2;
 
         public static bool start;
 
@@ -35,7 +39,12 @@ namespace Diameter_Checker
 
         public static string baudrate;
 
+        public static string comPort2;
+
+        public static string baudrate2;
+
         public static string serialData;
+        public static string serialData2;
 
         public static int totalPASS;
 
@@ -136,6 +145,7 @@ namespace Diameter_Checker
         public static bool subformIsOpen;
 
         public static SerialPort serialport;
+        public static SerialPort serialport2;
 
         public static SqlConnection connect;
 
@@ -144,12 +154,16 @@ namespace Diameter_Checker
         static Communication()
         {
             Communication.test = 0;
+            Communication.test2 = 0;
             Communication.charNumberOfCom_data = 27;
+            Communication.charNumberOfCom_data2 = 11;
             Communication.counter = 0;
             Communication.timer = 0;
+            Communication.timer2 = 0;
             Communication.enableReceiveData = true;
             Communication.enableReadData = false;
             Communication.AutoReconnect = true;
+            Communication.AutoReconnect2 = true;
             Communication.start = false;
             Communication.stop = true;
             Communication.enableConnectToControlBox = false;
@@ -225,6 +239,19 @@ namespace Diameter_Checker
             return (!Communication.serialport.IsOpen ? false : true);
         }
 
+        public static bool ConnectSerial2(string comportName_, string baudrate)
+        {
+            Communication.serialport2.BaudRate = Convert.ToInt32(baudrate);
+            Communication.serialport2.Parity = Parity.None;
+            Communication.serialport2.StopBits = StopBits.One;
+            Communication.serialport2.DataBits = 8;
+            Communication.serialport2.Handshake = Handshake.None;
+            Communication.serialport2.RtsEnable = true;
+            Communication.serialport2.PortName = comportName_;
+            Communication.serialport2.Open();
+            return (!Communication.serialport2.IsOpen ? false : true);
+        }
+
         public static bool load_ComSetting()
         {
             Communication.connectDatabase();
@@ -234,6 +261,8 @@ namespace Diameter_Checker
             {
                 Communication.comPort = myReader["comPort"].ToString();
                 Communication.baudrate = myReader["baudrate"].ToString();
+                Communication.comPort2 = myReader["comPort2"].ToString();
+                Communication.baudrate2 = myReader["baudrate2"].ToString();
             }
             Communication.connect.Close();
             return true;

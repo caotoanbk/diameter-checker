@@ -17,16 +17,21 @@ namespace Diameter_Checker
     public class frmMain : Form
     {
         private string InputData = string.Empty;
+        private string InputData2 = string.Empty;
 
         public static string strgetProcessorID;
 
         private string fistSubString;
+        private string fistSubString2;
 
         private int charNumberOfFirstString;
+        private int charNumberOfFirstString2;
 
         private string lastSubString;
+        private string lastSubString2;
 
         private int charNumberOfLastString;
+        private int charNumberOfLastString2;
 
         private static int i;
 
@@ -206,16 +211,21 @@ namespace Diameter_Checker
 
         private Timer tmrRefreshDataGridView;
 
-        private SerialPort serialPort1;
+        private SerialPort serialPort2;
         private GroupBox groupBox8;
         private Label label22;
         private TextBox txtQrCode;
         private Label label21;
         private Button btnCntProduct;
         private NumericUpDown numProductInSet;
+        private TextBox txtWeight;
+        private Label label23;
+        private Label label24;
+        private Label lblConnectStatus2;
+        private Label lblStatus2;
         private DataGridViewTextBoxColumn ID;
-        private DataGridViewTextBoxColumn QrCode;
         private DataGridViewTextBoxColumn model;
+        private DataGridViewTextBoxColumn QrCode;
         private DataGridViewTextBoxColumn A1MaxValue;
         private DataGridViewTextBoxColumn A1MinValue;
         private DataGridViewTextBoxColumn A1Result;
@@ -228,9 +238,6 @@ namespace Diameter_Checker
         private DataGridViewTextBoxColumn TotalProcessed;
         private DataGridViewTextBoxColumn TotalPASS;
         private DataGridViewTextBoxColumn TotalFAIL;
-        private TextBox txtWeight;
-        private Label label23;
-        private Label label24;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -243,6 +250,7 @@ namespace Diameter_Checker
         {
             this.InitializeComponent();
             Communication.serialport.DataReceived += new SerialDataReceivedEventHandler(this.DataReceive);
+            Communication.serialport2.DataReceived += new SerialDataReceivedEventHandler(this.DataReceive2);
         }
 
         private void AdjustLayout()
@@ -618,6 +626,25 @@ namespace Diameter_Checker
             }
         }
 
+        private void COM_Connect2()
+        {
+            try
+            {
+                Communication.serialport2.Close();
+                if (Communication.ConnectSerial2(Communication.comPort2, Communication.baudrate2))
+                {
+                    this.lblConnectStatus2.Text = "Connected";
+                    this.lblConnectStatus2.ForeColor = Color.Green;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Failed! Please check your settings and try again!");
+                this.lblConnectStatus2.Text = "Not Connected";
+                this.lblConnectStatus2.ForeColor = Color.Red;
+            }
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.SelectProductSetting();
@@ -705,6 +732,25 @@ namespace Diameter_Checker
             }
         }
 
+        public void DataReceive2(object obj, SerialDataReceivedEventArgs e)
+        {
+            if ( Communication.enableReceiveData )
+            {
+                this.InputData2 = string.Concat(this.InputData2, Communication.serialport2.ReadExisting());
+                this.InputData2 = this.InputData2.Replace("\r", string.Empty);
+                this.InputData2 = this.InputData2.Replace("\n", string.Empty);
+                Communication.test2++;
+                if (this.InputData2.Length > Communication.charNumberOfCom_data2 * 5)
+                {
+                    this.InputData2 = Communication.serialport2.ReadExisting();
+                }
+                if ( (!Communication.start ? false : this.InputData2.Length >= Communication.charNumberOfCom_data2) )
+                {
+                    this.SetText2(this.InputData2);
+                }
+            }
+        }
+
         private void deleteA1BufferData()
         {
             try
@@ -774,6 +820,7 @@ namespace Diameter_Checker
             this.loadProductSetting();
             this.loadData();
             this.COM_Connect();
+            this.COM_Connect2();
             this.txtSystemMessage.Text = "Please press the 'Start' button to begin!";
             this.dataGridView1.Columns["ID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             this.dataGridView1.Columns["model"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -899,19 +946,19 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -1003,11 +1050,16 @@ namespace Diameter_Checker
             this.tmrEnableReadA1Data = new System.Windows.Forms.Timer(this.components);
             this.tmrEnableReadA2Data = new System.Windows.Forms.Timer(this.components);
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
-            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
+            this.txtWeight = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.lblConnectStatus2 = new System.Windows.Forms.Label();
+            this.lblStatus2 = new System.Windows.Forms.Label();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1020,9 +1072,6 @@ namespace Diameter_Checker
             this.TotalProcessed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalPASS = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalFAIL = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtWeight = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -1276,56 +1325,56 @@ namespace Diameter_Checker
             // 
             // chartA1
             // 
-            chartArea3.AxisY.Title = "A1 Air Pressure";
-            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea3);
-            legend3.DockedToChartArea = "ChartArea1";
-            legend3.Enabled = false;
-            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend3.IsTextAutoFit = false;
-            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend3.Name = "Legend1";
-            this.chartA1.Legends.Add(legend3);
+            chartArea1.AxisY.Title = "A1 Air Pressure";
+            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea1);
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Enabled = false;
+            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend1.IsTextAutoFit = false;
+            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend1.Name = "Legend1";
+            this.chartA1.Legends.Add(legend1);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series3.BorderWidth = 2;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series3.Legend = "Legend1";
-            series3.Name = "A2";
-            this.chartA1.Series.Add(series3);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series1.Legend = "Legend1";
+            series1.Name = "A2";
+            this.chartA1.Series.Add(series1);
             this.chartA1.Size = new System.Drawing.Size(753, 314);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea4.AxisY.Title = "A2 Air Pressure";
-            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea4.Name = "ChartArea1";
-            chartArea4.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea4);
-            legend4.DockedToChartArea = "ChartArea1";
-            legend4.Enabled = false;
-            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend4.Name = "Legend1";
-            this.chartA2.Legends.Add(legend4);
+            chartArea2.AxisY.Title = "A2 Air Pressure";
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea2);
+            legend2.DockedToChartArea = "ChartArea1";
+            legend2.Enabled = false;
+            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend2.Name = "Legend1";
+            this.chartA2.Legends.Add(legend2);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series4.BorderWidth = 2;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series4.IsXValueIndexed = true;
-            series4.Legend = "Legend1";
-            series4.Name = "A2";
-            this.chartA2.Series.Add(series4);
+            series2.BorderWidth = 2;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "A2";
+            this.chartA2.Series.Add(series2);
             this.chartA2.Size = new System.Drawing.Size(774, 314);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
@@ -1423,29 +1472,29 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
-            this.QrCode,
             this.model,
+            this.QrCode,
             this.A1MaxValue,
             this.A1MinValue,
             this.A1Result,
@@ -1458,31 +1507,31 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dataGridView1.Location = new System.Drawing.Point(0, 449);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView1.Size = new System.Drawing.Size(1904, 480);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
@@ -1851,7 +1900,7 @@ namespace Diameter_Checker
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuConfig});
-            this.menuStrip1.Location = new System.Drawing.Point(245, 6);
+            this.menuStrip1.Location = new System.Drawing.Point(595, 6);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(89, 24);
             this.menuStrip1.TabIndex = 3;
@@ -1869,7 +1918,7 @@ namespace Diameter_Checker
             // communicatiomToolStripMenuItem
             // 
             this.communicatiomToolStripMenuItem.Name = "communicatiomToolStripMenuItem";
-            this.communicatiomToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.communicatiomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.communicatiomToolStripMenuItem.Text = "&Communication";
             this.communicatiomToolStripMenuItem.Click += new System.EventHandler(this.communicatiomToolStripMenuItem_Click);
             // 
@@ -1878,22 +1927,24 @@ namespace Diameter_Checker
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.lblStatus.Location = new System.Drawing.Point(34, 11);
+            this.lblStatus.Location = new System.Drawing.Point(64, 10);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(103, 16);
+            this.lblStatus.Size = new System.Drawing.Size(122, 16);
             this.lblStatus.TabIndex = 54;
-            this.lblStatus.Text = "Connect. Status:";
+            this.lblStatus.Text = "Serialport 1(A1,A2):";
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.Desktop;
+            this.panel2.Controls.Add(this.lblConnectStatus2);
+            this.panel2.Controls.Add(this.lblStatus2);
             this.panel2.Controls.Add(this.lblConnectStatus);
             this.panel2.Controls.Add(this.lblStatus);
             this.panel2.Controls.Add(this.menuStrip1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(1564, 0);
+            this.panel2.Location = new System.Drawing.Point(1212, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(340, 37);
+            this.panel2.Size = new System.Drawing.Size(692, 37);
             this.panel2.TabIndex = 56;
             // 
             // lblConnectStatus
@@ -1901,7 +1952,7 @@ namespace Diameter_Checker
             this.lblConnectStatus.AutoSize = true;
             this.lblConnectStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblConnectStatus.ForeColor = System.Drawing.Color.Lime;
-            this.lblConnectStatus.Location = new System.Drawing.Point(141, 11);
+            this.lblConnectStatus.Location = new System.Drawing.Point(192, 10);
             this.lblConnectStatus.Name = "lblConnectStatus";
             this.lblConnectStatus.Size = new System.Drawing.Size(73, 16);
             this.lblConnectStatus.TabIndex = 55;
@@ -1925,7 +1976,7 @@ namespace Diameter_Checker
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1564, 37);
+            this.panel4.Size = new System.Drawing.Size(1212, 37);
             this.panel4.TabIndex = 59;
             // 
             // label1
@@ -2129,51 +2180,101 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView.Interval = 10;
             this.tmrRefreshDataGridView.Tick += new System.EventHandler(this.tmrRefreshDataGridView_Tick);
             // 
-            // serialPort1
+            // serialPort2
             // 
-            this.serialPort1.BaudRate = 19200;
-            this.serialPort1.PortName = "COM3";
+            this.serialPort2.BaudRate = 19200;
+            this.serialPort2.PortName = "COM3";
             // 
             // tmrDisplayJudge
             // 
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
+            // txtWeight
+            // 
+            this.txtWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtWeight.Location = new System.Drawing.Point(72, 52);
+            this.txtWeight.Name = "txtWeight";
+            this.txtWeight.Size = new System.Drawing.Size(100, 26);
+            this.txtWeight.TabIndex = 7;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label23.Location = new System.Drawing.Point(4, 55);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(53, 16);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "Weight:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label24.Location = new System.Drawing.Point(196, 58);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(53, 16);
+            this.label24.TabIndex = 8;
+            this.label24.Text = "Current:";
+            // 
+            // lblConnectStatus2
+            // 
+            this.lblConnectStatus2.AutoSize = true;
+            this.lblConnectStatus2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblConnectStatus2.ForeColor = System.Drawing.Color.Lime;
+            this.lblConnectStatus2.Location = new System.Drawing.Point(460, 10);
+            this.lblConnectStatus2.Name = "lblConnectStatus2";
+            this.lblConnectStatus2.Size = new System.Drawing.Size(73, 16);
+            this.lblConnectStatus2.TabIndex = 57;
+            this.lblConnectStatus2.Text = "Connected";
+            // 
+            // lblStatus2
+            // 
+            this.lblStatus2.AutoSize = true;
+            this.lblStatus2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus2.ForeColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.lblStatus2.Location = new System.Drawing.Point(326, 10);
+            this.lblStatus2.Name = "lblStatus2";
+            this.lblStatus2.Size = new System.Drawing.Size(129, 16);
+            this.lblStatus2.TabIndex = 56;
+            this.lblStatus2.Text = "Serialport 2(Weight):";
+            // 
             // ID
             // 
             this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
             this.ID.FillWeight = 120F;
             this.ID.HeaderText = "ID";
             this.ID.MinimumWidth = 100;
             this.ID.Name = "ID";
             this.ID.ReadOnly = true;
             // 
-            // QrCode
-            // 
-            this.QrCode.DataPropertyName = "QrCode";
-            this.QrCode.HeaderText = "QrCode";
-            this.QrCode.Name = "QrCode";
-            // 
             // model
             // 
             this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.model.DataPropertyName = "model";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle4;
             this.model.FillWeight = 120F;
             this.model.HeaderText = "Model";
             this.model.MinimumWidth = 100;
             this.model.Name = "model";
             this.model.ReadOnly = true;
+            // 
+            // QrCode
+            // 
+            this.QrCode.DataPropertyName = "QrCode";
+            this.QrCode.HeaderText = "QrCode";
+            this.QrCode.Name = "QrCode";
             // 
             // A1MaxValue
             // 
@@ -2283,34 +2384,6 @@ namespace Diameter_Checker
             this.TotalFAIL.Name = "TotalFAIL";
             this.TotalFAIL.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.TotalFAIL.Width = 160;
-            // 
-            // txtWeight
-            // 
-            this.txtWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtWeight.Location = new System.Drawing.Point(72, 52);
-            this.txtWeight.Name = "txtWeight";
-            this.txtWeight.Size = new System.Drawing.Size(100, 26);
-            this.txtWeight.TabIndex = 7;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label23.Location = new System.Drawing.Point(4, 55);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(53, 16);
-            this.label23.TabIndex = 6;
-            this.label23.Text = "Weight:";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label24.Location = new System.Drawing.Point(196, 58);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(53, 16);
-            this.label24.TabIndex = 8;
-            this.label24.Text = "Current:";
             // 
             // frmMain
             // 
@@ -2624,6 +2697,62 @@ namespace Diameter_Checker
             }
         }
 
+        public void SetText2(string text)
+        {
+            bool flag;
+            if (base.InvokeRequired)
+            {
+                try
+                {
+                    frmMain.SetTextCallback d = new frmMain.SetTextCallback(this.SetText2);
+                    base.Invoke(d, new object[] { text });
+                }
+                catch (InvalidOperationException invalidOperationException)
+                {
+                }
+            }
+            else if (Communication.start)
+            {
+                if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
+                {
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" g");
+                    if (this.charNumberOfFirstString2 <= 0)
+                    {
+                        this.charNumberOfFirstString2 = 0;
+                    } else if(this.charNumberOfFirstString2 < 9)
+                    {
+                        this.charNumberOfFirstString2 += 2;
+                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                    }
+                    else
+                    {
+                        this.charNumberOfFirstString2 -= 9;
+                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                    }
+                    if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
+                    {
+                        Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
+                        if (Communication.serialData2.Length != Communication.charNumberOfCom_data2 || !(Communication.serialData2.Substring(9, 2) == " g"))
+                        {
+                            flag = false;
+                        }
+                        else
+                        {
+                            flag = true;
+                        }
+                        if (flag)
+                        {
+                            //Communication.enableReadData = true;
+                            //this.tmrDisplayData.Enabled = true;
+                        }
+                        this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
+                        this.lastSubString2 = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
+                        this.InputData2 = string.Concat(this.fistSubString2, this.lastSubString2);
+                    }
+                }
+            }
+        }
+
         private void testCycleFinish()
         {
             if ((!Communication.A1EnableSave ? false : Communication.A2EnableSave))
@@ -2705,6 +2834,30 @@ namespace Diameter_Checker
                     {
                         this.lblConnectStatus.Text = "Connected";
                         this.lblConnectStatus.ForeColor = Color.GreenYellow;
+                    }
+                }
+                catch
+                {
+                }
+            }
+            if (!Communication.serialport2.IsOpen)
+            {
+                this.lblConnectStatus2.Text = "Not Connected";
+                this.lblConnectStatus2.ForeColor = Color.Red;
+            }
+            else
+            {
+                this.lblConnectStatus2.Text = "Connected";
+                this.lblConnectStatus2.ForeColor = Color.GreenYellow;
+            }
+            if ((Communication.serialport2.IsOpen ? false : Communication.AutoReconnect2))
+            {
+                try
+                {
+                    if (Communication.ConnectSerial2(Communication.comPort2, Communication.baudrate2))
+                    {
+                        this.lblConnectStatus2.Text = "Connected";
+                        this.lblConnectStatus2.ForeColor = Color.GreenYellow;
                     }
                 }
                 catch
