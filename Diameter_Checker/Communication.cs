@@ -95,6 +95,7 @@ namespace Diameter_Checker
         public static string A1Average;
 
         public static double A1SD;
+        public static double Weight;
 
         public static string A1PP;
 
@@ -151,6 +152,9 @@ namespace Diameter_Checker
 
         public static string con_string;
 
+        public static bool receivedQrCodeFlg;
+        public static bool receivedWeightFlg;
+
         static Communication()
         {
             Communication.test = 0;
@@ -197,7 +201,10 @@ namespace Diameter_Checker
             Communication.subformIsOpen = false;
             Communication.serialport = new SerialPort();
             Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            Communication.serialport2 = new SerialPort();
             Communication.cntProductInSet = 0;
+            Communication.receivedQrCodeFlg = false;
+            Communication.receivedQrCodeFlg = false;
         }
 
         public Communication()
