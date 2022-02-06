@@ -203,7 +203,7 @@ namespace Diameter_Checker
             Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
             Communication.serialport2 = new SerialPort();
             Communication.cntProductInSet = 0;
-            Communication.receivedQrCodeFlg = false;
+            Communication.receivedWeightFlg = false;
             Communication.receivedQrCodeFlg = false;
         }
 
