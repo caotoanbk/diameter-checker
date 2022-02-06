@@ -141,6 +141,8 @@ namespace Diameter_Checker
 
         public static string con_string;
 
+        public static bool receivedQrCodeFlg;
+
         static Communication()
         {
             Communication.test = 0;
@@ -184,6 +186,7 @@ namespace Diameter_Checker
             Communication.serialport = new SerialPort();
             Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
             Communication.cntProductInSet = 0;
+            Communication.receivedQrCodeFlg = false;
         }
 
         public Communication()
