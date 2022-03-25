@@ -807,7 +807,7 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2022)
+            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2023)
             {
                 MessageBox.Show("System Error!");
                 base.Close();
@@ -947,19 +947,19 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -993,6 +993,22 @@ namespace Diameter_Checker
             this.label18 = new System.Windows.Forms.Label();
             this.btnJudge = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Judge = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalProcessed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalPASS = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalFAIL = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.txtDate = new System.Windows.Forms.TextBox();
@@ -1058,22 +1074,6 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Judge = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalProcessed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalPASS = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalFAIL = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -1103,7 +1103,7 @@ namespace Diameter_Checker
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 37);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1904, 928);
+            this.panel3.Size = new System.Drawing.Size(1540, 771);
             this.panel3.TabIndex = 71;
             // 
             // panel6
@@ -1120,7 +1120,7 @@ namespace Diameter_Checker
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1904, 928);
+            this.panel6.Size = new System.Drawing.Size(1540, 771);
             this.panel6.TabIndex = 2;
             // 
             // groupBox8
@@ -1355,56 +1355,56 @@ namespace Diameter_Checker
             // 
             // chartA1
             // 
-            chartArea3.AxisY.Title = "A1 Air Pressure";
-            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea3);
-            legend3.DockedToChartArea = "ChartArea1";
-            legend3.Enabled = false;
-            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend3.IsTextAutoFit = false;
-            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend3.Name = "Legend1";
-            this.chartA1.Legends.Add(legend3);
+            chartArea1.AxisY.Title = "A1 Air Pressure";
+            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea1);
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Enabled = false;
+            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend1.IsTextAutoFit = false;
+            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend1.Name = "Legend1";
+            this.chartA1.Legends.Add(legend1);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series3.BorderWidth = 2;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series3.Legend = "Legend1";
-            series3.Name = "A2";
-            this.chartA1.Series.Add(series3);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series1.Legend = "Legend1";
+            series1.Name = "A2";
+            this.chartA1.Series.Add(series1);
             this.chartA1.Size = new System.Drawing.Size(753, 314);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea4.AxisY.Title = "A2 Air Pressure";
-            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea4.Name = "ChartArea1";
-            chartArea4.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea4);
-            legend4.DockedToChartArea = "ChartArea1";
-            legend4.Enabled = false;
-            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend4.Name = "Legend1";
-            this.chartA2.Legends.Add(legend4);
+            chartArea2.AxisY.Title = "A2 Air Pressure";
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea2);
+            legend2.DockedToChartArea = "ChartArea1";
+            legend2.Enabled = false;
+            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend2.Name = "Legend1";
+            this.chartA2.Legends.Add(legend2);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series4.BorderWidth = 2;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series4.IsXValueIndexed = true;
-            series4.Legend = "Legend1";
-            series4.Name = "A2";
-            this.chartA2.Series.Add(series4);
+            series2.BorderWidth = 2;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "A2";
+            this.chartA2.Series.Add(series2);
             this.chartA2.Size = new System.Drawing.Size(774, 314);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
@@ -1502,24 +1502,24 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
@@ -1538,35 +1538,186 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 449);
+            this.dataGridView1.Location = new System.Drawing.Point(-364, 370);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView1.Size = new System.Drawing.Size(1904, 480);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
+            // 
+            // ID
+            // 
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ID.DataPropertyName = "ID";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ID.FillWeight = 120F;
+            this.ID.HeaderText = "ID";
+            this.ID.MinimumWidth = 100;
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            // 
+            // model
+            // 
+            this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.model.DataPropertyName = "model";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle4;
+            this.model.FillWeight = 120F;
+            this.model.HeaderText = "Model";
+            this.model.MinimumWidth = 100;
+            this.model.Name = "model";
+            this.model.ReadOnly = true;
+            // 
+            // QrCode
+            // 
+            this.QrCode.DataPropertyName = "QrCode";
+            this.QrCode.HeaderText = "QrCode";
+            this.QrCode.Name = "QrCode";
+            // 
+            // Weight
+            // 
+            this.Weight.DataPropertyName = "weight";
+            this.Weight.HeaderText = "Weight";
+            this.Weight.Name = "Weight";
+            // 
+            // A1MaxValue
+            // 
+            this.A1MaxValue.DataPropertyName = "A1MaxValue";
+            this.A1MaxValue.HeaderText = "A1 Max Value";
+            this.A1MaxValue.MinimumWidth = 130;
+            this.A1MaxValue.Name = "A1MaxValue";
+            this.A1MaxValue.ReadOnly = true;
+            this.A1MaxValue.Width = 133;
+            // 
+            // A1MinValue
+            // 
+            this.A1MinValue.DataPropertyName = "A1MinValue";
+            this.A1MinValue.HeaderText = "A1 Min Value";
+            this.A1MinValue.MinimumWidth = 130;
+            this.A1MinValue.Name = "A1MinValue";
+            this.A1MinValue.ReadOnly = true;
+            this.A1MinValue.Width = 133;
+            // 
+            // A1Result
+            // 
+            this.A1Result.DataPropertyName = "A1Result";
+            this.A1Result.FillWeight = 80F;
+            this.A1Result.HeaderText = "A1 Result";
+            this.A1Result.MinimumWidth = 80;
+            this.A1Result.Name = "A1Result";
+            this.A1Result.Width = 106;
+            // 
+            // A2MaxValue
+            // 
+            this.A2MaxValue.DataPropertyName = "A2MaxValue";
+            this.A2MaxValue.HeaderText = "A2 Max Value";
+            this.A2MaxValue.MinimumWidth = 130;
+            this.A2MaxValue.Name = "A2MaxValue";
+            this.A2MaxValue.Width = 133;
+            // 
+            // A2MinValue
+            // 
+            this.A2MinValue.DataPropertyName = "A2MinValue";
+            this.A2MinValue.HeaderText = "A2 Min Value";
+            this.A2MinValue.MinimumWidth = 130;
+            this.A2MinValue.Name = "A2MinValue";
+            this.A2MinValue.Width = 133;
+            // 
+            // A2Result
+            // 
+            this.A2Result.DataPropertyName = "A2Result";
+            this.A2Result.FillWeight = 80F;
+            this.A2Result.HeaderText = "A2 Result";
+            this.A2Result.MinimumWidth = 80;
+            this.A2Result.Name = "A2Result";
+            this.A2Result.Width = 106;
+            // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.FillWeight = 80F;
+            this.Date.HeaderText = "Date";
+            this.Date.MinimumWidth = 80;
+            this.Date.Name = "Date";
+            this.Date.Width = 107;
+            // 
+            // Time
+            // 
+            this.Time.DataPropertyName = "Time";
+            this.Time.FillWeight = 80F;
+            this.Time.HeaderText = "Time";
+            this.Time.MinimumWidth = 80;
+            this.Time.Name = "Time";
+            this.Time.Width = 106;
+            // 
+            // Judge
+            // 
+            this.Judge.DataPropertyName = "Judge";
+            this.Judge.FillWeight = 80F;
+            this.Judge.HeaderText = "Judge";
+            this.Judge.MinimumWidth = 80;
+            this.Judge.Name = "Judge";
+            this.Judge.Width = 106;
+            // 
+            // TotalProcessed
+            // 
+            this.TotalProcessed.DataPropertyName = "TotalProcessed";
+            this.TotalProcessed.FillWeight = 120F;
+            this.TotalProcessed.HeaderText = "Total Processed";
+            this.TotalProcessed.MinimumWidth = 100;
+            this.TotalProcessed.Name = "TotalProcessed";
+            this.TotalProcessed.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalProcessed.Width = 160;
+            // 
+            // TotalPASS
+            // 
+            this.TotalPASS.DataPropertyName = "TotalPASS";
+            this.TotalPASS.FillWeight = 120F;
+            this.TotalPASS.HeaderText = "Total PASS";
+            this.TotalPASS.MinimumWidth = 100;
+            this.TotalPASS.Name = "TotalPASS";
+            this.TotalPASS.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalPASS.Width = 159;
+            // 
+            // TotalFAIL
+            // 
+            this.TotalFAIL.DataPropertyName = "TotalFAIL";
+            this.TotalFAIL.FillWeight = 120F;
+            this.TotalFAIL.HeaderText = "Total FAIL";
+            this.TotalFAIL.MinimumWidth = 100;
+            this.TotalFAIL.Name = "TotalFAIL";
+            this.TotalFAIL.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.TotalFAIL.Width = 160;
             // 
             // panel5
             // 
@@ -1973,7 +2124,7 @@ namespace Diameter_Checker
             this.panel2.Controls.Add(this.lblStatus);
             this.panel2.Controls.Add(this.menuStrip1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(1212, 0);
+            this.panel2.Location = new System.Drawing.Point(848, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(692, 37);
             this.panel2.TabIndex = 56;
@@ -2019,7 +2170,7 @@ namespace Diameter_Checker
             this.panel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1904, 37);
+            this.panel1.Size = new System.Drawing.Size(1540, 37);
             this.panel1.TabIndex = 70;
             // 
             // panel4
@@ -2029,7 +2180,7 @@ namespace Diameter_Checker
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1212, 37);
+            this.panel4.Size = new System.Drawing.Size(848, 37);
             this.panel4.TabIndex = 59;
             // 
             // label1
@@ -2063,9 +2214,9 @@ namespace Diameter_Checker
             this.panelResult.Controls.Add(this.btnStart);
             this.panelResult.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelResult.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.panelResult.Location = new System.Drawing.Point(0, 965);
+            this.panelResult.Location = new System.Drawing.Point(0, 808);
             this.panelResult.Name = "panelResult";
-            this.panelResult.Size = new System.Drawing.Size(1904, 37);
+            this.panelResult.Size = new System.Drawing.Size(1540, 37);
             this.panelResult.TabIndex = 68;
             // 
             // chkStopScan
@@ -2096,7 +2247,7 @@ namespace Diameter_Checker
             // 
             this.button2.Dock = System.Windows.Forms.DockStyle.Right;
             this.button2.ForeColor = System.Drawing.Color.Teal;
-            this.button2.Location = new System.Drawing.Point(990, 0);
+            this.button2.Location = new System.Drawing.Point(626, 0);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(130, 33);
             this.button2.TabIndex = 78;
@@ -2108,7 +2259,7 @@ namespace Diameter_Checker
             // 
             this.btnSelect.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnSelect.ForeColor = System.Drawing.Color.Teal;
-            this.btnSelect.Location = new System.Drawing.Point(1120, 0);
+            this.btnSelect.Location = new System.Drawing.Point(756, 0);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(130, 33);
             this.btnSelect.TabIndex = 76;
@@ -2120,7 +2271,7 @@ namespace Diameter_Checker
             // 
             this.btnClear.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClear.ForeColor = System.Drawing.Color.DarkRed;
-            this.btnClear.Location = new System.Drawing.Point(1250, 0);
+            this.btnClear.Location = new System.Drawing.Point(886, 0);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(130, 33);
             this.btnClear.TabIndex = 77;
@@ -2132,7 +2283,7 @@ namespace Diameter_Checker
             // 
             this.btnClearCurrentTest.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClearCurrentTest.ForeColor = System.Drawing.Color.Teal;
-            this.btnClearCurrentTest.Location = new System.Drawing.Point(1380, 0);
+            this.btnClearCurrentTest.Location = new System.Drawing.Point(1016, 0);
             this.btnClearCurrentTest.Name = "btnClearCurrentTest";
             this.btnClearCurrentTest.Size = new System.Drawing.Size(130, 33);
             this.btnClearCurrentTest.TabIndex = 74;
@@ -2145,7 +2296,7 @@ namespace Diameter_Checker
             this.btnDeleteTestData.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnDeleteTestData.Enabled = false;
             this.btnDeleteTestData.ForeColor = System.Drawing.Color.DarkRed;
-            this.btnDeleteTestData.Location = new System.Drawing.Point(1510, 0);
+            this.btnDeleteTestData.Location = new System.Drawing.Point(1146, 0);
             this.btnDeleteTestData.Name = "btnDeleteTestData";
             this.btnDeleteTestData.Size = new System.Drawing.Size(130, 33);
             this.btnDeleteTestData.TabIndex = 73;
@@ -2158,7 +2309,7 @@ namespace Diameter_Checker
             this.btnEdit.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnEdit.ForeColor = System.Drawing.Color.Teal;
             this.btnEdit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEdit.Location = new System.Drawing.Point(1640, 0);
+            this.btnEdit.Location = new System.Drawing.Point(1276, 0);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(130, 33);
             this.btnEdit.TabIndex = 72;
@@ -2184,7 +2335,7 @@ namespace Diameter_Checker
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.ForeColor = System.Drawing.Color.Teal;
-            this.btnStart.Location = new System.Drawing.Point(1770, 0);
+            this.btnStart.Location = new System.Drawing.Point(1406, 0);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(130, 33);
             this.btnStart.TabIndex = 70;
@@ -2243,162 +2394,11 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // ID
-            // 
-            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle10;
-            this.ID.FillWeight = 120F;
-            this.ID.HeaderText = "ID";
-            this.ID.MinimumWidth = 100;
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            // 
-            // model
-            // 
-            this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.model.DataPropertyName = "model";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle11;
-            this.model.FillWeight = 120F;
-            this.model.HeaderText = "Model";
-            this.model.MinimumWidth = 100;
-            this.model.Name = "model";
-            this.model.ReadOnly = true;
-            // 
-            // QrCode
-            // 
-            this.QrCode.DataPropertyName = "QrCode";
-            this.QrCode.HeaderText = "QrCode";
-            this.QrCode.Name = "QrCode";
-            // 
-            // Weight
-            // 
-            this.Weight.DataPropertyName = "weight";
-            this.Weight.HeaderText = "Weight";
-            this.Weight.Name = "Weight";
-            // 
-            // A1MaxValue
-            // 
-            this.A1MaxValue.DataPropertyName = "A1MaxValue";
-            this.A1MaxValue.HeaderText = "A1 Max Value";
-            this.A1MaxValue.MinimumWidth = 130;
-            this.A1MaxValue.Name = "A1MaxValue";
-            this.A1MaxValue.ReadOnly = true;
-            this.A1MaxValue.Width = 133;
-            // 
-            // A1MinValue
-            // 
-            this.A1MinValue.DataPropertyName = "A1MinValue";
-            this.A1MinValue.HeaderText = "A1 Min Value";
-            this.A1MinValue.MinimumWidth = 130;
-            this.A1MinValue.Name = "A1MinValue";
-            this.A1MinValue.ReadOnly = true;
-            this.A1MinValue.Width = 133;
-            // 
-            // A1Result
-            // 
-            this.A1Result.DataPropertyName = "A1Result";
-            this.A1Result.FillWeight = 80F;
-            this.A1Result.HeaderText = "A1 Result";
-            this.A1Result.MinimumWidth = 80;
-            this.A1Result.Name = "A1Result";
-            this.A1Result.Width = 106;
-            // 
-            // A2MaxValue
-            // 
-            this.A2MaxValue.DataPropertyName = "A2MaxValue";
-            this.A2MaxValue.HeaderText = "A2 Max Value";
-            this.A2MaxValue.MinimumWidth = 130;
-            this.A2MaxValue.Name = "A2MaxValue";
-            this.A2MaxValue.Width = 133;
-            // 
-            // A2MinValue
-            // 
-            this.A2MinValue.DataPropertyName = "A2MinValue";
-            this.A2MinValue.HeaderText = "A2 Min Value";
-            this.A2MinValue.MinimumWidth = 130;
-            this.A2MinValue.Name = "A2MinValue";
-            this.A2MinValue.Width = 133;
-            // 
-            // A2Result
-            // 
-            this.A2Result.DataPropertyName = "A2Result";
-            this.A2Result.FillWeight = 80F;
-            this.A2Result.HeaderText = "A2 Result";
-            this.A2Result.MinimumWidth = 80;
-            this.A2Result.Name = "A2Result";
-            this.A2Result.Width = 106;
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.FillWeight = 80F;
-            this.Date.HeaderText = "Date";
-            this.Date.MinimumWidth = 80;
-            this.Date.Name = "Date";
-            this.Date.Width = 107;
-            // 
-            // Time
-            // 
-            this.Time.DataPropertyName = "Time";
-            this.Time.FillWeight = 80F;
-            this.Time.HeaderText = "Time";
-            this.Time.MinimumWidth = 80;
-            this.Time.Name = "Time";
-            this.Time.Width = 106;
-            // 
-            // Judge
-            // 
-            this.Judge.DataPropertyName = "Judge";
-            this.Judge.FillWeight = 80F;
-            this.Judge.HeaderText = "Judge";
-            this.Judge.MinimumWidth = 80;
-            this.Judge.Name = "Judge";
-            this.Judge.Width = 106;
-            // 
-            // TotalProcessed
-            // 
-            this.TotalProcessed.DataPropertyName = "TotalProcessed";
-            this.TotalProcessed.FillWeight = 120F;
-            this.TotalProcessed.HeaderText = "Total Processed";
-            this.TotalProcessed.MinimumWidth = 100;
-            this.TotalProcessed.Name = "TotalProcessed";
-            this.TotalProcessed.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalProcessed.Width = 160;
-            // 
-            // TotalPASS
-            // 
-            this.TotalPASS.DataPropertyName = "TotalPASS";
-            this.TotalPASS.FillWeight = 120F;
-            this.TotalPASS.HeaderText = "Total PASS";
-            this.TotalPASS.MinimumWidth = 100;
-            this.TotalPASS.Name = "TotalPASS";
-            this.TotalPASS.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalPASS.Width = 159;
-            // 
-            // TotalFAIL
-            // 
-            this.TotalFAIL.DataPropertyName = "TotalFAIL";
-            this.TotalFAIL.FillWeight = 120F;
-            this.TotalFAIL.HeaderText = "Total FAIL";
-            this.TotalFAIL.MinimumWidth = 100;
-            this.TotalFAIL.Name = "TotalFAIL";
-            this.TotalFAIL.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.TotalFAIL.Width = 160;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1904, 1002);
+            this.ClientSize = new System.Drawing.Size(1540, 845);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelResult);
@@ -2723,24 +2723,25 @@ namespace Diameter_Checker
             {
                 if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" g");
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf("+");
                     if (this.charNumberOfFirstString2 <= 0)
                     {
                         this.charNumberOfFirstString2 = 0;
-                    } else if(this.charNumberOfFirstString2 < 9)
-                    {
-                        this.charNumberOfFirstString2 += 2;
-                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
                     }
+                    //else if(this.charNumberOfFirstString2 < 8)
+                    //{
+                    //    //this.charNumberOfFirstString2 += 2;
+                    //    this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                    //}
                     else
                     {
-                        this.charNumberOfFirstString2 -= 9;
+                        //this.charNumberOfFirstString2 -= 9;
                         this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
                     }
                     if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
                         Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
-                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(9, 2) == " g")
+                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(8, 11) == " ST,GS,+")
                         {
                             this.txtWeight.Text = Communication.serialData2.Substring(0, 9).Trim();
                             Communication.receivedWeightFlg = true;

@@ -160,7 +160,7 @@ namespace Diameter_Checker
             Communication.test = 0;
             Communication.test2 = 0;
             Communication.charNumberOfCom_data = 27;
-            Communication.charNumberOfCom_data2 = 11;
+            Communication.charNumberOfCom_data2 = 19;
             Communication.counter = 0;
             Communication.timer = 0;
             Communication.timer2 = 0;
@@ -186,7 +186,7 @@ namespace Diameter_Checker
             Communication.A1RecevingData = false;
             Communication.A2RecevingData = false;
             Communication.loginUser = "Admin";
-            Communication.processorIDAdmin = "FAKECPUID";
+            Communication.processorIDAdmin = "BFEBFBFF000306C3";
             Communication.processorID = "BFEBFBFF000906E9";
             Communication.A1Detected = false;
             Communication.A2Detected = false;
