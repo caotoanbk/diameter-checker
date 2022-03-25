@@ -170,7 +170,7 @@ namespace Diameter_Checker
             Communication.A1RecevingData = false;
             Communication.A2RecevingData = false;
             Communication.loginUser = "Admin";
-            Communication.processorIDAdmin = "FAKECPUID";
+            Communication.processorIDAdmin = "BFEBFBFF000306C3";
             Communication.processorID = "BFEBFBFF000906E9";
             Communication.A1Detected = false;
             Communication.A2Detected = false;

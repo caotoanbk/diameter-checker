@@ -757,7 +757,7 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2022)
+            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2023)
             {
                 MessageBox.Show("System Error!");
                 base.Close();
