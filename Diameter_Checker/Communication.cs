@@ -95,7 +95,7 @@ namespace Diameter_Checker
         public static string A1Average;
 
         public static double A1SD;
-        public static double Weight;
+        public static string Weight;
 
         public static string A1PP;
 

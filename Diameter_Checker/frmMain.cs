@@ -741,10 +741,10 @@ namespace Diameter_Checker
                 this.InputData2 = this.InputData2.Replace("\r", string.Empty);
                 this.InputData2 = this.InputData2.Replace("\n", string.Empty);
                 Communication.test2++;
-                if (this.InputData2.Length > Communication.charNumberOfCom_data2 * 5)
-                {
-                    this.InputData2 = Communication.serialport2.ReadExisting();
-                }
+                //if (this.InputData2.Length >= Communication.charNumberOfCom_data2 )
+                //{
+                //    this.InputData2 = Communication.serialport2.ReadExisting();
+                //}
                 if ( this.InputData2.Length >= Communication.charNumberOfCom_data2 )
                 {
                     this.SetText2(this.InputData2);
@@ -2723,7 +2723,7 @@ namespace Diameter_Checker
             {
                 if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf("+");
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
                     if (this.charNumberOfFirstString2 <= 0)
                     {
                         this.charNumberOfFirstString2 = 0;
@@ -2736,14 +2736,14 @@ namespace Diameter_Checker
                     else
                     {
                         //this.charNumberOfFirstString2 -= 9;
-                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2+1);
                     }
                     if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
                         Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
-                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(8, 11) == " ST,GS,+")
+                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
-                            this.txtWeight.Text = Communication.serialData2.Substring(0, 9).Trim();
+                            this.txtWeight.Text = Communication.serialData2.Substring(8).Trim();
                             Communication.receivedWeightFlg = true;
                             //CheckAndMakeDecision();
                             //ClearAllData();
@@ -3100,7 +3100,12 @@ namespace Diameter_Checker
         private void CheckAndMakeDecision()
         {
             bool flag2;
-            if (!double.TryParse(this.txtWeight.Text.Trim(), out Communication.Weight) || string.IsNullOrEmpty(this.txtQrCode.Text.Trim()) || !Communication.A1EnableSave || !Communication.A2EnableSave || Communication.A1Detected || Communication.A2Detected || !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
+            Communication.Weight = this.txtWeight.Text.Trim();
+            if (string.IsNullOrEmpty(Communication.Weight) || 
+                string.IsNullOrEmpty(this.txtQrCode.Text.Trim()) || 
+                !Communication.A1EnableSave || !Communication.A2EnableSave || 
+                Communication.A1Detected || Communication.A2Detected || 
+                !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
             {
                 flag2 = false;
             }
