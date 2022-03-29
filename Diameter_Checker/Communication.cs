@@ -180,7 +180,7 @@ namespace Diameter_Checker
             Communication.closeComport = false;
             Communication.subformIsOpen = false;
             Communication.serialport = new SerialPort();
-            Communication.con_string = "Data Source=DESKTOP-E7PTK9T\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
         }
 
         public Communication()
