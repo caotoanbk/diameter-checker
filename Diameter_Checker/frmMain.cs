@@ -789,19 +789,19 @@ namespace Diameter_Checker
             this.dataGridView1.Columns["TotalFAIL"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             this.chartA1Setting();
             this.chartA2Setting();
-            using (ManagementObjectCollection.ManagementObjectEnumerator enumerator = (new ManagementClass("win32_processor")).GetInstances().GetEnumerator())
-            {
-                if (enumerator.MoveNext())
-                {
-                    ManagementObject managObj = (ManagementObject)enumerator.Current;
-                    frmMain.strgetProcessorID = managObj.Properties["processorID"].Value.ToString();
-                }
-            }
-            if ((frmMain.strgetProcessorID.Trim() == Communication.processorID.Trim() ? false : frmMain.strgetProcessorID.Trim() != Communication.processorIDAdmin.Trim()))
-            {
-                MessageBox.Show("System Error!", "WARNING!");
-                base.Dispose();
-            }
+            //using (ManagementObjectCollection.ManagementObjectEnumerator enumerator = (new ManagementClass("win32_processor")).GetInstances().GetEnumerator())
+            //{
+            //    if (enumerator.MoveNext())
+            //    {
+            //        ManagementObject managObj = (ManagementObject)enumerator.Current;
+            //        frmMain.strgetProcessorID = managObj.Properties["processorID"].Value.ToString();
+            //    }
+            //}
+            //if ((frmMain.strgetProcessorID.Trim() == Communication.processorID.Trim() ? false : frmMain.strgetProcessorID.Trim() != Communication.processorIDAdmin.Trim()))
+            //{
+            //    MessageBox.Show("System Error!", "WARNING!");
+            //    base.Dispose();
+            //}
             this.calculatePPandPPKvalue();
         }
 
