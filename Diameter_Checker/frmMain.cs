@@ -364,6 +364,7 @@ namespace Diameter_Checker
                 this.btnStart.Text = "Start";
                 this.btnStart.ForeColor = Color.Teal;
                 this.txtSystemMessage.Text = "STOPPED!";
+                this.numProductInSet.Enabled = true;
                 Communication.start = false;
                 Communication.stop = true;
                 Communication.enableReceiveData = false;
@@ -371,6 +372,7 @@ namespace Diameter_Checker
             else
             {
                 this.btnStart.Text = "Stop";
+                this.numProductInSet.Enabled = false;
                 this.btnStart.ForeColor = Color.DarkRed;
                 this.txtSystemMessage.Text = "Working mode";
                 Communication.start = true;
