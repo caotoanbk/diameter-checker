@@ -153,8 +153,6 @@ namespace Diameter_Checker
         public static SqlConnection connect;
 
         public static string con_string;
-
-        public static bool receivedQrCodeFlg;
         public static bool receivedWeightFlg;
 
         static Communication()
@@ -206,7 +204,6 @@ namespace Diameter_Checker
             Communication.serialport2 = new SerialPort();
             Communication.cntProductInSet = 0;
             Communication.receivedWeightFlg = false;
-            Communication.receivedQrCodeFlg = false;
         }
 
         public Communication()
