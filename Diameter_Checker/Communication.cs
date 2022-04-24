@@ -138,6 +138,8 @@ namespace Diameter_Checker
         public static string A2MaximumOffset;
 
         public static string A2MinimumOffset;
+        public static string maxWeight;
+        public static string minWeight;
 
         public static float detectionOffset;
 
