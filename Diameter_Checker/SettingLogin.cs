@@ -28,13 +28,13 @@ namespace Diameter_Checker
 
         private void btnEnter_Click(object sender, EventArgs e)
         {
-            if ((this.cmbUsername.Text != "Admin" ? false : this.txtPassword.Text == "0913183822"))
+            if ((this.cmbUsername.Text != "Admin" ? false : this.txtPassword.Text == "12345678"))
             {
                 Communication.loginUser = "Admin";
                 (new ComSetting()).ShowDialog();
                 base.Close();
             }
-            else if ((this.cmbUsername.Text != "Developer" ? true : this.txtPassword.Text != "halla913183822"))
+            else if ((this.cmbUsername.Text != "Developer" ? true : this.txtPassword.Text != "12345678"))
             {
                 MessageBox.Show("Wrong Username & Password!", "Warning!");
             }
