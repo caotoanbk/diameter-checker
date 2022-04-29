@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
@@ -219,8 +220,6 @@ namespace Diameter_Checker
         private Label label25;
         private Label label26;
         private Label lblDateTime;
-        private NumericUpDown numWeightMin;
-        private NumericUpDown numWeightMax;
         private TextBox txtWeightResult;
         private GroupBox groupBox6;
         private DataGridViewTextBoxColumn ID;
@@ -238,6 +237,8 @@ namespace Diameter_Checker
         private DataGridViewTextBoxColumn TotalProcessed;
         private DataGridViewTextBoxColumn TotalPASS;
         private DataGridViewTextBoxColumn TotalFAIL;
+        private TextBox txtWeightMin;
+        private TextBox txtWeightMax;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -336,11 +337,11 @@ namespace Diameter_Checker
         {
             if (MessageBox.Show("This action is only accepted with the engineer!", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if ((this.cmbModel.Text == null || this.txtA1DetectionLevel.Text.Length != 6 || this.txtA2DetectionLevel.Text.Length != 6 || this.txtA1MinimumOffset.Text.Length != 6 || this.txtA1MaximumOffset.Text.Length != 6 || this.txtA2MinimumOffset.Text.Length != 6 || this.numWeightMax.Value <=0 || this.numWeightMin.Value <=0 ? false : this.txtA2MaximumOffset.Text.Length == 6))
+                if ((this.cmbModel.Text == null || this.txtA1DetectionLevel.Text.Length != 6 || this.txtA2DetectionLevel.Text.Length != 6 || this.txtA1MinimumOffset.Text.Length != 6 || this.txtA1MaximumOffset.Text.Length != 6 || this.txtA2MinimumOffset.Text.Length != 6 || string.IsNullOrEmpty(this.txtWeightMax.Text) || string.IsNullOrEmpty(this.txtWeightMin.Text) ? false : this.txtA2MaximumOffset.Text.Length == 6))
                 {
                     SqlConnection con = new SqlConnection(Communication.con_string);
                     con.Open();
-                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','",this.numWeightMax.Value.ToString(),"','", this.numWeightMin.Value.ToString(),"')" });
+                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','", this.txtWeightMax.Text, "','", this.txtWeightMin.Text, "')" });
                     SqlCommand cmd_add = new SqlCommand()
                     {
                         Connection = con,
@@ -994,6 +995,21 @@ namespace Diameter_Checker
             this.label18 = new System.Windows.Forms.Label();
             this.btnJudge = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A1Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.A2Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Judge = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalProcessed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalPASS = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalFAIL = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtA2Result = new System.Windows.Forms.TextBox();
@@ -1007,8 +1023,6 @@ namespace Diameter_Checker
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numWeightMin = new System.Windows.Forms.NumericUpDown();
-            this.numWeightMax = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.cmbTimeToEnableRead = new System.Windows.Forms.ComboBox();
@@ -1061,21 +1075,8 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A1Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.A2Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Judge = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalProcessed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalPASS = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalFAIL = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtWeightMax = new System.Windows.Forms.TextBox();
+            this.txtWeightMin = new System.Windows.Forms.TextBox();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -1090,8 +1091,6 @@ namespace Diameter_Checker
             this.panel5.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMax)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -1186,9 +1185,9 @@ namespace Diameter_Checker
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label23.Location = new System.Drawing.Point(5, 25);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(69, 16);
+            this.label23.Size = new System.Drawing.Size(53, 16);
             this.label23.TabIndex = 6;
-            this.label23.Text = "Weight(g):";
+            this.label23.Text = "Weight:";
             // 
             // groupBox7
             // 
@@ -1571,6 +1570,139 @@ namespace Diameter_Checker
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             // 
+            // ID
+            // 
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ID.DataPropertyName = "ID";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ID.FillWeight = 120F;
+            this.ID.HeaderText = "ID";
+            this.ID.MinimumWidth = 100;
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            // 
+            // model
+            // 
+            this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.model.DataPropertyName = "model";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle4;
+            this.model.FillWeight = 120F;
+            this.model.HeaderText = "Model";
+            this.model.MinimumWidth = 100;
+            this.model.Name = "model";
+            this.model.ReadOnly = true;
+            // 
+            // Weight
+            // 
+            this.Weight.DataPropertyName = "weight";
+            this.Weight.HeaderText = "Weight";
+            this.Weight.Name = "Weight";
+            // 
+            // A1MaxValue
+            // 
+            this.A1MaxValue.DataPropertyName = "A1MaxValue";
+            this.A1MaxValue.HeaderText = "A1 Max Value";
+            this.A1MaxValue.MinimumWidth = 130;
+            this.A1MaxValue.Name = "A1MaxValue";
+            this.A1MaxValue.ReadOnly = true;
+            // 
+            // A1MinValue
+            // 
+            this.A1MinValue.DataPropertyName = "A1MinValue";
+            this.A1MinValue.HeaderText = "A1 Min Value";
+            this.A1MinValue.MinimumWidth = 130;
+            this.A1MinValue.Name = "A1MinValue";
+            this.A1MinValue.ReadOnly = true;
+            // 
+            // A1Result
+            // 
+            this.A1Result.DataPropertyName = "A1Result";
+            this.A1Result.FillWeight = 80F;
+            this.A1Result.HeaderText = "A1 Result";
+            this.A1Result.MinimumWidth = 80;
+            this.A1Result.Name = "A1Result";
+            // 
+            // A2MaxValue
+            // 
+            this.A2MaxValue.DataPropertyName = "A2MaxValue";
+            this.A2MaxValue.HeaderText = "A2 Max Value";
+            this.A2MaxValue.MinimumWidth = 130;
+            this.A2MaxValue.Name = "A2MaxValue";
+            // 
+            // A2MinValue
+            // 
+            this.A2MinValue.DataPropertyName = "A2MinValue";
+            this.A2MinValue.HeaderText = "A2 Min Value";
+            this.A2MinValue.MinimumWidth = 130;
+            this.A2MinValue.Name = "A2MinValue";
+            // 
+            // A2Result
+            // 
+            this.A2Result.DataPropertyName = "A2Result";
+            this.A2Result.FillWeight = 80F;
+            this.A2Result.HeaderText = "A2 Result";
+            this.A2Result.MinimumWidth = 80;
+            this.A2Result.Name = "A2Result";
+            // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.FillWeight = 80F;
+            this.Date.HeaderText = "Date";
+            this.Date.MinimumWidth = 80;
+            this.Date.Name = "Date";
+            // 
+            // Time
+            // 
+            this.Time.DataPropertyName = "Time";
+            this.Time.FillWeight = 80F;
+            this.Time.HeaderText = "Time";
+            this.Time.MinimumWidth = 80;
+            this.Time.Name = "Time";
+            // 
+            // Judge
+            // 
+            this.Judge.DataPropertyName = "Judge";
+            this.Judge.FillWeight = 80F;
+            this.Judge.HeaderText = "Judge";
+            this.Judge.MinimumWidth = 80;
+            this.Judge.Name = "Judge";
+            // 
+            // TotalProcessed
+            // 
+            this.TotalProcessed.DataPropertyName = "TotalProcessed";
+            this.TotalProcessed.FillWeight = 120F;
+            this.TotalProcessed.HeaderText = "Total Processed";
+            this.TotalProcessed.MinimumWidth = 100;
+            this.TotalProcessed.Name = "TotalProcessed";
+            this.TotalProcessed.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // TotalPASS
+            // 
+            this.TotalPASS.DataPropertyName = "TotalPASS";
+            this.TotalPASS.FillWeight = 120F;
+            this.TotalPASS.HeaderText = "Total PASS";
+            this.TotalPASS.MinimumWidth = 100;
+            this.TotalPASS.Name = "TotalPASS";
+            this.TotalPASS.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // TotalFAIL
+            // 
+            this.TotalFAIL.DataPropertyName = "TotalFAIL";
+            this.TotalFAIL.FillWeight = 120F;
+            this.TotalFAIL.HeaderText = "Total FAIL";
+            this.TotalFAIL.MinimumWidth = 100;
+            this.TotalFAIL.Name = "TotalFAIL";
+            this.TotalFAIL.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.SystemColors.HighlightText;
@@ -1700,8 +1832,8 @@ namespace Diameter_Checker
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.numWeightMin);
-            this.groupBox1.Controls.Add(this.numWeightMax);
+            this.groupBox1.Controls.Add(this.txtWeightMin);
+            this.groupBox1.Controls.Add(this.txtWeightMax);
             this.groupBox1.Controls.Add(this.label25);
             this.groupBox1.Controls.Add(this.label26);
             this.groupBox1.Controls.Add(this.cmbTimeToEnableRead);
@@ -1727,32 +1859,6 @@ namespace Diameter_Checker
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Product Setting";
-            // 
-            // numWeightMin
-            // 
-            this.numWeightMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.numWeightMin.Location = new System.Drawing.Point(814, 52);
-            this.numWeightMin.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.numWeightMin.Name = "numWeightMin";
-            this.numWeightMin.Size = new System.Drawing.Size(95, 26);
-            this.numWeightMin.TabIndex = 88;
-            // 
-            // numWeightMax
-            // 
-            this.numWeightMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.numWeightMax.Location = new System.Drawing.Point(814, 22);
-            this.numWeightMax.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.numWeightMax.Name = "numWeightMax";
-            this.numWeightMax.Size = new System.Drawing.Size(95, 26);
-            this.numWeightMax.TabIndex = 87;
             // 
             // label25
             // 
@@ -2274,138 +2380,25 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // ID
+            // txtWeightMax
             // 
-            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.ID.FillWeight = 120F;
-            this.ID.HeaderText = "ID";
-            this.ID.MinimumWidth = 100;
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
+            this.txtWeightMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightMax.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.txtWeightMax.Location = new System.Drawing.Point(814, 22);
+            this.txtWeightMax.Name = "txtWeightMax";
+            this.txtWeightMax.Size = new System.Drawing.Size(80, 26);
+            this.txtWeightMax.TabIndex = 89;
+            this.txtWeightMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // model
+            // txtWeightMin
             // 
-            this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.model.DataPropertyName = "model";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle4;
-            this.model.FillWeight = 120F;
-            this.model.HeaderText = "Model";
-            this.model.MinimumWidth = 100;
-            this.model.Name = "model";
-            this.model.ReadOnly = true;
-            // 
-            // Weight
-            // 
-            this.Weight.DataPropertyName = "weight";
-            this.Weight.HeaderText = "Weight";
-            this.Weight.Name = "Weight";
-            // 
-            // A1MaxValue
-            // 
-            this.A1MaxValue.DataPropertyName = "A1MaxValue";
-            this.A1MaxValue.HeaderText = "A1 Max Value";
-            this.A1MaxValue.MinimumWidth = 130;
-            this.A1MaxValue.Name = "A1MaxValue";
-            this.A1MaxValue.ReadOnly = true;
-            // 
-            // A1MinValue
-            // 
-            this.A1MinValue.DataPropertyName = "A1MinValue";
-            this.A1MinValue.HeaderText = "A1 Min Value";
-            this.A1MinValue.MinimumWidth = 130;
-            this.A1MinValue.Name = "A1MinValue";
-            this.A1MinValue.ReadOnly = true;
-            // 
-            // A1Result
-            // 
-            this.A1Result.DataPropertyName = "A1Result";
-            this.A1Result.FillWeight = 80F;
-            this.A1Result.HeaderText = "A1 Result";
-            this.A1Result.MinimumWidth = 80;
-            this.A1Result.Name = "A1Result";
-            // 
-            // A2MaxValue
-            // 
-            this.A2MaxValue.DataPropertyName = "A2MaxValue";
-            this.A2MaxValue.HeaderText = "A2 Max Value";
-            this.A2MaxValue.MinimumWidth = 130;
-            this.A2MaxValue.Name = "A2MaxValue";
-            // 
-            // A2MinValue
-            // 
-            this.A2MinValue.DataPropertyName = "A2MinValue";
-            this.A2MinValue.HeaderText = "A2 Min Value";
-            this.A2MinValue.MinimumWidth = 130;
-            this.A2MinValue.Name = "A2MinValue";
-            // 
-            // A2Result
-            // 
-            this.A2Result.DataPropertyName = "A2Result";
-            this.A2Result.FillWeight = 80F;
-            this.A2Result.HeaderText = "A2 Result";
-            this.A2Result.MinimumWidth = 80;
-            this.A2Result.Name = "A2Result";
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.FillWeight = 80F;
-            this.Date.HeaderText = "Date";
-            this.Date.MinimumWidth = 80;
-            this.Date.Name = "Date";
-            // 
-            // Time
-            // 
-            this.Time.DataPropertyName = "Time";
-            this.Time.FillWeight = 80F;
-            this.Time.HeaderText = "Time";
-            this.Time.MinimumWidth = 80;
-            this.Time.Name = "Time";
-            // 
-            // Judge
-            // 
-            this.Judge.DataPropertyName = "Judge";
-            this.Judge.FillWeight = 80F;
-            this.Judge.HeaderText = "Judge";
-            this.Judge.MinimumWidth = 80;
-            this.Judge.Name = "Judge";
-            // 
-            // TotalProcessed
-            // 
-            this.TotalProcessed.DataPropertyName = "TotalProcessed";
-            this.TotalProcessed.FillWeight = 120F;
-            this.TotalProcessed.HeaderText = "Total Processed";
-            this.TotalProcessed.MinimumWidth = 100;
-            this.TotalProcessed.Name = "TotalProcessed";
-            this.TotalProcessed.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // TotalPASS
-            // 
-            this.TotalPASS.DataPropertyName = "TotalPASS";
-            this.TotalPASS.FillWeight = 120F;
-            this.TotalPASS.HeaderText = "Total PASS";
-            this.TotalPASS.MinimumWidth = 100;
-            this.TotalPASS.Name = "TotalPASS";
-            this.TotalPASS.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // TotalFAIL
-            // 
-            this.TotalFAIL.DataPropertyName = "TotalFAIL";
-            this.TotalFAIL.FillWeight = 120F;
-            this.TotalFAIL.HeaderText = "Total FAIL";
-            this.TotalFAIL.MinimumWidth = 100;
-            this.TotalFAIL.Name = "TotalFAIL";
-            this.TotalFAIL.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.txtWeightMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightMin.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.txtWeightMin.Location = new System.Drawing.Point(814, 52);
+            this.txtWeightMin.Name = "txtWeightMin";
+            this.txtWeightMin.Size = new System.Drawing.Size(80, 26);
+            this.txtWeightMin.TabIndex = 90;
+            this.txtWeightMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // frmMain
             // 
@@ -2440,8 +2433,6 @@ namespace Diameter_Checker
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMax)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -2635,8 +2626,8 @@ namespace Diameter_Checker
             this.txtA1MaximumOffset.Text = null;
             this.txtA2MinimumOffset.Text = null;
             this.txtA2MaximumOffset.Text = null;
-            this.numWeightMax.Value = 0;
-            this.numWeightMin.Value = 0;
+            this.txtWeightMax.Text = null;
+            this.txtWeightMin.Text = null;
 
             try
             {
@@ -2661,10 +2652,8 @@ namespace Diameter_Checker
                     this.txtA1MaximumOffset.Text = dt["A1MaximumOffset"].ToString().Trim();
                     this.txtA2MinimumOffset.Text = dt["A2MinimumOffset"].ToString().Trim();
                     this.txtA2MaximumOffset.Text = dt["A2MaximumOffset"].ToString().Trim();
-                    decimal maxWeight = decimal.Parse(Communication.maxWeight);
-                    this.numWeightMax.Value = maxWeight;
-                    decimal minWeight = decimal.Parse(Communication.minWeight);
-                    this.numWeightMin.Value = minWeight;
+                    this.txtWeightMax.Text = dt["maxWeight"].ToString().Trim();
+                    this.txtWeightMin.Text = dt["minWeight"].ToString().Trim();
                 }
                 con.Close();
             }
@@ -2726,6 +2715,7 @@ namespace Diameter_Checker
 
         public void SetText2(string text)
         {
+            string weightResult;
             if (base.InvokeRequired)
             {
                 try
@@ -2741,36 +2731,33 @@ namespace Diameter_Checker
             {
                 if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+")-11;
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
                     if (this.charNumberOfFirstString2 <= 0)
                     {
                         this.charNumberOfFirstString2 = 0;
                     }
-                    //else if(this.charNumberOfFirstString2 < 8)
-                    //{
-                    //    //this.charNumberOfFirstString2 += 2;
-                    //    this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
-                    //}
                     else
                     {
-                        //this.charNumberOfFirstString2 -= 9;
                         this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
                     }
                     if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
                         Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
-                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(11, 8) == " ST,GS,+")
+                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
-                            this.txtWeight.Text = Communication.serialData2.Substring(0,11).Trim();
+                            Communication.Weight = weightResult  = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
+                            //weightResult = weightResult.Replace(',', '.');
                             Communication.receivedWeightFlg = true;
-                            string s = this.txtWeight.Text.Trim();
-                            bool isKg = s.ToUpper().Contains("KG");
-                            decimal weight = decimal.Parse(string.Concat(s?.Where(c => char.IsNumber(c) || c == '.') ?? ""));
+                            //s = s.Remove(s.Length - 1);
+                            bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
+                            float weight = float.Parse(weightResult.Replace("g", "").Trim());
+                            //parseResult = decimal.TryParse(s.Trim(), out decimal weight);
                             weight = isKg ? weight * 1000 : weight;
-                            Communication.Weight = this.txtWeight.Text.Trim();
-                            decimal minWeight = decimal.Parse(Communication.minWeight);
-                            decimal maxWeight = decimal.Parse(Communication.maxWeight);
-                            if( weight < minWeight || weight > maxWeight)
+                            float minWeight = float.Parse(txtWeightMin.Text);
+                            float maxWeight = float.Parse(txtWeightMax.Text);
+                            //string format = string.Format("weight = {0}, min weight = {1}, max weight = {2}", weight.ToString(), minWeight.ToString(), maxWeight.ToString());
+                            //MessageBox.Show(format);
+                            if (weight < minWeight || weight > maxWeight)
                             {
                                 this.txtWeightResult.ForeColor = Color.Red;
                                 this.txtWeightResult.Text = "NG";
@@ -3154,6 +3141,10 @@ namespace Diameter_Checker
                     this.btnJudge.ForeColor = Color.Red;
                     Communication.totalFAIL++;
                     this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
+                    if (this.chkStopScan.Checked)
+                    {
+                        stopWorking();
+                    }
                 }
                 else
                 {
@@ -3164,13 +3155,7 @@ namespace Diameter_Checker
                     Communication.cntProductInSet++;
                     if (Communication.cntProductInSet >= this.numProductInSet.Value)
                     {
-                        this.btnStart.Text = "Start";
-                        this.btnStart.ForeColor = Color.Teal;
-                        this.txtSystemMessage.Text = "STOPPED!";
-                        this.numProductInSet.Enabled = true;
-                        Communication.start = false;
-                        Communication.stop = true;
-                        Communication.enableReceiveData = false;
+                        stopWorking();
                     }
                 }
                 Communication.A1Result = this.txtA1Result.Text;
@@ -3195,6 +3180,17 @@ namespace Diameter_Checker
             }
 
         }
+
+        private void stopWorking()
+        {
+            this.btnStart.Text = "Start";
+            this.btnStart.ForeColor = Color.Teal;
+            this.txtSystemMessage.Text = "STOPPED!";
+            this.numProductInSet.Enabled = true;
+            Communication.start = false;
+            Communication.stop = true;
+            Communication.enableReceiveData = false;
+        } 
 
         private void tmrEnableReadA1Data_Tick(object sender, EventArgs e)
         {
