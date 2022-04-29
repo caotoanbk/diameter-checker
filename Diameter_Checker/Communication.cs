@@ -9,204 +9,137 @@ namespace Diameter_Checker
     {
         public static int test;
         public static int test2;
-
         public static int charNumberOfCom_data;
         public static int charNumberOfCom_data2;
-
         public static int counter;
-
         public static int timer;
         public static int timer2;
-
         public static bool enableReceiveData;
-
         public static bool enableReadData;
-
         public static bool AutoReconnect;
         public static bool AutoReconnect2;
-
         public static bool start;
-
         public static bool stop;
-
         public static bool enableConnectToControlBox;
-
         public static bool refreshDataGridView;
-
         public static bool enableClearData;
-
         public static string comPort;
-
         public static string baudrate;
-
         public static string comPort2;
-
         public static string baudrate2;
-
         public static string serialData;
         public static string serialData2;
-
         public static int totalPASS;
-
         public static int cntProductInSet;
-
         public static int totalFAIL;
-
         public static int totalProcessed;
-
         public static string ID;
-
         public static string model;
-
         public static string Date;
-
         public static string Time;
-
         public static string Judge;
-
         public static string A1MeasuredValue;
-
         public static string A1MaximumValue;
-
         public static string A1MinimumValue;
-
         public static string A1Result;
-
         public static bool A1EnableSave;
-
         public static string A2MeasuredValue;
-
         public static string A2MaximumValue;
-
         public static string A2MinimumValue;
-
         public static string A2Result;
-
         public static bool A2EnableSave;
-
         public static bool A1enableStopTest;
-
         public static bool A2enableStopTest;
-
         public static bool A1RecevingData;
-
         public static bool A2RecevingData;
-
         public static string A1Average;
-
         public static double A1SD;
         public static string Weight;
-
         public static string A1PP;
-
         public static string A1PPK;
-
         public static double A1PPU;
-
         public static double A1PPL;
-
         public static string A2Average;
-
         public static double A2SD;
-
         public static string A2PP;
-
         public static string A2PPK;
-
         public static double A2PPU;
-
         public static double A2PPL;
-
         public static string loginUser;
-
-        public static string processorIDAdmin;
-
-        public static string processorID;
-
+        public static string processorID1;
+        public static string processorID2;
+        public static string processorID3;
         public static bool A1Detected;
-
         public static bool A2Detected;
-
         public static string A1DetectionLevel;
-
         public static string A2DetectionLevel;
-
         public static string A1MaximumOffset;
-
         public static string A1MinimumOffset;
-
         public static string A2MaximumOffset;
-
         public static string A2MinimumOffset;
         public static string maxWeight;
         public static string minWeight;
-
         public static float detectionOffset;
-
         public static bool closeComport;
-
         public static bool subformIsOpen;
-
         public static SerialPort serialport;
         public static SerialPort serialport2;
-
         public static SqlConnection connect;
-
         public static string con_string;
-
         public static bool receivedQrCodeFlg;
         public static bool receivedWeightFlg;
 
         static Communication()
         {
-            Communication.test = 0;
-            Communication.test2 = 0;
-            Communication.charNumberOfCom_data = 27;
-            Communication.charNumberOfCom_data2 = 19;
-            Communication.counter = 0;
-            Communication.timer = 0;
-            Communication.timer2 = 0;
-            Communication.enableReceiveData = true;
-            Communication.enableReadData = false;
-            Communication.AutoReconnect = true;
-            Communication.AutoReconnect2 = true;
-            Communication.start = false;
-            Communication.stop = true;
-            Communication.enableConnectToControlBox = false;
-            Communication.refreshDataGridView = false;
-            Communication.enableClearData = false;
-            Communication.A1MeasuredValue = null;
-            Communication.A1MaximumValue = null;
-            Communication.A1MinimumValue = null;
-            Communication.A1EnableSave = false;
-            Communication.A2MeasuredValue = null;
-            Communication.A2MaximumValue = null;
-            Communication.A2MinimumValue = null;
-            Communication.A2EnableSave = false;
-            Communication.A1enableStopTest = false;
-            Communication.A2enableStopTest = false;
-            Communication.A1RecevingData = false;
-            Communication.A2RecevingData = false;
-            Communication.loginUser = "Admin";
-            Communication.processorIDAdmin = "BFEBFBFF000306C3";
-            Communication.processorID = "BFEBFBFF000906E9";
-            Communication.A1Detected = false;
-            Communication.A2Detected = false;
-            Communication.A1DetectionLevel = "10";
-            Communication.A2DetectionLevel = "10";
-            Communication.A1MaximumOffset = " ";
-            Communication.A1MinimumOffset = " ";
-            Communication.A2MaximumOffset = " ";
-            Communication.A2MinimumOffset = " ";
-            Communication.detectionOffset = 1f;
-            Communication.closeComport = false;
-            Communication.subformIsOpen = false;
-            Communication.serialport = new SerialPort();
-            Communication.con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
-            Communication.serialport2 = new SerialPort();
-            Communication.cntProductInSet = 0;
-            Communication.receivedWeightFlg = false;
-            Communication.receivedQrCodeFlg = false;
+            test = 0;
+            test2 = 0;
+            charNumberOfCom_data = 27;
+            charNumberOfCom_data2 = 19;
+            counter = 0;
+            timer = 0;
+            timer2 = 0;
+            enableReceiveData = true;
+            enableReadData = false;
+            AutoReconnect = true;
+            AutoReconnect2 = true;
+            start = false;
+            stop = true;
+            enableConnectToControlBox = false;
+            refreshDataGridView = false;
+            enableClearData = false;
+            A1MeasuredValue = null;
+            A1MaximumValue = null;
+            A1MinimumValue = null;
+            A1EnableSave = false;
+            A2MeasuredValue = null;
+            A2MaximumValue = null;
+            A2MinimumValue = null;
+            A2EnableSave = false;
+            A1enableStopTest = false;
+            A2enableStopTest = false;
+            A1RecevingData = false;
+            A2RecevingData = false;
+            loginUser = "Admin";
+            processorID1 = "BFEBFBFF000306C3";
+            processorID2 = "BFEBFBFF000906E9";
+            processorID3 = "BFEBFBFF000A0653";
+            A1Detected = false;
+            A2Detected = false;
+            A1DetectionLevel = "10";
+            A2DetectionLevel = "10";
+            A1MaximumOffset = " ";
+            A1MinimumOffset = " ";
+            A2MaximumOffset = " ";
+            A2MinimumOffset = " ";
+            detectionOffset = 1f;
+            closeComport = false;
+            subformIsOpen = false;
+            serialport = new SerialPort();
+            con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            serialport2 = new SerialPort();
+            cntProductInSet = 0;
+            receivedWeightFlg = false;
+            receivedQrCodeFlg = false;
         }
 
         public Communication()
@@ -215,18 +148,18 @@ namespace Diameter_Checker
 
         public void clearReceiveData()
         {
-            Communication.A1MeasuredValue = null;
-            Communication.A1Result = null;
-            Communication.A2MeasuredValue = null;
-            Communication.A2Result = null;
+            A1MeasuredValue = null;
+            A1Result = null;
+            A2MeasuredValue = null;
+            A2Result = null;
         }
 
         public static bool connectDatabase()
         {
             try
             {
-                Communication.connect = new SqlConnection(Communication.con_string);
-                Communication.connect.Open();
+                connect = new SqlConnection(con_string);
+                connect.Open();
             }
             catch
             {
@@ -237,43 +170,42 @@ namespace Diameter_Checker
 
         public static bool ConnectSerial(string comportName_, string baudrate)
         {
-            Communication.serialport.BaudRate = Convert.ToInt32(baudrate);
-            Communication.serialport.Parity = Parity.None;
-            Communication.serialport.StopBits = StopBits.One;
-            Communication.serialport.DataBits = 8;
-            Communication.serialport.Handshake = Handshake.None;
-            Communication.serialport.RtsEnable = true;
-            Communication.serialport.PortName = comportName_;
-            Communication.serialport.Open();
-            return (!Communication.serialport.IsOpen ? false : true);
+            serialport.BaudRate = Convert.ToInt32(baudrate);
+            serialport.Parity = Parity.None;
+            serialport.StopBits = StopBits.One;
+            serialport.DataBits = 8;
+            serialport.Handshake = Handshake.None;
+            serialport.RtsEnable = true;
+            serialport.PortName = comportName_;
+            serialport.Open();
+            return (serialport.IsOpen);
         }
 
         public static bool ConnectSerial2(string comportName_, string baudrate)
         {
-            Communication.serialport2.BaudRate = Convert.ToInt32(baudrate);
-            Communication.serialport2.Parity = Parity.None;
-            Communication.serialport2.StopBits = StopBits.One;
-            Communication.serialport2.DataBits = 8;
-            Communication.serialport2.Handshake = Handshake.None;
-            Communication.serialport2.RtsEnable = true;
-            Communication.serialport2.PortName = comportName_;
-            Communication.serialport2.Open();
-            return (!Communication.serialport2.IsOpen ? false : true);
+            serialport2.BaudRate = Convert.ToInt32(baudrate);
+            serialport2.Parity = Parity.None;
+            serialport2.StopBits = StopBits.One;
+            serialport2.DataBits = 8;
+            serialport2.Handshake = Handshake.None;
+            serialport2.RtsEnable = true;
+            serialport2.PortName = comportName_;
+            serialport2.Open();
+            return (serialport2.IsOpen);
         }
 
         public static bool load_ComSetting()
         {
-            Communication.connectDatabase();
-            SqlDataReader myReader = null;
-            myReader = (new SqlCommand("SELECT * FROM ComportSetting", Communication.connect)).ExecuteReader();
+            connectDatabase();
+            SqlDataReader myReader = new SqlCommand("SELECT * FROM ComportSetting", connect).ExecuteReader();
             while (myReader.Read())
             {
-                Communication.comPort = myReader["comPort"].ToString();
-                Communication.baudrate = myReader["baudrate"].ToString();
-                Communication.comPort2 = myReader["comPort2"].ToString();
-                Communication.baudrate2 = myReader["baudrate2"].ToString();
+                comPort = myReader["comPort"].ToString();
+                baudrate = myReader["baudrate"].ToString();
+                comPort2 = myReader["comPort2"].ToString();
+                baudrate2 = myReader["baudrate2"].ToString();
             }
-            Communication.connect.Close();
+            connect.Close();
             return true;
         }
     }

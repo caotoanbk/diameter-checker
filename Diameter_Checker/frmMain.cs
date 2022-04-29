@@ -19,193 +19,101 @@ namespace Diameter_Checker
     {
         private string InputData = string.Empty;
         private string InputData2 = string.Empty;
-
         public static string strgetProcessorID;
-
         private string fistSubString;
         private string fistSubString2;
-
         private int charNumberOfFirstString;
         private int charNumberOfFirstString2;
-
         private string lastSubString;
         private string lastSubString2;
-
         private int charNumberOfLastString;
         private int charNumberOfLastString2;
-
         private static int i;
-
         private static int j;
-
         private static int rowIndex;
-
         private IContainer components = null;
-
         private Panel panel3;
-
         private Panel panel6;
-
         private MenuStrip menuStrip1;
-
         private ToolStripMenuItem MenuConfig;
-
         private ToolStripMenuItem communicatiomToolStripMenuItem;
-
         private Label lblStatus;
-
         private Panel panel2;
-
         private Label lblConnectStatus;
-
         private Panel panel1;
-
         private Timer tmrConnectionStatus;
-
         private Panel panelResult;
-
         private Button btnSelect;
-
         private Button btnClear;
-
         private Button btnClearCurrentTest;
-
         private Button btnDeleteTestData;
-
         private Button btnEdit;
-
         private Button btnStart;
-
         private Panel panel5;
-
         private Label label2;
-
         private ComboBox cmbModel;
-
         private GroupBox groupBox1;
-
         private Label label4;
-
         private Label label7;
-
         private GroupBox groupBox2;
-
         private Label label10;
-
         private Label label11;
-
         private TextBox lblSystemMessage;
-
         private GroupBox groupBox4;
-
         private TextBox txtTotalProcessed;
-
         private Label label16;
-
         private TextBox txtTotalFAIL;
-
         private TextBox txtTotalPass;
-
         private Label label17;
-
         private Label label18;
-
         private GroupBox groupBox3;
-
         private Button btnJudge;
-
         private TextBox txtA2MinimumValue;
-
         private TextBox txtA2MaximumValue;
-
         private Label label13;
-
         private Panel panel4;
-
         private Label label1;
-
         private GroupBox groupBox5;
-
         private TextBox txtA1PPK;
-
         private Label label15;
-
         private TextBox txtA1PP;
-
         private TextBox txtA1DetectionLevel;
-
         private TextBox txtA2DetectionLevel;
-
         private TextBox txtA1MinimumValue;
-
         private TextBox txtA1MaximumValue;
-
         private TextBox txtA1Result;
-
         private Label label3;
-
         private Label label5;
-
         private TextBox txtA2MinimumOffset;
-
         private TextBox txtA1MinimumOffset;
-
         private Label label6;
-
         private Label label8;
-
         private TextBox txtA2MaximumOffset;
-
         private TextBox txtA1MaximumOffset;
-
         private Label label9;
-
         private Label label12;
-
         private TextBox txtA2PPK;
-
         private Label label14;
-
         private TextBox txtA2PP;
-
         private Label label19;
-
         private TextBox txtA2Result;
-
         private Timer tmrDisplayData;
-
         private Button button2;
-
         private TextBox txtSystemMessage;
-
         private Timer tmrDateTime;
-
         private DataGridView dataGridView1;
-
         private Chart chartA2;
-
         private Chart chartA1;
-
         private Timer tmrRefreshChart;
-
         private GroupBox groupBox7;
-
         private CheckBox chkStopScan;
-
         private Timer tmrA1DetectRemoveObject;
-
         private Timer tmrA2DetectRemoveObject;
-
         private Timer tmrEnableReadA1Data;
-
         private Timer tmrEnableReadA2Data;
-
         private ComboBox cmbTimeToEnableRead;
-
         private Label label20;
-
         private Timer tmrRefreshDataGridView;
-
         private SerialPort serialPort2;
         private GroupBox groupBox8;
         private Label label22;
@@ -237,10 +145,10 @@ namespace Diameter_Checker
         private Label label25;
         private Label label26;
         private Label lblDateTime;
-        private NumericUpDown numWeightMin;
-        private NumericUpDown numWeightMax;
         private TextBox txtWeightResult;
         private GroupBox groupBox6;
+        private TextBox txtWeightMin;
+        private TextBox txtWeightMax;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -339,11 +247,11 @@ namespace Diameter_Checker
         {
             if (MessageBox.Show("This action is only accepted with the engineer!", "WARNING!", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if ((this.cmbModel.Text == null || this.txtA1DetectionLevel.Text.Length != 6 || this.txtA2DetectionLevel.Text.Length != 6 || this.txtA1MinimumOffset.Text.Length != 6 || this.txtA1MaximumOffset.Text.Length != 6 || this.txtA2MinimumOffset.Text.Length != 6 || this.numWeightMax.Value <=0 || this.numWeightMin.Value <=0 ? false : this.txtA2MaximumOffset.Text.Length == 6))
+                if ((this.cmbModel.Text == null || this.txtA1DetectionLevel.Text.Length != 6 || this.txtA2DetectionLevel.Text.Length != 6 || this.txtA1MinimumOffset.Text.Length != 6 || this.txtA1MaximumOffset.Text.Length != 6 || this.txtA2MinimumOffset.Text.Length != 6 || string.IsNullOrEmpty(txtWeightMax.Text) || string.IsNullOrEmpty(txtWeightMin.Text) ? false : this.txtA2MaximumOffset.Text.Length == 6))
                 {
                     SqlConnection con = new SqlConnection(Communication.con_string);
                     con.Open();
-                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','",this.numWeightMax.Value.ToString(),"','", this.numWeightMin.Value.ToString(),"')" });
+                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','",this.txtWeightMax.Text,"','", this.txtWeightMin.Text,"')" });
                     SqlCommand cmd_add = new SqlCommand()
                     {
                         Connection = con,
@@ -851,10 +759,10 @@ namespace Diameter_Checker
                 if (enumerator.MoveNext())
                 {
                     ManagementObject managObj = (ManagementObject)enumerator.Current;
-                    frmMain.strgetProcessorID = managObj.Properties["processorID"].Value.ToString();
+                    strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            if ((frmMain.strgetProcessorID.Trim() == Communication.processorID.Trim() ? false : frmMain.strgetProcessorID.Trim() != Communication.processorIDAdmin.Trim()))
+            if ( strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim() )
             {
                 MessageBox.Show("System Error!", "WARNING!");
                 base.Dispose();
@@ -953,28 +861,27 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label24 = new System.Windows.Forms.Label();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.txtWeightResult = new System.Windows.Forms.TextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.txtWeight = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
-            this.numProductInSet = new System.Windows.Forms.NumericUpDown();
-            this.btnCntProduct = new System.Windows.Forms.Button();
-            this.label22 = new System.Windows.Forms.Label();
             this.txtQrCode = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -987,9 +894,12 @@ namespace Diameter_Checker
             this.label15 = new System.Windows.Forms.Label();
             this.txtA1PP = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.btnCntProduct = new System.Windows.Forms.Button();
+            this.numProductInSet = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chartA1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartA2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label22 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.txtTotalProcessed = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -1056,6 +966,7 @@ namespace Diameter_Checker
             this.lblConnectStatus = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.lblDateTime = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tmrConnectionStatus = new System.Windows.Forms.Timer(this.components);
             this.panelResult = new System.Windows.Forms.Panel();
@@ -1079,17 +990,14 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.lblDateTime = new System.Windows.Forms.Label();
-            this.numWeightMax = new System.Windows.Forms.NumericUpDown();
-            this.numWeightMin = new System.Windows.Forms.NumericUpDown();
-            this.txtWeightResult = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.txtWeightMax = new System.Windows.Forms.TextBox();
+            this.txtWeightMin = new System.Windows.Forms.TextBox();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).BeginInit();
@@ -1103,8 +1011,6 @@ namespace Diameter_Checker
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelResult.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMin)).BeginInit();
             this.SuspendLayout();
             // 
             // panel3
@@ -1138,6 +1044,16 @@ namespace Diameter_Checker
             this.panel6.Size = new System.Drawing.Size(1908, 771);
             this.panel6.TabIndex = 2;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label24.Location = new System.Drawing.Point(1543, 153);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(53, 16);
+            this.label24.TabIndex = 8;
+            this.label24.Text = "Current:";
+            // 
             // groupBox8
             // 
             this.groupBox8.Controls.Add(this.txtWeightResult);
@@ -1153,15 +1069,24 @@ namespace Diameter_Checker
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "QR code && Weight";
             // 
-            // label24
+            // txtWeightResult
             // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label24.Location = new System.Drawing.Point(1543, 153);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(53, 16);
-            this.label24.TabIndex = 8;
-            this.label24.Text = "Current:";
+            this.txtWeightResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 32.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightResult.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.txtWeightResult.Location = new System.Drawing.Point(204, 22);
+            this.txtWeightResult.Name = "txtWeightResult";
+            this.txtWeightResult.Size = new System.Drawing.Size(82, 56);
+            this.txtWeightResult.TabIndex = 32;
+            this.txtWeightResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Location = new System.Drawing.Point(7, 95);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(200, 100);
+            this.groupBox6.TabIndex = 3;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "groupBox6";
             // 
             // txtWeight
             // 
@@ -1177,45 +1102,9 @@ namespace Diameter_Checker
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label23.Location = new System.Drawing.Point(5, 55);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(69, 16);
+            this.label23.Size = new System.Drawing.Size(53, 16);
             this.label23.TabIndex = 6;
-            this.label23.Text = "Weight(g):";
-            // 
-            // numProductInSet
-            // 
-            this.numProductInSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.numProductInSet.Location = new System.Drawing.Point(1620, 106);
-            this.numProductInSet.Name = "numProductInSet";
-            this.numProductInSet.Size = new System.Drawing.Size(102, 26);
-            this.numProductInSet.TabIndex = 5;
-            this.numProductInSet.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // btnCntProduct
-            // 
-            this.btnCntProduct.BackColor = System.Drawing.Color.White;
-            this.btnCntProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnCntProduct.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.btnCntProduct.Location = new System.Drawing.Point(1619, 138);
-            this.btnCntProduct.Name = "btnCntProduct";
-            this.btnCntProduct.Size = new System.Drawing.Size(105, 41);
-            this.btnCntProduct.TabIndex = 4;
-            this.btnCntProduct.Text = "0";
-            this.btnCntProduct.UseCompatibleTextRendering = true;
-            this.btnCntProduct.UseVisualStyleBackColor = false;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label22.Location = new System.Drawing.Point(1540, 111);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(74, 16);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Số SP /set:";
+            this.label23.Text = "Weight:";
             // 
             // txtQrCode
             // 
@@ -1353,6 +1242,32 @@ namespace Diameter_Checker
             this.label13.Text = "PP";
             this.label13.Click += new System.EventHandler(this.label13_Click);
             // 
+            // btnCntProduct
+            // 
+            this.btnCntProduct.BackColor = System.Drawing.Color.White;
+            this.btnCntProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnCntProduct.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.btnCntProduct.Location = new System.Drawing.Point(1619, 138);
+            this.btnCntProduct.Name = "btnCntProduct";
+            this.btnCntProduct.Size = new System.Drawing.Size(105, 41);
+            this.btnCntProduct.TabIndex = 4;
+            this.btnCntProduct.Text = "0";
+            this.btnCntProduct.UseCompatibleTextRendering = true;
+            this.btnCntProduct.UseVisualStyleBackColor = false;
+            // 
+            // numProductInSet
+            // 
+            this.numProductInSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numProductInSet.Location = new System.Drawing.Point(1620, 106);
+            this.numProductInSet.Name = "numProductInSet";
+            this.numProductInSet.Size = new System.Drawing.Size(102, 26);
+            this.numProductInSet.TabIndex = 5;
+            this.numProductInSet.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.chartA1);
@@ -1368,59 +1283,69 @@ namespace Diameter_Checker
             // 
             // chartA1
             // 
-            chartArea9.AxisY.Title = "A1 Air Pressure";
-            chartArea9.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea9.Name = "ChartArea1";
-            chartArea9.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea9);
-            legend9.DockedToChartArea = "ChartArea1";
-            legend9.Enabled = false;
-            legend9.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend9.IsTextAutoFit = false;
-            legend9.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend9.Name = "Legend1";
-            this.chartA1.Legends.Add(legend9);
+            chartArea1.AxisY.Title = "A1 Air Pressure";
+            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea1);
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Enabled = false;
+            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend1.IsTextAutoFit = false;
+            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend1.Name = "Legend1";
+            this.chartA1.Legends.Add(legend1);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series9.BorderWidth = 2;
-            series9.ChartArea = "ChartArea1";
-            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series9.Legend = "Legend1";
-            series9.Name = "A2";
-            this.chartA1.Series.Add(series9);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series1.Legend = "Legend1";
+            series1.Name = "A2";
+            this.chartA1.Series.Add(series1);
             this.chartA1.Size = new System.Drawing.Size(753, 314);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea10.AxisY.Title = "A2 Air Pressure";
-            chartArea10.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea10.Name = "ChartArea1";
-            chartArea10.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea10);
-            legend10.DockedToChartArea = "ChartArea1";
-            legend10.Enabled = false;
-            legend10.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend10.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend10.Name = "Legend1";
-            this.chartA2.Legends.Add(legend10);
+            chartArea2.AxisY.Title = "A2 Air Pressure";
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea2);
+            legend2.DockedToChartArea = "ChartArea1";
+            legend2.Enabled = false;
+            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend2.Name = "Legend1";
+            this.chartA2.Legends.Add(legend2);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series10.BorderWidth = 2;
-            series10.ChartArea = "ChartArea1";
-            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series10.IsXValueIndexed = true;
-            series10.Legend = "Legend1";
-            series10.Name = "A2";
-            this.chartA2.Series.Add(series10);
+            series2.BorderWidth = 2;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "A2";
+            this.chartA2.Series.Add(series2);
             this.chartA2.Size = new System.Drawing.Size(774, 314);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label22.Location = new System.Drawing.Point(1540, 111);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(74, 16);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Số SP /set:";
             // 
             // groupBox4
             // 
@@ -1515,25 +1440,25 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle30.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
@@ -1552,31 +1477,31 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle33.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle33.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle33.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle33.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle33;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dataGridView1.Location = new System.Drawing.Point(4, 449);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle34.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle34.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle34.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle34;
-            dataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle35.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle35.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle35;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView1.Size = new System.Drawing.Size(1899, 401);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
@@ -1586,11 +1511,11 @@ namespace Diameter_Checker
             // 
             this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle31.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle31.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle31;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
             this.ID.FillWeight = 120F;
             this.ID.HeaderText = "ID";
             this.ID.MinimumWidth = 100;
@@ -1601,11 +1526,11 @@ namespace Diameter_Checker
             // 
             this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.model.DataPropertyName = "model";
-            dataGridViewCellStyle32.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle32.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle32.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle32.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle32;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle4;
             this.model.FillWeight = 120F;
             this.model.HeaderText = "Model";
             this.model.MinimumWidth = 100;
@@ -1850,8 +1775,8 @@ namespace Diameter_Checker
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.numWeightMin);
-            this.groupBox1.Controls.Add(this.numWeightMax);
+            this.groupBox1.Controls.Add(this.txtWeightMin);
+            this.groupBox1.Controls.Add(this.txtWeightMax);
             this.groupBox1.Controls.Add(this.label25);
             this.groupBox1.Controls.Add(this.label26);
             this.groupBox1.Controls.Add(this.cmbTimeToEnableRead);
@@ -2177,6 +2102,16 @@ namespace Diameter_Checker
             this.panel4.Size = new System.Drawing.Size(1216, 37);
             this.panel4.TabIndex = 59;
             // 
+            // lblDateTime
+            // 
+            this.lblDateTime.AutoSize = true;
+            this.lblDateTime.ForeColor = System.Drawing.Color.GhostWhite;
+            this.lblDateTime.Location = new System.Drawing.Point(282, 13);
+            this.lblDateTime.Name = "lblDateTime";
+            this.lblDateTime.Size = new System.Drawing.Size(41, 13);
+            this.lblDateTime.TabIndex = 59;
+            this.lblDateTime.Text = "label27";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -2388,60 +2323,25 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // lblDateTime
+            // txtWeightMax
             // 
-            this.lblDateTime.AutoSize = true;
-            this.lblDateTime.ForeColor = System.Drawing.Color.GhostWhite;
-            this.lblDateTime.Location = new System.Drawing.Point(282, 13);
-            this.lblDateTime.Name = "lblDateTime";
-            this.lblDateTime.Size = new System.Drawing.Size(41, 13);
-            this.lblDateTime.TabIndex = 59;
-            this.lblDateTime.Text = "label27";
+            this.txtWeightMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightMax.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.txtWeightMax.Location = new System.Drawing.Point(816, 22);
+            this.txtWeightMax.Name = "txtWeightMax";
+            this.txtWeightMax.Size = new System.Drawing.Size(80, 26);
+            this.txtWeightMax.TabIndex = 87;
+            this.txtWeightMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // numWeightMax
+            // txtWeightMin
             // 
-            this.numWeightMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.numWeightMax.Location = new System.Drawing.Point(814, 22);
-            this.numWeightMax.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.numWeightMax.Name = "numWeightMax";
-            this.numWeightMax.Size = new System.Drawing.Size(95, 26);
-            this.numWeightMax.TabIndex = 87;
-            // 
-            // numWeightMin
-            // 
-            this.numWeightMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.numWeightMin.Location = new System.Drawing.Point(814, 52);
-            this.numWeightMin.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-            this.numWeightMin.Name = "numWeightMin";
-            this.numWeightMin.Size = new System.Drawing.Size(95, 26);
-            this.numWeightMin.TabIndex = 88;
-            // 
-            // txtWeightResult
-            // 
-            this.txtWeightResult.Font = new System.Drawing.Font("Microsoft Sans Serif", 32.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtWeightResult.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.txtWeightResult.Location = new System.Drawing.Point(204, 22);
-            this.txtWeightResult.Name = "txtWeightResult";
-            this.txtWeightResult.Size = new System.Drawing.Size(82, 56);
-            this.txtWeightResult.TabIndex = 32;
-            this.txtWeightResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Location = new System.Drawing.Point(7, 95);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(200, 100);
-            this.groupBox6.TabIndex = 3;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "groupBox6";
+            this.txtWeightMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightMin.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.txtWeightMin.Location = new System.Drawing.Point(816, 52);
+            this.txtWeightMin.Name = "txtWeightMin";
+            this.txtWeightMin.Size = new System.Drawing.Size(80, 26);
+            this.txtWeightMin.TabIndex = 88;
+            this.txtWeightMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // frmMain
             // 
@@ -2460,11 +2360,11 @@ namespace Diameter_Checker
             this.panel6.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).EndInit();
@@ -2485,8 +2385,6 @@ namespace Diameter_Checker
             this.panel4.PerformLayout();
             this.panelResult.ResumeLayout(false);
             this.panelResult.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numWeightMin)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2671,8 +2569,8 @@ namespace Diameter_Checker
             this.txtA1MaximumOffset.Text = null;
             this.txtA2MinimumOffset.Text = null;
             this.txtA2MaximumOffset.Text = null;
-            this.numWeightMax.Value = 0;
-            this.numWeightMin.Value = 0;
+            this.txtWeightMax.Text = null;
+            this.txtWeightMin.Text = null;
 
             try
             {
@@ -2697,10 +2595,8 @@ namespace Diameter_Checker
                     this.txtA1MaximumOffset.Text = dt["A1MaximumOffset"].ToString().Trim();
                     this.txtA2MinimumOffset.Text = dt["A2MinimumOffset"].ToString().Trim();
                     this.txtA2MaximumOffset.Text = dt["A2MaximumOffset"].ToString().Trim();
-                    decimal maxWeight = decimal.Parse(Communication.maxWeight);
-                    this.numWeightMax.Value = maxWeight;
-                    decimal minWeight = decimal.Parse(Communication.minWeight);
-                    this.numWeightMin.Value = minWeight;
+                    this.txtWeightMax.Text = dt["maxWeight"].ToString().Trim();
+                    this.txtWeightMin.Text = dt["minWeight"].ToString().Trim();
                 }
                 con.Close();
             }
@@ -2725,11 +2621,6 @@ namespace Diameter_Checker
             }
             else if (Communication.start)
             {
-                //if (string.IsNullOrWhiteSpace(this.txtQrCode.Text))
-                //{
-                //    this.txtSystemMessage.Text = "Chưa nhập QR code!";
-                //    return;
-                //}
                 if (this.InputData.Length >= Communication.charNumberOfCom_data)
                 {
                     this.charNumberOfFirstString = this.InputData.IndexOf("A1");
@@ -2767,6 +2658,8 @@ namespace Diameter_Checker
 
         public void SetText2(string text)
         {
+            string weightResult;
+            float weight;
             if (base.InvokeRequired)
             {
                 try
@@ -2782,34 +2675,27 @@ namespace Diameter_Checker
             {
                 if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+")-11;
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
                     if (this.charNumberOfFirstString2 <= 0)
                     {
                         this.charNumberOfFirstString2 = 0;
                     }
-                    //else if(this.charNumberOfFirstString2 < 8)
-                    //{
-                    //    //this.charNumberOfFirstString2 += 2;
-                    //    this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
-                    //}
                     else
                     {
-                        //this.charNumberOfFirstString2 -= 9;
                         this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
                     }
                     if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
                         Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
-                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(11, 8) == " ST,GS,+")
+                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
-                            this.txtWeight.Text = Communication.serialData2.Substring(0,11).Trim();
+                            weightResult = txtWeight.Text = Communication.serialData2.Substring(8,11).Trim();
+                            bool isKg = weightResult.ToUpper().Contains("KG");
                             Communication.receivedWeightFlg = true;
-                            string s = this.txtWeight.Text.Trim();
-                            bool isKg = s.ToUpper().Contains("KG");
-                            decimal weight = decimal.Parse(string.Concat(s?.Where(c => char.IsNumber(c) || c == '.') ?? ""));
+                            weight = float.Parse(weightResult.Replace("g", "").Replace(".", "").Trim())/10f;
                             weight = isKg ? weight * 1000 : weight;
-                            decimal minWeight = decimal.Parse(Communication.minWeight);
-                            decimal maxWeight = decimal.Parse(Communication.maxWeight);
+                            float minWeight = float.Parse(txtWeightMin.Text.Trim());
+                            float maxWeight = float.Parse(txtWeightMax.Text.Trim());
                             if( weight < minWeight || weight > maxWeight)
                             {
                                 this.txtWeightResult.ForeColor = Color.Red;
@@ -3197,6 +3083,10 @@ namespace Diameter_Checker
                     this.btnJudge.ForeColor = Color.Red;
                     Communication.totalFAIL++;
                     this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
+                    if (chkStopScan.Checked)
+                    {
+                        stopWorking();
+                    }
                 }
                 else
                 {
@@ -3207,13 +3097,7 @@ namespace Diameter_Checker
                     Communication.cntProductInSet++;
                     if (Communication.cntProductInSet >= this.numProductInSet.Value)
                     {
-                        this.btnStart.Text = "Start";
-                        this.btnStart.ForeColor = Color.Teal;
-                        this.txtSystemMessage.Text = "STOPPED!";
-                        this.numProductInSet.Enabled = true;
-                        Communication.start = false;
-                        Communication.stop = true;
-                        Communication.enableReceiveData = false;
+                        stopWorking();
                     }
                 }
                 Communication.A1Result = this.txtA1Result.Text;
@@ -3242,6 +3126,16 @@ namespace Diameter_Checker
 
         }
 
+        private void stopWorking()
+        {
+            this.btnStart.Text = "Start";
+            this.btnStart.ForeColor = Color.Teal;
+            this.txtSystemMessage.Text = "STOPPED!";
+            this.numProductInSet.Enabled = true;
+            Communication.start = false;
+            Communication.stop = true;
+            Communication.enableReceiveData = false;
+        }
         private void tmrEnableReadA1Data_Tick(object sender, EventArgs e)
         {
             this.tmrEnableReadA1Data.Enabled = false;
