@@ -2621,36 +2621,40 @@ namespace Diameter_Checker
             }
             else if (Communication.start)
             {
-                if (this.InputData.Length >= Communication.charNumberOfCom_data)
+                if (InputData.Length >= Communication.charNumberOfCom_data)
                 {
-                    this.charNumberOfFirstString = this.InputData.IndexOf("A1");
-                    if (this.charNumberOfFirstString <= 0)
+                    charNumberOfFirstString = InputData.IndexOf("A1");
+                    if (charNumberOfFirstString <= 0)
                     {
-                        this.charNumberOfFirstString = 0;
+                        charNumberOfFirstString = 0;
                     }
                     else
                     {
-                        this.fistSubString = this.InputData.Substring(0, this.charNumberOfFirstString);
+                        fistSubString = InputData.Substring(0, charNumberOfFirstString);
                     }
-                    if (this.InputData.Length >= this.charNumberOfFirstString + Communication.charNumberOfCom_data)
+                    if (InputData.Length >= charNumberOfFirstString + Communication.charNumberOfCom_data)
                     {
-                        Communication.serialData = this.InputData.Substring(this.charNumberOfFirstString, Communication.charNumberOfCom_data);
-                        if (Communication.serialData.Length != Communication.charNumberOfCom_data || !(Communication.serialData.Substring(0, 2) == "A1") || !(Communication.serialData.Substring(14, 2) == "A2") || !(Communication.serialData.Substring(11, 2) == "OK") && !(Communication.serialData.Substring(11, 2) == "NG"))
+                        Communication.serialData = InputData.Substring(charNumberOfFirstString, Communication.charNumberOfCom_data);
+                        if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
+                            !(Communication.serialData.Substring(0, 2) == "A1") || 
+                            !(Communication.serialData.Substring(14, 2) == "A2") || 
+                            !(Communication.serialData.Substring(11, 2) == "OK") && 
+                            !(Communication.serialData.Substring(11, 2) == "NG") )
                         {
                             flag = false;
                         }
                         else
                         {
-                            flag = (Communication.serialData.Substring(25, 2) == "OK" ? true : Communication.serialData.Substring(25, 2) == "NG");
+                            flag = Communication.serialData.Substring(25, 2) == "OK" || Communication.serialData.Substring(25, 2) == "NG";
                         }
                         if (flag)
                         {
                             Communication.enableReadData = true;
-                            this.tmrDisplayData.Enabled = true;
+                            tmrDisplayData.Enabled = true;
                         }
-                        this.charNumberOfLastString = this.InputData.Length - this.charNumberOfFirstString - Communication.charNumberOfCom_data;
-                        this.lastSubString = this.InputData.Substring(this.InputData.Length - this.charNumberOfLastString, this.charNumberOfLastString);
-                        this.InputData = string.Concat(this.fistSubString, this.lastSubString);
+                        charNumberOfLastString = InputData.Length - charNumberOfFirstString - Communication.charNumberOfCom_data;
+                        lastSubString = InputData.Substring(InputData.Length - charNumberOfLastString, charNumberOfLastString);
+                        InputData = string.Concat(fistSubString, lastSubString);
                     }
                 }
             }
@@ -2673,22 +2677,26 @@ namespace Diameter_Checker
             }
             else
             {
-                if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
+                if (InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
-                    if (this.charNumberOfFirstString2 <= 0)
+                    charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
+                    if (charNumberOfFirstString2 <= 0)
                     {
-                        this.charNumberOfFirstString2 = 0;
+                        charNumberOfFirstString2 = 0;
                     }
                     else
                     {
-                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                        fistSubString2 = InputData2.Substring(0, charNumberOfFirstString2);
                     }
-                    if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
+                    if (InputData2.Length >= charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
-                        Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
+                        Communication.serialData2 = InputData2.Substring(charNumberOfFirstString2, Communication.charNumberOfCom_data2);
                         if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
+                            if (!string.IsNullOrEmpty(btnJudge.Text))
+                            {
+                                ClearAllData();
+                            }
                             weightResult = txtWeight.Text = Communication.serialData2.Substring(8,11).Trim();
                             bool isKg = weightResult.ToUpper().Contains("KG");
                             Communication.receivedWeightFlg = true;
@@ -2698,20 +2706,18 @@ namespace Diameter_Checker
                             float maxWeight = float.Parse(txtWeightMax.Text.Trim());
                             if( weight < minWeight || weight > maxWeight)
                             {
-                                this.txtWeightResult.ForeColor = Color.Red;
-                                this.txtWeightResult.Text = "NG";
+                                txtWeightResult.ForeColor = Color.Red;
+                                txtWeightResult.Text = "NG";
                             }
                             else
                             {
-                                this.txtWeightResult.ForeColor = Color.ForestGreen;
-                                this.txtWeightResult.Text = "OK";
+                                txtWeightResult.ForeColor = Color.ForestGreen;
+                                txtWeightResult.Text = "OK";
                             }
-                            //CheckAndMakeDecision();
-                            //ClearAllData();
                         }
-                        this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
-                        this.lastSubString2 = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
-                        this.InputData2 = string.Concat(this.fistSubString2, this.lastSubString2);
+                        charNumberOfLastString2 = InputData2.Length - charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
+                        lastSubString2 = InputData2.Substring(InputData2.Length - charNumberOfLastString2, charNumberOfLastString2);
+                        InputData2 = string.Concat(fistSubString2, lastSubString2);
                     }
                 }
             }
@@ -2721,7 +2727,7 @@ namespace Diameter_Checker
         {
             if ((!Communication.A1EnableSave ? false : Communication.A2EnableSave))
             {
-                if ((this.txtA1Result.Text != "OK" ? true : this.txtA2Result.Text != "OK"))
+                if ((txtA1Result.Text != "OK" ? true : this.txtA2Result.Text != "OK"))
                 {
                     Communication.Judge = "FAIL";
                     this.btnJudge.ForeColor = Color.Red;
@@ -2731,7 +2737,7 @@ namespace Diameter_Checker
                 else
                 {
                     Communication.Judge = "PASS";
-                    this.btnJudge.ForeColor = Color.ForestGreen;
+                    btnJudge.ForeColor = Color.ForestGreen;
                     Communication.totalPASS++;
                     this.txtTotalPass.Text = Communication.totalPASS.ToString();
                 }
@@ -2782,22 +2788,22 @@ namespace Diameter_Checker
         {
             if (!Communication.serialport.IsOpen)
             {
-                this.lblConnectStatus.Text = "Not Connected";
-                this.lblConnectStatus.ForeColor = Color.Red;
+                lblConnectStatus.Text = "Not Connected";
+                lblConnectStatus.ForeColor = Color.Red;
             }
             else
             {
-                this.lblConnectStatus.Text = "Connected";
-                this.lblConnectStatus.ForeColor = Color.GreenYellow;
+                lblConnectStatus.Text = "Connected";
+                lblConnectStatus.ForeColor = Color.GreenYellow;
             }
-            if ((Communication.serialport.IsOpen ? false : Communication.AutoReconnect))
+            if (!Communication.serialport.IsOpen && Communication.AutoReconnect)
             {
                 try
                 {
                     if (Communication.ConnectSerial(Communication.comPort, Communication.baudrate))
                     {
-                        this.lblConnectStatus.Text = "Connected";
-                        this.lblConnectStatus.ForeColor = Color.GreenYellow;
+                        lblConnectStatus.Text = "Connected";
+                        lblConnectStatus.ForeColor = Color.GreenYellow;
                     }
                 }
                 catch
@@ -2806,57 +2812,57 @@ namespace Diameter_Checker
             }
             if (!Communication.serialport2.IsOpen)
             {
-                this.lblConnectStatus2.Text = "Not Connected";
-                this.lblConnectStatus2.ForeColor = Color.Red;
+                lblConnectStatus2.Text = "Not Connected";
+                lblConnectStatus2.ForeColor = Color.Red;
             }
             else
             {
-                this.lblConnectStatus2.Text = "Connected";
-                this.lblConnectStatus2.ForeColor = Color.GreenYellow;
+                lblConnectStatus2.Text = "Connected";
+                lblConnectStatus2.ForeColor = Color.GreenYellow;
             }
-            if ((Communication.serialport2.IsOpen ? false : Communication.AutoReconnect2))
+            if ( !Communication.serialport2.IsOpen && Communication.AutoReconnect2 )
             {
                 try
                 {
                     if (Communication.ConnectSerial2(Communication.comPort2, Communication.baudrate2))
                     {
-                        this.lblConnectStatus2.Text = "Connected";
-                        this.lblConnectStatus2.ForeColor = Color.GreenYellow;
+                        lblConnectStatus2.Text = "Connected";
+                        lblConnectStatus2.ForeColor = Color.GreenYellow;
                     }
                 }
                 catch
                 {
                 }
             }
-            if (this.cmbTimeToEnableRead.Text == "0.5")
+            if (cmbTimeToEnableRead.Text == "0.5")
             {
-                this.tmrEnableReadA1Data.Interval = 500;
-                this.tmrEnableReadA2Data.Interval = 500;
+                tmrEnableReadA1Data.Interval = 500;
+                tmrEnableReadA2Data.Interval = 500;
             }
-            if (this.cmbTimeToEnableRead.Text == "1")
+            if (cmbTimeToEnableRead.Text == "1")
             {
-                this.tmrEnableReadA1Data.Interval = 1000;
-                this.tmrEnableReadA2Data.Interval = 1000;
+                tmrEnableReadA1Data.Interval = 1000;
+                tmrEnableReadA2Data.Interval = 1000;
             }
-            if (this.cmbTimeToEnableRead.Text == "1.5")
+            if (cmbTimeToEnableRead.Text == "1.5")
             {
-                this.tmrEnableReadA1Data.Interval = 1500;
-                this.tmrEnableReadA2Data.Interval = 1500;
+                tmrEnableReadA1Data.Interval = 1500;
+                tmrEnableReadA2Data.Interval = 1500;
             }
-            if (this.cmbTimeToEnableRead.Text == "2")
+            if (cmbTimeToEnableRead.Text == "2")
             {
-                this.tmrEnableReadA1Data.Interval = 2000;
-                this.tmrEnableReadA2Data.Interval = 2000;
+                tmrEnableReadA1Data.Interval = 2000;
+                tmrEnableReadA2Data.Interval = 2000;
             }
-            if (this.cmbTimeToEnableRead.Text == "2.5")
+            if (cmbTimeToEnableRead.Text == "2.5")
             {
-                this.tmrEnableReadA1Data.Interval = 2500;
-                this.tmrEnableReadA2Data.Interval = 2500;
+                tmrEnableReadA1Data.Interval = 2500;
+                tmrEnableReadA2Data.Interval = 2500;
             }
-            if (this.cmbTimeToEnableRead.Text == "3")
+            if (cmbTimeToEnableRead.Text == "3")
             {
-                this.tmrEnableReadA1Data.Interval = 3000;
-                this.tmrEnableReadA2Data.Interval = 3000;
+                tmrEnableReadA1Data.Interval = 3000;
+                tmrEnableReadA2Data.Interval = 3000;
             }
         }
 
@@ -2873,27 +2879,31 @@ namespace Diameter_Checker
         {
             bool flag;
             bool flag1;
-            //bool flag2;
-            this.tmrDisplayData.Enabled = false;
+
+            tmrDisplayData.Enabled = false;
             if (Communication.subformIsOpen)
             {
-                this.txtA1MaximumValue.Text = null;
-                this.txtA1MinimumValue.Text = null;
-                this.txtA1Result.Text = null;
-                this.txtA2MaximumValue.Text = null;
-                this.txtA2MinimumValue.Text = null;
-                this.txtA2Result.Text = null;
-                this.txtWeightResult.Text = null;
+                txtA1MaximumValue.Text = null;
+                txtA1MinimumValue.Text = null;
+                txtA1Result.Text = null;
+                txtA2MaximumValue.Text = null;
+                txtA2MinimumValue.Text = null;
+                txtA2Result.Text = null;
+                txtWeightResult.Text = null;
             }
             else
             {
-                if (Communication.serialData.Length != Communication.charNumberOfCom_data || !(Communication.serialData.Substring(0, 2) == "A1") || !(Communication.serialData.Substring(14, 2) == "A2") || !(Communication.serialData.Substring(11, 2) == "OK") && !(Communication.serialData.Substring(11, 2) == "NG"))
+                if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
+                    !(Communication.serialData.Substring(0, 2) == "A1") || 
+                    !(Communication.serialData.Substring(14, 2) == "A2") || 
+                    !(Communication.serialData.Substring(11, 2) == "OK") && 
+                    !(Communication.serialData.Substring(11, 2) == "NG") )
                 {
                     flag = false;
                 }
                 else
                 {
-                    flag = (Communication.serialData.Substring(25, 2) == "OK" ? true : Communication.serialData.Substring(25, 2) == "NG");
+                    flag = Communication.serialData.Substring(25, 2) == "OK" || Communication.serialData.Substring(25, 2) == "NG";
                 }
                 if (flag)
                 {
@@ -2901,69 +2911,73 @@ namespace Diameter_Checker
                     Communication.A1Result = Communication.serialData.Substring(11, 2);
                     if (float.Parse(Communication.A1MeasuredValue) < float.Parse(Communication.A1DetectionLevel) - Communication.detectionOffset)
                     {
-                        this.tmrEnableReadA1Data.Enabled = true;
-                        if ((Communication.A1enableStopTest ? false : Communication.A1RecevingData))
+                        tmrEnableReadA1Data.Enabled = true;
+                        if ( !Communication.A1enableStopTest && Communication.A1RecevingData )
                         {
-                            if (!this.tmrA1DetectRemoveObject.Enabled)
+                            if (!tmrA1DetectRemoveObject.Enabled)
                             {
-                                this.tmrA1DetectRemoveObject.Enabled = true;
+                                tmrA1DetectRemoveObject.Enabled = true;
                             }
                             Communication.A1Detected = true;
-                            if ((!Communication.A1Detected ? true : !Communication.A2Detected))
+                            if ( !Communication.A2Detected )
                             {
-                                this.txtSystemMessage.Text = "A1 Detected!";
+                                txtSystemMessage.Text = "A1 Detected!";
                             }
                             else
                             {
-                                this.txtSystemMessage.Text = "A1 + A2 Detected!";
+                                txtSystemMessage.Text = "A1 + A2 Detected!";
                             }
                             if (Communication.A1MaximumValue == null)
                             {
                                 Communication.A1MaximumValue = Communication.A1MeasuredValue;
-                                this.txtA1MaximumValue.Text = Communication.A1MaximumValue;
+                                txtA1MaximumValue.Text = Communication.A1MaximumValue;
                             }
                             if (Communication.A1MinimumValue == null)
                             {
                                 Communication.A1MinimumValue = Communication.A1MeasuredValue;
-                                this.txtA1MinimumValue.Text = Communication.A1MinimumValue;
+                                txtA1MinimumValue.Text = Communication.A1MinimumValue;
                             }
                             if (float.Parse(Communication.A1MaximumValue) <= float.Parse(Communication.A1MeasuredValue))
                             {
                                 Communication.A1MaximumValue = Communication.A1MeasuredValue;
-                                this.txtA1MaximumValue.Text = Communication.A1MaximumValue;
+                                txtA1MaximumValue.Text = Communication.A1MaximumValue;
                             }
                             if (float.Parse(Communication.A1MinimumValue) >= float.Parse(Communication.A1MeasuredValue))
                             {
                                 Communication.A1MinimumValue = Communication.A1MeasuredValue;
-                                this.txtA1MinimumValue.Text = Communication.A1MinimumValue;
+                                txtA1MinimumValue.Text = Communication.A1MinimumValue;
                             }
-                            this.saveA1BufferData();
-                            this.chartA1Display();
+                            saveA1BufferData();
+                            chartA1Display();
                             ClearAllData();
                         }
                     }
-                    else if ((!Communication.A1Detected ? true : !Communication.A1RecevingData))
+                    else if ( !Communication.A1Detected || !Communication.A1RecevingData )
                     {
                         Communication.A1Detected = false;
                     }
                     else
                     {
-                        this.getA1BufferData();
-                        this.deleteA1BufferData();
+                        getA1BufferData();
+                        deleteA1BufferData();
                         Communication.A1Detected = false;
                         Communication.A1EnableSave = true;
                         Communication.A1enableStopTest = false;
-                        this.tmrEnableReadA1Data.Enabled = false;
+                        tmrEnableReadA1Data.Enabled = false;
                         Communication.A1RecevingData = false;
                     }
                 }
-                if (Communication.serialData.Length != Communication.charNumberOfCom_data || !(Communication.serialData.Substring(0, 2) == "A1") || !(Communication.serialData.Substring(14, 2) == "A2") || !(Communication.serialData.Substring(11, 2) == "OK") && !(Communication.serialData.Substring(11, 2) == "NG"))
+                if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
+                    !(Communication.serialData.Substring(0, 2) == "A1") || 
+                    !(Communication.serialData.Substring(14, 2) == "A2") || 
+                    !(Communication.serialData.Substring(11, 2) == "OK") && 
+                    !(Communication.serialData.Substring(11, 2) == "NG") )
                 {
                     flag1 = false;
                 }
                 else
                 {
-                    flag1 = (Communication.serialData.Substring(25, 2) == "OK" ? true : Communication.serialData.Substring(25, 2) == "NG");
+                    flag1 = Communication.serialData.Substring(25, 2) == "OK" || Communication.serialData.Substring(25, 2) == "NG";
                 }
                 if (flag1)
                 {
@@ -2971,70 +2985,73 @@ namespace Diameter_Checker
                     Communication.A2Result = Communication.serialData.Substring(25, 2);
                     if (float.Parse(Communication.A2MeasuredValue) < float.Parse(Communication.A2DetectionLevel) - Communication.detectionOffset)
                     {
-                        this.tmrEnableReadA2Data.Enabled = true;
-                        if ((Communication.A2enableStopTest ? false : Communication.A2RecevingData))
+                        tmrEnableReadA2Data.Enabled = true;
+                        if ( !Communication.A2enableStopTest && Communication.A2RecevingData )
                         {
-                            if (!this.tmrA2DetectRemoveObject.Enabled)
+                            if (!tmrA2DetectRemoveObject.Enabled)
                             {
-                                this.tmrA2DetectRemoveObject.Enabled = true;
+                                tmrA2DetectRemoveObject.Enabled = true;
                             }
                             Communication.A2Detected = true;
-                            if ((!Communication.A1Detected ? true : !Communication.A2Detected))
+                            if ( !Communication.A1Detected )
                             {
-                                this.txtSystemMessage.Text = "A2 Detected!";
+                                txtSystemMessage.Text = "A2 Detected!";
                             }
                             else
                             {
-                                this.txtSystemMessage.Text = "A1 + A2 Detected!";
+                                txtSystemMessage.Text = "A1 + A2 Detected!";
                             }
                             if (Communication.A2MaximumValue == null)
                             {
                                 Communication.A2MaximumValue = Communication.A2MeasuredValue;
-                                this.txtA2MaximumValue.Text = Communication.A2MaximumValue;
+                                txtA2MaximumValue.Text = Communication.A2MaximumValue;
                             }
                             if (Communication.A2MinimumValue == null)
                             {
                                 Communication.A2MinimumValue = Communication.A2MeasuredValue;
-                                this.txtA2MinimumValue.Text = Communication.A2MinimumValue;
+                                txtA2MinimumValue.Text = Communication.A2MinimumValue;
                             }
                             if (float.Parse(Communication.A2MaximumValue) <= float.Parse(Communication.A2MeasuredValue))
                             {
                                 Communication.A2MaximumValue = Communication.A2MeasuredValue;
-                                this.txtA2MaximumValue.Text = Communication.A2MaximumValue;
+                                txtA2MaximumValue.Text = Communication.A2MaximumValue;
                             }
                             if (float.Parse(Communication.A2MinimumValue) >= float.Parse(Communication.A2MeasuredValue))
                             {
                                 Communication.A2MinimumValue = Communication.A2MeasuredValue;
-                                this.txtA2MinimumValue.Text = Communication.A2MinimumValue;
+                                txtA2MinimumValue.Text = Communication.A2MinimumValue;
                             }
-                            this.saveA2BufferData();
-                            this.chartA2Display();
+                            saveA2BufferData();
+                            chartA2Display();
                             ClearAllData();
                         }
                     }
-                    else if ((!Communication.A2Detected ? true : !Communication.A2RecevingData))
+                    else if ( !Communication.A2Detected || !Communication.A2RecevingData )
                     {
                         Communication.A2Detected = false;
                     }
                     else
                     {
-                        this.getA2BufferData();
-                        this.deleteA2BufferData();
+                        getA2BufferData();
+                        deleteA2BufferData();
                         Communication.A2Detected = false;
                         Communication.A2EnableSave = true;
                         Communication.A2enableStopTest = false;
-                        this.tmrEnableReadA2Data.Enabled = false;
+                        tmrEnableReadA2Data.Enabled = false;
                         Communication.A2RecevingData = false;
                     }
                 }
-                if( Communication.receivedQrCodeFlg && Communication.receivedWeightFlg)
+                if( Communication.receivedQrCodeFlg && 
+                    Communication.receivedWeightFlg &&
+                    Communication.A1EnableSave &&
+                    Communication.A2EnableSave )
                 {
-                    CheckAndMakeDecision();         //Check QrCode, A1, A2 result to make decision
+                    CheckAndMakeDecision();
                 }
 
-                if ((Communication.A1Detected ? false : !Communication.A2Detected))
+                if (!Communication.A1Detected && !Communication.A2Detected)
                 {
-                    this.txtSystemMessage.Text = "None Object Detected!";
+                    txtSystemMessage.Text = "None Object Detected!";
                 }
             }
         }
@@ -3044,18 +3061,18 @@ namespace Diameter_Checker
             if (Communication.enableClearData)
             {
                 Communication.enableClearData = false;
-                this.chartA1.Series.Clear();
-                this.chartA1Setting();
-                this.chartA2.Series.Clear();
-                this.chartA2Setting();
-                this.txtA1Result.Text = "";
-                this.txtA2Result.Text = "";
-                this.txtWeightResult.Text = "";
-                this.btnJudge.Text = "";
-                this.controlAlarm_A1ResetAlarm();
-                this.controlAlarm_A2ResetAlarm();
-                if (!Communication.receivedWeightFlg) this.txtWeight.Text = "";
-                if (!Communication.receivedQrCodeFlg) this.txtQrCode.Text = "";
+                chartA1.Series.Clear();
+                chartA1Setting();
+                chartA2.Series.Clear();
+                chartA2Setting();
+                txtA1Result.Text = "";
+                txtA2Result.Text = "";
+                txtWeightResult.Text = "";
+                btnJudge.Text = "";
+                controlAlarm_A1ResetAlarm();
+                controlAlarm_A2ResetAlarm();
+                if (!Communication.receivedWeightFlg) txtWeight.Text = "";
+                if (!Communication.receivedQrCodeFlg) txtQrCode.Text = "";
             }
         }
 
@@ -3063,26 +3080,26 @@ namespace Diameter_Checker
         {
             bool flag2;
             Communication.Weight = this.txtWeight.Text.Trim();
-            if (string.IsNullOrEmpty(Communication.Weight) || 
-                string.IsNullOrEmpty(this.txtQrCode.Text.Trim()) || 
+            if ( !Communication.receivedWeightFlg ||
+                !Communication.receivedQrCodeFlg || 
                 !Communication.A1EnableSave || !Communication.A2EnableSave || 
                 Communication.A1Detected || Communication.A2Detected || 
-                !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
+                !(txtA1Result.Text == "OK") && !(txtA1Result.Text == "NG"))
             {
                 flag2 = false;
             }
             else
             {
-                flag2 = (this.txtA2Result.Text == "OK" ? true : this.txtA2Result.Text == "NG");
+                flag2 = txtA2Result.Text == "OK" || txtA2Result.Text == "NG";
             }
             if (flag2)
             {
-                if (this.txtA1Result.Text != "OK" || this.txtA2Result.Text != "OK" || this.txtWeightResult.Text != "OK")
+                if (txtA1Result.Text != "OK" || txtA2Result.Text != "OK" || txtWeightResult.Text != "OK")
                 {
                     Communication.Judge = "FAIL";
-                    this.btnJudge.ForeColor = Color.Red;
+                    btnJudge.ForeColor = Color.Red;
                     Communication.totalFAIL++;
-                    this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
+                    txtTotalFAIL.Text = Communication.totalFAIL.ToString();
                     if (chkStopScan.Checked)
                     {
                         stopWorking();
@@ -3091,9 +3108,9 @@ namespace Diameter_Checker
                 else
                 {
                     Communication.Judge = "PASS";
-                    this.btnJudge.ForeColor = Color.ForestGreen;
+                    btnJudge.ForeColor = Color.ForestGreen;
                     Communication.totalPASS++;
-                    this.txtTotalPass.Text = Communication.totalPASS.ToString();
+                    txtTotalPass.Text = Communication.totalPASS.ToString();
                     Communication.cntProductInSet++;
                     if (Communication.cntProductInSet >= this.numProductInSet.Value)
                     {
@@ -3102,11 +3119,11 @@ namespace Diameter_Checker
                 }
                 Communication.A1Result = this.txtA1Result.Text;
                 Communication.A2Result = this.txtA2Result.Text;
-                this.tmrDisplayJudge.Enabled = true;
+                tmrDisplayJudge.Enabled = true;
                 Communication.totalProcessed++;
-                this.txtTotalProcessed.Text = Communication.totalProcessed.ToString();
+                txtTotalProcessed.Text = Communication.totalProcessed.ToString();
                 Communication.ID = string.Concat("HL", Communication.totalProcessed);
-                this.saveData();
+                saveData();
                 Communication.A1EnableSave = false;
                 Communication.A2EnableSave = false;
                 Communication.A1MaximumValue = null;
@@ -3116,35 +3133,33 @@ namespace Diameter_Checker
                 Communication.enableClearData = true;
                 Communication.receivedQrCodeFlg = false;
                 Communication.receivedWeightFlg = false;
-                //this.txtQrCode.Text = "";
-                //this.txtWeight.Text = "";
-                this.loadData();
-                this.tmrEnableReadA1Data.Enabled = false;
-                this.tmrEnableReadA2Data.Enabled = false;
-                this.calculatePPandPPKvalue();
+                loadData();
+                tmrEnableReadA1Data.Enabled = false;
+                tmrEnableReadA2Data.Enabled = false;
+                calculatePPandPPKvalue();
             }
 
         }
 
         private void stopWorking()
         {
-            this.btnStart.Text = "Start";
-            this.btnStart.ForeColor = Color.Teal;
-            this.txtSystemMessage.Text = "STOPPED!";
-            this.numProductInSet.Enabled = true;
+            btnStart.Text = "Start";
+            btnStart.ForeColor = Color.Teal;
+            txtSystemMessage.Text = "STOPPED!";
+            numProductInSet.Enabled = true;
             Communication.start = false;
             Communication.stop = true;
             Communication.enableReceiveData = false;
         }
         private void tmrEnableReadA1Data_Tick(object sender, EventArgs e)
         {
-            this.tmrEnableReadA1Data.Enabled = false;
+            tmrEnableReadA1Data.Enabled = false;
             Communication.A1RecevingData = true;
         }
 
         private void tmrEnableReadA2Data_Tick(object sender, EventArgs e)
         {
-            this.tmrEnableReadA2Data.Enabled = false;
+            tmrEnableReadA2Data.Enabled = false;
             Communication.A2RecevingData = true;
         }
 
@@ -3157,8 +3172,8 @@ namespace Diameter_Checker
             if (Communication.refreshDataGridView)
             {
                 Communication.refreshDataGridView = false;
-                this.tmrRefreshDataGridView.Enabled = false;
-                this.loadData();
+                tmrRefreshDataGridView.Enabled = false;
+                loadData();
             }
         }
 
@@ -3206,8 +3221,6 @@ namespace Diameter_Checker
             if(e.KeyCode == Keys.Enter)
             {
                 Communication.receivedQrCodeFlg = true;
-                //CheckAndMakeDecision();
-                //ClearAllData();
             }
         }
     }
