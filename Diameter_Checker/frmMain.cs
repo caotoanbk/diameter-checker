@@ -2745,13 +2745,20 @@ namespace Diameter_Checker
                         Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
                         if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
+                            if (!string.IsNullOrEmpty(btnJudge.Text))
+                            {
+                                ClearAllData();
+                            }
                             Communication.Weight = weightResult  = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
                             //weightResult = weightResult.Replace(',', '.');
                             Communication.receivedWeightFlg = true;
                             //s = s.Remove(s.Length - 1);
                             bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
-                            float weight = float.Parse(weightResult.Replace("g", "").Trim());
+                            weightResult = weightResult.Replace("g", "").Trim();
+                            weightResult = weightResult.Replace("Kg", "").Trim();
+                            weightResult = weightResult.Replace("KG", "").Trim();
                             //parseResult = decimal.TryParse(s.Trim(), out decimal weight);
+                            float weight = float.Parse(weightResult.Replace(".", "")) / 10f;
                             weight = isKg ? weight * 1000 : weight;
                             float minWeight = float.Parse(txtWeightMin.Text);
                             float maxWeight = float.Parse(txtWeightMax.Text);
@@ -3088,7 +3095,7 @@ namespace Diameter_Checker
                         Communication.A2RecevingData = false;
                     }
                 }
-                if( Communication.receivedWeightFlg)
+                if( Communication.receivedWeightFlg && Communication.A1EnableSave && Communication.A2EnableSave)
                 {
                     CheckAndMakeDecision();         //Check QrCode, A1, A2 result to make decision
                 }
@@ -3122,10 +3129,12 @@ namespace Diameter_Checker
         private void CheckAndMakeDecision()
         {
             bool flag2;
-            if (string.IsNullOrEmpty(this.txtWeight.Text.Trim()) || 
+            if (
+                (!(this.txtWeightResult.Text == "OK") && !(this.txtWeightResult.Text == "NG")) || 
                 !Communication.A1EnableSave || !Communication.A2EnableSave || 
                 Communication.A1Detected || Communication.A2Detected || 
-                !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG"))
+                !(this.txtA1Result.Text == "OK") && !(this.txtA1Result.Text == "NG")
+            )
             {
                 flag2 = false;
             }
