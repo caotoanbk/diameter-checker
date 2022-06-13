@@ -251,7 +251,7 @@ namespace Diameter_Checker
                 {
                     SqlConnection con = new SqlConnection(Communication.con_string);
                     con.Open();
-                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','",this.txtWeightMax.Text,"','", this.txtWeightMin.Text,"')" });
+                    string add = string.Concat(new string[] { "INSERT INTO ProductSetting (model, A1DetectionValue, A2DetectionValue, A1MaximumOffset, A1MinimumOffset, A2MaximumOffset, A2MinimumOffset, maxWeight, minWeight) VALUES ('", this.cmbModel.Text, "','", this.txtA1DetectionLevel.Text, "','", this.txtA2DetectionLevel.Text, "','", this.txtA1MaximumOffset.Text, "','", this.txtA1MinimumOffset.Text, "','", this.txtA2MaximumOffset.Text, "','", this.txtA2MinimumOffset.Text, "','", this.txtWeightMax.Text, "','", this.txtWeightMin.Text, "')" });
                     SqlCommand cmd_add = new SqlCommand()
                     {
                         Connection = con,
@@ -649,7 +649,7 @@ namespace Diameter_Checker
 
         public void DataReceive2(object obj, SerialDataReceivedEventArgs e)
         {
-            if ( Communication.enableReceiveData )
+            if (Communication.enableReceiveData)
             {
                 this.InputData2 = string.Concat(this.InputData2, Communication.serialport2.ReadExisting());
                 this.InputData2 = this.InputData2.Replace("\r", string.Empty);
@@ -659,7 +659,7 @@ namespace Diameter_Checker
                 //{
                 //    this.InputData2 = Communication.serialport2.ReadExisting();
                 //}
-                if ( this.InputData2.Length >= Communication.charNumberOfCom_data2 )
+                if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
                     this.SetText2(this.InputData2);
                 }
@@ -699,7 +699,7 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Enabled = false;
             this.btnJudge.Text = Communication.Judge;
             this.btnCntProduct.Text = Communication.cntProductInSet.ToString();
-            if(this.numProductInSet.Value == Communication.cntProductInSet)
+            if (this.numProductInSet.Value == Communication.cntProductInSet)
             {
                 MessageBox.Show("Đã đủ số lượng!");
             }
@@ -762,7 +762,7 @@ namespace Diameter_Checker
                     strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            if ( strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim() )
+            if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
             {
                 MessageBox.Show("System Error!", "WARNING!");
                 base.Dispose();
@@ -2635,11 +2635,11 @@ namespace Diameter_Checker
                     if (InputData.Length >= charNumberOfFirstString + Communication.charNumberOfCom_data)
                     {
                         Communication.serialData = InputData.Substring(charNumberOfFirstString, Communication.charNumberOfCom_data);
-                        if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
-                            !(Communication.serialData.Substring(0, 2) == "A1") || 
-                            !(Communication.serialData.Substring(14, 2) == "A2") || 
-                            !(Communication.serialData.Substring(11, 2) == "OK") && 
-                            !(Communication.serialData.Substring(11, 2) == "NG") )
+                        if (Communication.serialData.Length != Communication.charNumberOfCom_data ||
+                            !(Communication.serialData.Substring(0, 2) == "A1") ||
+                            !(Communication.serialData.Substring(14, 2) == "A2") ||
+                            !(Communication.serialData.Substring(11, 2) == "OK") &&
+                            !(Communication.serialData.Substring(11, 2) == "NG"))
                         {
                             flag = false;
                         }
@@ -2663,7 +2663,7 @@ namespace Diameter_Checker
         public void SetText2(string text)
         {
             string weightResult;
-            float weight;
+            float weight, minWeight, maxWeight;
             if (base.InvokeRequired)
             {
                 try
@@ -2677,47 +2677,63 @@ namespace Diameter_Checker
             }
             else
             {
-                if (InputData2.Length >= Communication.charNumberOfCom_data2)
+                if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
-                    charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
-                    if (charNumberOfFirstString2 <= 0)
+                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
+                    if (this.charNumberOfFirstString2 <= 0)
                     {
-                        charNumberOfFirstString2 = 0;
+                        this.charNumberOfFirstString2 = 0;
                     }
                     else
                     {
-                        fistSubString2 = InputData2.Substring(0, charNumberOfFirstString2);
+                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
                     }
-                    if (InputData2.Length >= charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
+                    if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
                     {
-                        Communication.serialData2 = InputData2.Substring(charNumberOfFirstString2, Communication.charNumberOfCom_data2);
+                        Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
                         if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
                         {
                             if (!string.IsNullOrEmpty(btnJudge.Text))
                             {
                                 ClearAllData();
                             }
-                            weightResult = txtWeight.Text = Communication.serialData2.Substring(8,11).Trim();
-                            bool isKg = weightResult.ToUpper().Contains("KG");
+                            Communication.Weight = weightResult = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
                             Communication.receivedWeightFlg = true;
-                            weight = float.Parse(weightResult.Replace("g", "").Replace(".", "").Trim())/10f;
-                            weight = isKg ? weight * 1000 : weight;
-                            float minWeight = float.Parse(txtWeightMin.Text.Trim());
-                            float maxWeight = float.Parse(txtWeightMax.Text.Trim());
-                            if( weight < minWeight || weight > maxWeight)
+                            //bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
+                            weightResult = weightResult.Replace("g", "").Trim();
+                            //weightResult = weightResult.Replace("Kg", "").Trim();
+                            //weightResult = weightResult.Replace("KG", "").Trim();
+                            //parseResult = decimal.TryParse(s.Trim(), out decimal weight);
+                            try
                             {
-                                txtWeightResult.ForeColor = Color.Red;
-                                txtWeightResult.Text = "NG";
+                                weight = float.Parse(weightResult.Replace(".", "")) / 10f;
+                                //weight = isKg ? weight * 1000 : weight;
+                                minWeight = float.Parse(txtWeightMin.Text);
+                                maxWeight = float.Parse(txtWeightMax.Text);
+                                if (weight < minWeight || weight > maxWeight)
+                                {
+                                    this.txtWeightResult.ForeColor = Color.Red;
+                                    this.txtWeightResult.Text = "NG";
+                                }
+                                else
+                                {
+                                    this.txtWeightResult.ForeColor = Color.ForestGreen;
+                                    this.txtWeightResult.Text = "OK";
+                                }
                             }
-                            else
+                            catch (Exception e)
                             {
-                                txtWeightResult.ForeColor = Color.ForestGreen;
-                                txtWeightResult.Text = "OK";
+
+                                MessageBox.Show(e.Message);
                             }
+                            //string format = string.Format("weight = {0}, min weight = {1}, max weight = {2}", weight.ToString(), minWeight.ToString(), maxWeight.ToString());
+                            //MessageBox.Show(format);
+                            //CheckAndMakeDecision();
+                            //ClearAllData();
                         }
-                        charNumberOfLastString2 = InputData2.Length - charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
-                        lastSubString2 = InputData2.Substring(InputData2.Length - charNumberOfLastString2, charNumberOfLastString2);
-                        InputData2 = string.Concat(fistSubString2, lastSubString2);
+                        this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
+                        this.lastSubString2 = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
+                        this.InputData2 = string.Concat(this.fistSubString2, this.lastSubString2);
                     }
                 }
             }
@@ -2820,7 +2836,7 @@ namespace Diameter_Checker
                 lblConnectStatus2.Text = "Connected";
                 lblConnectStatus2.ForeColor = Color.GreenYellow;
             }
-            if ( !Communication.serialport2.IsOpen && Communication.AutoReconnect2 )
+            if (!Communication.serialport2.IsOpen && Communication.AutoReconnect2)
             {
                 try
                 {
@@ -2893,11 +2909,11 @@ namespace Diameter_Checker
             }
             else
             {
-                if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
-                    !(Communication.serialData.Substring(0, 2) == "A1") || 
-                    !(Communication.serialData.Substring(14, 2) == "A2") || 
-                    !(Communication.serialData.Substring(11, 2) == "OK") && 
-                    !(Communication.serialData.Substring(11, 2) == "NG") )
+                if (Communication.serialData.Length != Communication.charNumberOfCom_data ||
+                    !(Communication.serialData.Substring(0, 2) == "A1") ||
+                    !(Communication.serialData.Substring(14, 2) == "A2") ||
+                    !(Communication.serialData.Substring(11, 2) == "OK") &&
+                    !(Communication.serialData.Substring(11, 2) == "NG"))
                 {
                     flag = false;
                 }
@@ -2912,14 +2928,14 @@ namespace Diameter_Checker
                     if (float.Parse(Communication.A1MeasuredValue) < float.Parse(Communication.A1DetectionLevel) - Communication.detectionOffset)
                     {
                         tmrEnableReadA1Data.Enabled = true;
-                        if ( !Communication.A1enableStopTest && Communication.A1RecevingData )
+                        if (!Communication.A1enableStopTest && Communication.A1RecevingData)
                         {
                             if (!tmrA1DetectRemoveObject.Enabled)
                             {
                                 tmrA1DetectRemoveObject.Enabled = true;
                             }
                             Communication.A1Detected = true;
-                            if ( !Communication.A2Detected )
+                            if (!Communication.A2Detected)
                             {
                                 txtSystemMessage.Text = "A1 Detected!";
                             }
@@ -2952,7 +2968,7 @@ namespace Diameter_Checker
                             ClearAllData();
                         }
                     }
-                    else if ( !Communication.A1Detected || !Communication.A1RecevingData )
+                    else if (!Communication.A1Detected || !Communication.A1RecevingData)
                     {
                         Communication.A1Detected = false;
                     }
@@ -2967,11 +2983,11 @@ namespace Diameter_Checker
                         Communication.A1RecevingData = false;
                     }
                 }
-                if ( Communication.serialData.Length != Communication.charNumberOfCom_data || 
-                    !(Communication.serialData.Substring(0, 2) == "A1") || 
-                    !(Communication.serialData.Substring(14, 2) == "A2") || 
-                    !(Communication.serialData.Substring(11, 2) == "OK") && 
-                    !(Communication.serialData.Substring(11, 2) == "NG") )
+                if (Communication.serialData.Length != Communication.charNumberOfCom_data ||
+                    !(Communication.serialData.Substring(0, 2) == "A1") ||
+                    !(Communication.serialData.Substring(14, 2) == "A2") ||
+                    !(Communication.serialData.Substring(11, 2) == "OK") &&
+                    !(Communication.serialData.Substring(11, 2) == "NG"))
                 {
                     flag1 = false;
                 }
@@ -2986,14 +3002,14 @@ namespace Diameter_Checker
                     if (float.Parse(Communication.A2MeasuredValue) < float.Parse(Communication.A2DetectionLevel) - Communication.detectionOffset)
                     {
                         tmrEnableReadA2Data.Enabled = true;
-                        if ( !Communication.A2enableStopTest && Communication.A2RecevingData )
+                        if (!Communication.A2enableStopTest && Communication.A2RecevingData)
                         {
                             if (!tmrA2DetectRemoveObject.Enabled)
                             {
                                 tmrA2DetectRemoveObject.Enabled = true;
                             }
                             Communication.A2Detected = true;
-                            if ( !Communication.A1Detected )
+                            if (!Communication.A1Detected)
                             {
                                 txtSystemMessage.Text = "A2 Detected!";
                             }
@@ -3026,7 +3042,7 @@ namespace Diameter_Checker
                             ClearAllData();
                         }
                     }
-                    else if ( !Communication.A2Detected || !Communication.A2RecevingData )
+                    else if (!Communication.A2Detected || !Communication.A2RecevingData)
                     {
                         Communication.A2Detected = false;
                     }
@@ -3041,10 +3057,10 @@ namespace Diameter_Checker
                         Communication.A2RecevingData = false;
                     }
                 }
-                if( Communication.receivedQrCodeFlg && 
+                if (Communication.receivedQrCodeFlg &&
                     Communication.receivedWeightFlg &&
                     Communication.A1EnableSave &&
-                    Communication.A2EnableSave )
+                    Communication.A2EnableSave)
                 {
                     CheckAndMakeDecision();
                 }
@@ -3080,10 +3096,11 @@ namespace Diameter_Checker
         {
             bool flag2;
             Communication.Weight = this.txtWeight.Text.Trim();
-            if ( !Communication.receivedWeightFlg ||
-                !Communication.receivedQrCodeFlg || 
-                !Communication.A1EnableSave || !Communication.A2EnableSave || 
-                Communication.A1Detected || Communication.A2Detected || 
+            if (
+                (!(this.txtWeightResult.Text == "OK") && !(this.txtWeightResult.Text == "NG")) ||
+                !Communication.receivedQrCodeFlg ||
+                !Communication.A1EnableSave || !Communication.A2EnableSave ||
+                Communication.A1Detected || Communication.A2Detected ||
                 !(txtA1Result.Text == "OK") && !(txtA1Result.Text == "NG"))
             {
                 flag2 = false;
@@ -3218,7 +3235,7 @@ namespace Diameter_Checker
 
         private void txtQrCode_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 Communication.receivedQrCodeFlg = true;
             }
