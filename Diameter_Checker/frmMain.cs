@@ -850,7 +850,10 @@ namespace Diameter_Checker
                     frmMain.strgetProcessorID = managObj.Properties["processorID"].Value.ToString();
                 }
             }
-            if ((frmMain.strgetProcessorID.Trim() == Communication.processorID.Trim() ? false : frmMain.strgetProcessorID.Trim() != Communication.processorIDAdmin.Trim()))
+            if (frmMain.strgetProcessorID != Communication.processorID1 && 
+                frmMain.strgetProcessorID != Communication.processorID2 &&
+                frmMain.strgetProcessorID != Communication.processorID3
+                )
             {
                 MessageBox.Show("System Error!", "WARNING!");
                 base.Dispose();
@@ -2716,6 +2719,7 @@ namespace Diameter_Checker
         public void SetText2(string text)
         {
             string weightResult;
+            float weight, minWeight, maxWeight;
             if (base.InvokeRequired)
             {
                 try
@@ -2749,31 +2753,37 @@ namespace Diameter_Checker
                             {
                                 ClearAllData();
                             }
-                            Communication.Weight = weightResult  = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
-                            //weightResult = weightResult.Replace(',', '.');
+                            Communication.Weight = weightResult = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
                             Communication.receivedWeightFlg = true;
-                            //s = s.Remove(s.Length - 1);
-                            bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
+                            //bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
                             weightResult = weightResult.Replace("g", "").Trim();
-                            weightResult = weightResult.Replace("Kg", "").Trim();
-                            weightResult = weightResult.Replace("KG", "").Trim();
+                            //weightResult = weightResult.Replace("Kg", "").Trim();
+                            //weightResult = weightResult.Replace("KG", "").Trim();
                             //parseResult = decimal.TryParse(s.Trim(), out decimal weight);
-                            float weight = float.Parse(weightResult.Replace(".", "")) / 10f;
-                            weight = isKg ? weight * 1000 : weight;
-                            float minWeight = float.Parse(txtWeightMin.Text);
-                            float maxWeight = float.Parse(txtWeightMax.Text);
+                            try
+                            {
+                                weight = float.Parse(weightResult.Replace(".", "")) / 10f;
+                                //weight = isKg ? weight * 1000 : weight;
+                                minWeight = float.Parse(txtWeightMin.Text);
+                                maxWeight = float.Parse(txtWeightMax.Text);
+                                if (weight < minWeight || weight > maxWeight)
+                                {
+                                    this.txtWeightResult.ForeColor = Color.Red;
+                                    this.txtWeightResult.Text = "NG";
+                                }
+                                else
+                                {
+                                    this.txtWeightResult.ForeColor = Color.ForestGreen;
+                                    this.txtWeightResult.Text = "OK";
+                                }
+                            }
+                            catch (Exception e)
+                            {
+
+                                MessageBox.Show(e.Message);
+                            }
                             //string format = string.Format("weight = {0}, min weight = {1}, max weight = {2}", weight.ToString(), minWeight.ToString(), maxWeight.ToString());
                             //MessageBox.Show(format);
-                            if (weight < minWeight || weight > maxWeight)
-                            {
-                                this.txtWeightResult.ForeColor = Color.Red;
-                                this.txtWeightResult.Text = "NG";
-                            }
-                            else
-                            {
-                                this.txtWeightResult.ForeColor = Color.ForestGreen;
-                                this.txtWeightResult.Text = "OK";
-                            }
                             //CheckAndMakeDecision();
                             //ClearAllData();
                         }

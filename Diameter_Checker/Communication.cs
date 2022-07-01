@@ -119,9 +119,9 @@ namespace Diameter_Checker
 
         public static string loginUser;
 
-        public static string processorIDAdmin;
-
-        public static string processorID;
+        public static string processorID1;
+        public static string processorID2;
+        public static string processorID3;
 
         public static bool A1Detected;
 
@@ -186,8 +186,9 @@ namespace Diameter_Checker
             Communication.A1RecevingData = false;
             Communication.A2RecevingData = false;
             Communication.loginUser = "Admin";
-            Communication.processorIDAdmin = "BFEBFBFF000306C3";
-            Communication.processorID = "BFEBFBFF000906E9";
+            processorID1 = "BFEBFBFF000306C3";
+            processorID2 = "BFEBFBFF000906E9";
+            processorID3 = "BFEBFBFF000A0653";
             Communication.A1Detected = false;
             Communication.A2Detected = false;
             Communication.A1DetectionLevel = "10";
