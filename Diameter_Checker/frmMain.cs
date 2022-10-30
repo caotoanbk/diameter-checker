@@ -810,7 +810,8 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2023)
+            var lastDayOfTheYear = new DateTime(2022, 12, 31);
+            if (DateTime.Today.Date > lastDayOfTheYear.Date)
             {
                 MessageBox.Show("System Error!");
                 base.Close();
