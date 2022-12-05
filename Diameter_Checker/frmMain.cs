@@ -810,8 +810,9 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //var lastDayOfTheYear = new DateTime(2022, 12, 31);
-            if (DateTime.Today.Year > 2022)
+            var firstDayOfMonth = new DateTime(2023, 03, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddSeconds(-1);
+            if (DateTime.Compare(DateTime.Today,lastDayOfMonth) > 0)
             {
                 MessageBox.Show("System Error!");
                 base.Close();
@@ -851,8 +852,9 @@ namespace Diameter_Checker
                     frmMain.strgetProcessorID = managObj.Properties["processorID"].Value.ToString();
                 }
             }
-            if (frmMain.strgetProcessorID != Communication.processorID1 && 
-                frmMain.strgetProcessorID != Communication.processorID2 &&
+            if (
+                //frmMain.strgetProcessorID != Communication.processorID1 && 
+                //frmMain.strgetProcessorID != Communication.processorID2 &&
                 frmMain.strgetProcessorID != Communication.processorID3
                 )
             {
