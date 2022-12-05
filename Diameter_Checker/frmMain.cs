@@ -810,11 +810,11 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var firstDayOfMonth = new DateTime(2023, 03, 1);
-            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddSeconds(-1);
-            if (DateTime.Compare(DateTime.Today,lastDayOfMonth) > 0)
+            var orgDate = new DateTime(2023, 3, 1);
+            var testDate = orgDate.AddSeconds(-1);
+            if (DateTime.Compare(DateTime.Today, testDate) > 0)
             {
-                MessageBox.Show("System Error!");
+                MessageBox.Show("License expired!");
                 base.Close();
             }
             //this.serialPort1.Open();
@@ -853,12 +853,12 @@ namespace Diameter_Checker
                 }
             }
             if (
-                //frmMain.strgetProcessorID != Communication.processorID1 && 
+                //frmMain.strgetProcessorID != Communication.processorID1 &&
                 //frmMain.strgetProcessorID != Communication.processorID2 &&
                 frmMain.strgetProcessorID != Communication.processorID3
                 )
             {
-                MessageBox.Show("System Error!", "WARNING!");
+                MessageBox.Show("License expired!", "WARNING!");
                 base.Dispose();
             }
             this.calculatePPandPPKvalue();
