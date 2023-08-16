@@ -70,13 +70,8 @@ namespace Diameter_Checker
         private Button btnJudge;
         private TextBox txtA2MinimumValue;
         private TextBox txtA2MaximumValue;
-        private Label label13;
         private Panel panel4;
         private Label label1;
-        private GroupBox groupBox5;
-        private TextBox txtA1PPK;
-        private Label label15;
-        private TextBox txtA1PP;
         private TextBox txtA1DetectionLevel;
         private TextBox txtA2DetectionLevel;
         private TextBox txtA1MinimumValue;
@@ -93,9 +88,7 @@ namespace Diameter_Checker
         private Label label9;
         private Label label12;
         private TextBox txtA2PPK;
-        private Label label14;
         private TextBox txtA2PP;
-        private Label label19;
         private TextBox txtA2Result;
         private Timer tmrDisplayData;
         private Button button2;
@@ -105,7 +98,6 @@ namespace Diameter_Checker
         private Chart chartA2;
         private Chart chartA1;
         private Timer tmrRefreshChart;
-        private GroupBox groupBox7;
         private CheckBox chkStopScan;
         private Timer tmrA1DetectRemoveObject;
         private Timer tmrA2DetectRemoveObject;
@@ -150,12 +142,17 @@ namespace Diameter_Checker
         private TextBox txtWeightMin;
         private TextBox txtWeightMax;
         private Chart chart1;
-        private DateTimePicker dateTimePicker1;
-        private GroupBox groupBox9;
-        private TextBox textBox1;
+        private DateTimePicker dateTimeFilter;
+        private TextBox txtA1PPK;
         private Label label27;
-        private TextBox textBox2;
+        private TextBox txtA1PP;
         private Label label28;
+        private Label label14;
+        private TextBox textBox4;
+        private TextBox textBox3;
+        private Label label13;
+        private Label label29;
+        private CheckBox checkBoxFilterDate;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -728,11 +725,11 @@ namespace Diameter_Checker
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2023)
-            {
-                MessageBox.Show("System Error!");
-                base.Close();
-            }
+            //if (Convert.ToInt32(DateTime.Today.Year.ToString()) > 2023)
+            //{
+            //    MessageBox.Show("System Error!");
+            //    base.Close();
+            //}
             //this.serialPort1.Open();
             this.controlAlarm_A1ResetAlarm();
             this.controlAlarm_A2ResetAlarm();
@@ -769,11 +766,11 @@ namespace Diameter_Checker
                     strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
-            {
-                MessageBox.Show("System Error!", "WARNING!");
-                base.Dispose();
-            }
+            //if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
+            //{
+            //    MessageBox.Show("System Error!", "WARNING!");
+            //    base.Dispose();
+            //}
             this.calculatePPandPPKvalue();
         }
 
@@ -868,22 +865,22 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label24 = new System.Windows.Forms.Label();
@@ -894,19 +891,17 @@ namespace Diameter_Checker
             this.label23 = new System.Windows.Forms.Label();
             this.txtQrCode = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.txtA2PPK = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtA2PP = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.txtA1PPK = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.txtA1PP = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.btnCntProduct = new System.Windows.Forms.Button();
             this.numProductInSet = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dateTimeFilter = new System.Windows.Forms.DateTimePicker();
+            this.txtA1PPK = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtA1PP = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtA2PPK = new System.Windows.Forms.TextBox();
+            this.txtA2PP = new System.Windows.Forms.TextBox();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartA1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartA2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label22 = new System.Windows.Forms.Label();
@@ -1002,20 +997,18 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.checkBoxFilterDate = new System.Windows.Forms.CheckBox();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).BeginInit();
             this.groupBox4.SuspendLayout();
@@ -1028,8 +1021,6 @@ namespace Diameter_Checker
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelResult.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel3
@@ -1045,8 +1036,19 @@ namespace Diameter_Checker
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.panel6.Controls.Add(this.label14);
+            this.panel6.Controls.Add(this.textBox4);
+            this.panel6.Controls.Add(this.textBox3);
+            this.panel6.Controls.Add(this.label13);
+            this.panel6.Controls.Add(this.label29);
+            this.panel6.Controls.Add(this.txtA2PPK);
+            this.panel6.Controls.Add(this.label27);
+            this.panel6.Controls.Add(this.txtA1PPK);
+            this.panel6.Controls.Add(this.txtA2PP);
+            this.panel6.Controls.Add(this.label28);
             this.panel6.Controls.Add(this.label24);
             this.panel6.Controls.Add(this.groupBox8);
+            this.panel6.Controls.Add(this.txtA1PP);
             this.panel6.Controls.Add(this.btnCntProduct);
             this.panel6.Controls.Add(this.numProductInSet);
             this.panel6.Controls.Add(this.groupBox3);
@@ -1142,123 +1144,6 @@ namespace Diameter_Checker
             this.label21.TabIndex = 0;
             this.label21.Text = "QR Code:";
             // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.txtA2PPK);
-            this.groupBox7.Controls.Add(this.label14);
-            this.groupBox7.Controls.Add(this.txtA2PP);
-            this.groupBox7.Controls.Add(this.label19);
-            this.groupBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.groupBox7.Location = new System.Drawing.Point(1250, 222);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(178, 108);
-            this.groupBox7.TabIndex = 27;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "A2 Index";
-            // 
-            // txtA2PPK
-            // 
-            this.txtA2PPK.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA2PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA2PPK.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA2PPK.Location = new System.Drawing.Point(42, 62);
-            this.txtA2PPK.Name = "txtA2PPK";
-            this.txtA2PPK.Size = new System.Drawing.Size(130, 35);
-            this.txtA2PPK.TabIndex = 25;
-            this.txtA2PPK.Text = "0";
-            this.txtA2PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label14.Location = new System.Drawing.Point(4, 72);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(39, 20);
-            this.label14.TabIndex = 26;
-            this.label14.Text = "PPK";
-            // 
-            // txtA2PP
-            // 
-            this.txtA2PP.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA2PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA2PP.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA2PP.Location = new System.Drawing.Point(42, 21);
-            this.txtA2PP.Name = "txtA2PP";
-            this.txtA2PP.Size = new System.Drawing.Size(130, 35);
-            this.txtA2PP.TabIndex = 20;
-            this.txtA2PP.Text = "0";
-            this.txtA2PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label19.Location = new System.Drawing.Point(14, 31);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(29, 20);
-            this.label19.TabIndex = 24;
-            this.label19.Text = "PP";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.txtA1PPK);
-            this.groupBox5.Controls.Add(this.label15);
-            this.groupBox5.Controls.Add(this.txtA1PP);
-            this.groupBox5.Controls.Add(this.label13);
-            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.groupBox5.Location = new System.Drawing.Point(1013, 222);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(178, 108);
-            this.groupBox5.TabIndex = 26;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "A1 Index";
-            // 
-            // txtA1PPK
-            // 
-            this.txtA1PPK.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA1PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA1PPK.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA1PPK.Location = new System.Drawing.Point(40, 62);
-            this.txtA1PPK.Name = "txtA1PPK";
-            this.txtA1PPK.Size = new System.Drawing.Size(132, 35);
-            this.txtA1PPK.TabIndex = 25;
-            this.txtA1PPK.Text = "0";
-            this.txtA1PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label15.Location = new System.Drawing.Point(2, 72);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(39, 20);
-            this.label15.TabIndex = 26;
-            this.label15.Text = "PPK";
-            // 
-            // txtA1PP
-            // 
-            this.txtA1PP.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA1PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA1PP.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA1PP.Location = new System.Drawing.Point(40, 21);
-            this.txtA1PP.Name = "txtA1PP";
-            this.txtA1PP.Size = new System.Drawing.Size(132, 35);
-            this.txtA1PP.TabIndex = 20;
-            this.txtA1PP.Text = "0";
-            this.txtA1PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label13.Location = new System.Drawing.Point(12, 31);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(29, 20);
-            this.label13.TabIndex = 24;
-            this.label13.Text = "PP";
-            this.label13.Click += new System.EventHandler(this.label13_Click);
-            // 
             // btnCntProduct
             // 
             this.btnCntProduct.BackColor = System.Drawing.Color.White;
@@ -1287,75 +1172,177 @@ namespace Diameter_Checker
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.dateTimePicker1);
-            this.groupBox3.Controls.Add(this.groupBox9);
-            this.groupBox3.Controls.Add(this.groupBox7);
+            this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox3.Controls.Add(this.chart1);
-            this.groupBox3.Controls.Add(this.groupBox5);
             this.groupBox3.Controls.Add(this.chartA1);
             this.groupBox3.Controls.Add(this.chartA2);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.groupBox3.ForeColor = System.Drawing.Color.Teal;
             this.groupBox3.Location = new System.Drawing.Point(6, 102);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(1522, 410);
+            this.groupBox3.Size = new System.Drawing.Size(1522, 514);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Time Chart";
             // 
+            // dateTimeFilter
+            // 
+            this.dateTimeFilter.Enabled = false;
+            this.dateTimeFilter.Location = new System.Drawing.Point(996, 7);
+            this.dateTimeFilter.Name = "dateTimeFilter";
+            this.dateTimeFilter.Size = new System.Drawing.Size(207, 20);
+            this.dateTimeFilter.TabIndex = 28;
+            this.dateTimeFilter.ValueChanged += new System.EventHandler(this.dateTimeFilter_ValueChanged);
+            // 
+            // txtA1PPK
+            // 
+            this.txtA1PPK.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA1PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA1PPK.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA1PPK.Location = new System.Drawing.Point(1764, 364);
+            this.txtA1PPK.Name = "txtA1PPK";
+            this.txtA1PPK.Size = new System.Drawing.Size(132, 35);
+            this.txtA1PPK.TabIndex = 25;
+            this.txtA1PPK.Text = "0";
+            this.txtA1PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label27.Location = new System.Drawing.Point(1760, 341);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(39, 20);
+            this.label27.TabIndex = 26;
+            this.label27.Text = "PPK";
+            // 
+            // txtA1PP
+            // 
+            this.txtA1PP.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA1PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA1PP.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA1PP.Location = new System.Drawing.Point(1610, 364);
+            this.txtA1PP.Name = "txtA1PP";
+            this.txtA1PP.Size = new System.Drawing.Size(132, 35);
+            this.txtA1PP.TabIndex = 20;
+            this.txtA1PP.Text = "0";
+            this.txtA1PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label28.Location = new System.Drawing.Point(1606, 341);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(29, 20);
+            this.label28.TabIndex = 24;
+            this.label28.Text = "PP";
+            // 
+            // txtA2PPK
+            // 
+            this.txtA2PPK.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA2PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA2PPK.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA2PPK.Location = new System.Drawing.Point(1764, 410);
+            this.txtA2PPK.Name = "txtA2PPK";
+            this.txtA2PPK.Size = new System.Drawing.Size(132, 35);
+            this.txtA2PPK.TabIndex = 25;
+            this.txtA2PPK.Text = "0";
+            this.txtA2PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtA2PP
+            // 
+            this.txtA2PP.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA2PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA2PP.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA2PP.Location = new System.Drawing.Point(1610, 410);
+            this.txtA2PP.Name = "txtA2PP";
+            this.txtA2PP.Size = new System.Drawing.Size(132, 35);
+            this.txtA2PP.TabIndex = 20;
+            this.txtA2PP.Text = "0";
+            this.txtA2PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // chart1
+            // 
+            chartArea4.AxisY.Title = "A1 Air Pressure";
+            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea4.Name = "ChartArea1";
+            chartArea4.ShadowColor = System.Drawing.Color.Gray;
+            this.chart1.ChartAreas.Add(chartArea4);
+            legend4.DockedToChartArea = "ChartArea1";
+            legend4.Enabled = false;
+            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend4.IsTextAutoFit = false;
+            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend4.Name = "Legend1";
+            this.chart1.Legends.Add(legend4);
+            this.chart1.Location = new System.Drawing.Point(2, 270);
+            this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series4.BorderWidth = 2;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series4.Legend = "Legend1";
+            series4.Name = "A2";
+            this.chart1.Series.Add(series4);
+            this.chart1.Size = new System.Drawing.Size(752, 243);
+            this.chart1.TabIndex = 3;
+            this.chart1.Text = "Chart A1";
+            // 
             // chartA1
             // 
-            chartArea2.AxisY.Title = "A1 Air Pressure";
-            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea2.Name = "ChartArea1";
-            chartArea2.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea2);
-            legend2.DockedToChartArea = "ChartArea1";
-            legend2.Enabled = false;
-            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend2.IsTextAutoFit = false;
-            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend2.Name = "Legend1";
-            this.chartA1.Legends.Add(legend2);
+            chartArea5.AxisY.Title = "A1 Air Pressure";
+            chartArea5.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea5.Name = "ChartArea1";
+            chartArea5.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea5);
+            legend5.DockedToChartArea = "ChartArea1";
+            legend5.Enabled = false;
+            legend5.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend5.IsTextAutoFit = false;
+            legend5.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend5.Name = "Legend1";
+            this.chartA1.Legends.Add(legend5);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series2.BorderWidth = 2;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series2.Legend = "Legend1";
-            series2.Name = "A2";
-            this.chartA1.Series.Add(series2);
-            this.chartA1.Size = new System.Drawing.Size(748, 172);
+            series5.BorderWidth = 2;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series5.Legend = "Legend1";
+            series5.Name = "A2";
+            this.chartA1.Series.Add(series5);
+            this.chartA1.Size = new System.Drawing.Size(752, 243);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea3.AxisY.Title = "A2 Air Pressure";
-            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea3);
-            legend3.DockedToChartArea = "ChartArea1";
-            legend3.Enabled = false;
-            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend3.Name = "Legend1";
-            this.chartA2.Legends.Add(legend3);
+            chartArea6.AxisY.Title = "A2 Air Pressure";
+            chartArea6.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea6.Name = "ChartArea1";
+            chartArea6.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea6);
+            legend6.DockedToChartArea = "ChartArea1";
+            legend6.Enabled = false;
+            legend6.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend6.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend6.Name = "Legend1";
+            this.chartA2.Legends.Add(legend6);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series3.BorderWidth = 2;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series3.IsXValueIndexed = true;
-            series3.Legend = "Legend1";
-            series3.Name = "A2";
-            this.chartA2.Series.Add(series3);
-            this.chartA2.Size = new System.Drawing.Size(774, 172);
+            series6.BorderWidth = 2;
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series6.IsXValueIndexed = true;
+            series6.Legend = "Legend1";
+            series6.Name = "A2";
+            this.chartA2.Series.Add(series6);
+            this.chartA2.Size = new System.Drawing.Size(752, 243);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
             // 
@@ -1462,25 +1449,26 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
@@ -1499,32 +1487,32 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.dataGridView1.Location = new System.Drawing.Point(4, 518);
+            this.dataGridView1.Location = new System.Drawing.Point(4, 622);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle7;
-            this.dataGridView1.Size = new System.Drawing.Size(1899, 332);
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            this.dataGridView1.Size = new System.Drawing.Size(1899, 228);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
@@ -1533,11 +1521,11 @@ namespace Diameter_Checker
             // 
             this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle10;
             this.ID.FillWeight = 120F;
             this.ID.HeaderText = "ID";
             this.ID.MinimumWidth = 100;
@@ -1548,11 +1536,11 @@ namespace Diameter_Checker
             // 
             this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.model.DataPropertyName = "model";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle11;
             this.model.FillWeight = 120F;
             this.model.HeaderText = "Model";
             this.model.MinimumWidth = 100;
@@ -2136,6 +2124,8 @@ namespace Diameter_Checker
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.SystemColors.Desktop;
+            this.panel4.Controls.Add(this.checkBoxFilterDate);
+            this.panel4.Controls.Add(this.dateTimeFilter);
             this.panel4.Controls.Add(this.lblDateTime);
             this.panel4.Controls.Add(this.label1);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2365,98 +2355,70 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // chart1
+            // label29
             // 
-            chartArea1.AxisY.Title = "A1 Air Pressure";
-            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea1.Name = "ChartArea1";
-            chartArea1.ShadowColor = System.Drawing.Color.Gray;
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.DockedToChartArea = "ChartArea1";
-            legend1.Enabled = false;
-            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend1.IsTextAutoFit = false;
-            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(6, 211);
-            this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series1.BorderWidth = 2;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series1.Legend = "Legend1";
-            series1.Name = "A2";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(748, 172);
-            this.chart1.TabIndex = 3;
-            this.chart1.Text = "Chart A1";
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(1537, 364);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(67, 16);
+            this.label29.TabIndex = 29;
+            this.label29.Text = "A1 Index";
             // 
-            // groupBox9
+            // label13
             // 
-            this.groupBox9.Controls.Add(this.textBox1);
-            this.groupBox9.Controls.Add(this.label27);
-            this.groupBox9.Controls.Add(this.textBox2);
-            this.groupBox9.Controls.Add(this.label28);
-            this.groupBox9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.groupBox9.Location = new System.Drawing.Point(802, 222);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(178, 108);
-            this.groupBox9.TabIndex = 27;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "A1 Index";
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(1537, 410);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(67, 16);
+            this.label13.TabIndex = 30;
+            this.label13.Text = "A2 Index";
             // 
-            // textBox1
+            // textBox3
             // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.textBox1.ForeColor = System.Drawing.Color.Yellow;
-            this.textBox1.Location = new System.Drawing.Point(40, 62);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(132, 35);
-            this.textBox1.TabIndex = 25;
-            this.textBox1.Text = "0";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox3.BackColor = System.Drawing.SystemColors.MenuText;
+            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.textBox3.ForeColor = System.Drawing.Color.Yellow;
+            this.textBox3.Location = new System.Drawing.Point(1610, 456);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(132, 35);
+            this.textBox3.TabIndex = 31;
+            this.textBox3.Text = "0";
+            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // label27
+            // textBox4
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label27.Location = new System.Drawing.Point(2, 72);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(39, 20);
-            this.label27.TabIndex = 26;
-            this.label27.Text = "PPK";
+            this.textBox4.BackColor = System.Drawing.SystemColors.MenuText;
+            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.textBox4.ForeColor = System.Drawing.Color.Yellow;
+            this.textBox4.Location = new System.Drawing.Point(1764, 456);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(132, 35);
+            this.textBox4.TabIndex = 32;
+            this.textBox4.Text = "0";
+            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // textBox2
+            // label14
             // 
-            this.textBox2.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.textBox2.ForeColor = System.Drawing.Color.Yellow;
-            this.textBox2.Location = new System.Drawing.Point(40, 21);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(132, 35);
-            this.textBox2.TabIndex = 20;
-            this.textBox2.Text = "0";
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(1537, 456);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(56, 16);
+            this.label14.TabIndex = 33;
+            this.label14.Text = "Weight";
             // 
-            // label28
+            // checkBoxFilterDate
             // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label28.Location = new System.Drawing.Point(12, 31);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 20);
-            this.label28.TabIndex = 24;
-            this.label28.Text = "PP";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(802, 382);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
-            this.dateTimePicker1.TabIndex = 28;
+            this.checkBoxFilterDate.AutoSize = true;
+            this.checkBoxFilterDate.Location = new System.Drawing.Point(910, 8);
+            this.checkBoxFilterDate.Name = "checkBoxFilterDate";
+            this.checkBoxFilterDate.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxFilterDate.TabIndex = 60;
+            this.checkBoxFilterDate.Text = "Filter date";
+            this.checkBoxFilterDate.UseVisualStyleBackColor = true;
+            this.checkBoxFilterDate.CheckedChanged += new System.EventHandler(this.checkBoxFilterDate_CheckedChanged);
             // 
             // frmMain
             // 
@@ -2475,12 +2437,9 @@ namespace Diameter_Checker
             this.panel6.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).EndInit();
             this.groupBox4.ResumeLayout(false);
@@ -2500,9 +2459,6 @@ namespace Diameter_Checker
             this.panel4.PerformLayout();
             this.panelResult.ResumeLayout(false);
             this.panelResult.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2515,13 +2471,20 @@ namespace Diameter_Checker
         {
         }
 
-        private void loadData()
+        private void loadData(string d="")
         {
             try
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("select ID, model, QrCode, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data)A1 order by NEWID DESC)B1 order by NEWID", con));
+                string whereClause = "";
+                if(!string.IsNullOrEmpty(d))
+                {
+                    whereClause = " where Date = '" + d + "'";
+                }
+                
+                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("select ID, model, QrCode, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data"+whereClause+")A1 order by NEWID DESC)B1 order by NEWID", con));
+
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 this.dataGridView1.DataSource = dt;
@@ -3356,6 +3319,28 @@ namespace Diameter_Checker
             if (e.KeyCode == Keys.Enter)
             {
                 Communication.receivedQrCodeFlg = true;
+            }
+        }
+
+        private void dateTimeFilter_ValueChanged(object sender, EventArgs e)
+        {
+            string theDate = dateTimeFilter.Value.ToString("yyyy-MM-dd");
+            this.loadData(theDate);
+        }
+
+        private void checkBoxFilterDate_CheckedChanged(object sender, EventArgs e)
+        {
+            bool chk = checkBoxFilterDate.Checked;
+            if (chk)
+            {
+                dateTimeFilter.Enabled = true;
+                string theDate = dateTimeFilter.Value.ToString("yyyy-MM-dd");
+                this.loadData(theDate);
+            }
+            else
+            {
+                dateTimeFilter.Enabled = false;
+                this.loadData();
             }
         }
     }
