@@ -30,6 +30,7 @@ namespace Diameter_Checker
         private int charNumberOfLastString2;
         private static int i;
         private static int j;
+        private static int k;
         private static int rowIndex;
         private IContainer components = null;
         private Panel panel3;
@@ -109,8 +110,6 @@ namespace Diameter_Checker
         private SerialPort serialPort2;
         private GroupBox groupBox8;
         private Label label22;
-        private TextBox txtQrCode;
-        private Label label21;
         private Button btnCntProduct;
         private NumericUpDown numProductInSet;
         private TextBox txtWeight;
@@ -120,7 +119,6 @@ namespace Diameter_Checker
         private Label lblStatus2;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn model;
-        private DataGridViewTextBoxColumn QrCode;
         private DataGridViewTextBoxColumn Weight;
         private DataGridViewTextBoxColumn A1MaxValue;
         private DataGridViewTextBoxColumn A1MinValue;
@@ -141,15 +139,15 @@ namespace Diameter_Checker
         private GroupBox groupBox6;
         private TextBox txtWeightMin;
         private TextBox txtWeightMax;
-        private Chart chart1;
+        private Chart chartWeight;
         private DateTimePicker dateTimeFilter;
         private TextBox txtA1PPK;
         private Label label27;
         private TextBox txtA1PP;
         private Label label28;
         private Label label14;
-        private TextBox textBox4;
-        private TextBox textBox3;
+        private TextBox txtWeightPPK;
+        private TextBox txtWeightPP;
         private Label label13;
         private Label label29;
         private CheckBox checkBoxFilterDate;
@@ -159,6 +157,7 @@ namespace Diameter_Checker
         {
             frmMain.i = 0;
             frmMain.j = 0;
+            frmMain.k = 0;
         }
 
         public frmMain()
@@ -201,6 +200,7 @@ namespace Diameter_Checker
                 Communication.A1MinimumValue = null;
                 Communication.A2MaximumValue = null;
                 Communication.A2MinimumValue = null;
+                Communication.Weight = null;
                 this.controlAlarm_A1ResetAlarm();
                 this.controlAlarm_A2ResetAlarm();
                 this.txtA1MaximumValue.Text = null;
@@ -211,10 +211,12 @@ namespace Diameter_Checker
                 this.txtA2Result.Text = null;
                 this.txtWeight.Text = null;
                 this.txtWeightResult.Text = null;
-                this.chartA1.Series.Clear();
-                this.chartA1Setting();
-                this.chartA2.Series.Clear();
-                this.chartA2Setting();
+                //this.chartA1.Series.Clear();
+                //this.chartA1Setting();
+                //this.chartA2.Series.Clear();
+                //this.chartA2Setting();
+                //this.chartWeight.Series.Clear();
+                //this.chartWeightSetting();
             }
         }
 
@@ -316,6 +318,9 @@ namespace Diameter_Checker
         {
             float single;
             double num;
+            Random rnd = new Random(); // for testing
+
+            //A1
             try
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
@@ -350,19 +355,28 @@ namespace Diameter_Checker
                 Communication.A1PPU /= 1000;
                 Communication.A1PPL = (double.Parse(Communication.A1Average) - double.Parse(Communication.A1MinimumOffset)) / (3 * Communication.A1SD);
                 Communication.A1PPL /= 1000;
+
                 if (Communication.A1PPU >= Communication.A1PPL)
                 {
                     this.txtA1PPK.Text = Communication.A1PPL.ToString().Substring(0, 10);
+                    Communication.A1PPK = Communication.A1PPL;
                 }
                 else
                 {
                     this.txtA1PPK.Text = Communication.A1PPU.ToString().Substring(0, 10);
+                    Communication.A1PPK = Communication.A1PPU;
                 }
+
+                //for testing
+                //Communication.A1PPK = 1.33f + rnd.NextDouble()*0.34;
+
                 con.Close();
             }
             catch
             {
             }
+
+            //A2
             try
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
@@ -400,32 +414,96 @@ namespace Diameter_Checker
                 if (Communication.A2PPU >= Communication.A2PPL)
                 {
                     this.txtA2PPK.Text = Communication.A2PPL.ToString().Substring(0, 10);
+                    Communication.A2PPK = Communication.A2PPL;
                 }
                 else
                 {
                     this.txtA2PPK.Text = Communication.A2PPU.ToString().Substring(0, 10);
+                    Communication.A2PPK = Communication.A2PPU;
                 }
+                //for testing
+                //Communication.A2PPK = 1.33f + rnd.NextDouble()*0.34;
                 con.Close();
             }
             catch
             {
             }
+
+            //Weight
+            try
+            {
+                SqlConnection con = new SqlConnection(Communication.con_string);
+                con.Open();
+                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(weight)  FROM Data", con));
+                DataTable dataTableGetAverage = new DataTable();
+                adapterGetAverage.Fill(dataTableGetAverage);
+                single = float.Parse(dataTableGetAverage.Rows[0][0].ToString()) * 1000f;
+                Communication.WeightAverage = single.ToString();
+
+                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT weight FROM Data Where model='", this.cmbModel.Text, "'"), con);
+                SqlDataAdapter adapterLoadAllValue = new SqlDataAdapter(cmd_LoadAllValue);
+                DataTable dataTableLoadAllValue = new DataTable();
+                adapterLoadAllValue.Fill(dataTableLoadAllValue);
+                Communication.WeightSD = 0;
+                double b = 0;
+                frmMain.rowIndex = 0;
+                while (frmMain.rowIndex <= dataTableLoadAllValue.Rows.Count - 1)
+                {
+                    double a = double.Parse(dataTableLoadAllValue.Rows[frmMain.rowIndex][0].ToString());
+                    b = double.Parse(Communication.WeightAverage.ToString());
+                    Communication.WeightSD += Math.Pow(a - b, 2);
+                    frmMain.rowIndex++;
+                }
+                Communication.WeightSD = Math.Sqrt(Communication.WeightSD / (double)(frmMain.rowIndex - 1));
+                Communication.WeightSD /= 1000;
+                num = (double.Parse(Communication.maxWeight) - double.Parse(Communication.minWeight)) / (6 * Communication.WeightSD);
+                Communication.WeightPP = num.ToString();
+                num = double.Parse(Communication.WeightPP) / 1000;
+                Communication.WeightPP = num.ToString();
+                this.txtWeightPP.Text = Communication.WeightPP.Substring(0, 10);
+                Communication.WeightPPU = (double.Parse(Communication.maxWeight) - double.Parse(Communication.WeightAverage)) / (3 * Communication.WeightSD);
+                Communication.WeightPPU /= 1000;
+                Communication.WeightPPL = (double.Parse(Communication.WeightAverage) - double.Parse(Communication.minWeight)) / (3 * Communication.WeightSD);
+                Communication.WeightPPL /= 1000;
+                if (Communication.WeightPPU >= Communication.WeightPPL)
+                {
+                    this.txtWeightPPK.Text = Communication.WeightPPL.ToString().Substring(0, 10);
+                    Communication.WeightPPK = Communication.WeightPPL;
+                }
+                else
+                {
+                    this.txtWeightPPK.Text = Communication.WeightPPU.ToString().Substring(0, 10);
+                    Communication.WeightPPK = Communication.WeightPPU;
+                }
+                //for testing
+                //Communication.WeightPPK = 1.33f + rnd.NextDouble()*0.34;
+                con.Close();
+            }
+            catch
+            {
+            }
+
+            chartA1Display();
+            chartA2Display();
+            chartWDisplay();
         }
 
         private void chartA1Display()
         {
-            DataPointCollection points = this.chartA1.Series["A1 Max Offset"].Points;
+            DataPointCollection points = this.chartA1.Series["A1 Max PPK"].Points;
             int num = frmMain.i;
-            frmMain.i = num + 1;
-            points.AddXY((double)num, (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection dataPointCollection = this.chartA1.Series["A1 Measuring"].Points;
+            //frmMain.i = num + 1;
+            points.AddXY((double)num, Communication.MAX_PPK);
+
+            DataPointCollection dataPointCollection = this.chartA1.Series["A1 Actual PPK"].Points;
             int num1 = frmMain.i;
-            frmMain.i = num1 + 1;
-            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A1MeasuredValue.Replace(".", "")) / 1000f));
-            DataPointCollection points1 = this.chartA1.Series["A1 Min Offset"].Points;
+            //frmMain.i = num1 + 1;
+            dataPointCollection.AddXY((double)num1, Communication.A1PPK);
+
+            DataPointCollection points1 = this.chartA1.Series["A1 Min PPK"].Points;
             int num2 = frmMain.i;
+            points1.AddXY((double)num2, Communication.MIN_PPK);
             frmMain.i = num2 + 1;
-            points1.AddXY((double)num2, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
         }
 
         private void chartA1Setting()
@@ -434,49 +512,57 @@ namespace Diameter_Checker
             ChartArea chart1 = this.chartA1.ChartAreas[0];
             this.chartA1.Series.Clear();
             chart1.AxisX.Minimum = 0;
-            chart1.AxisY.Maximum = (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f) + 0.01;
-            chart1.AxisY.Minimum = (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f) - 0.01;
+            chart1.AxisY.Maximum = Math.Floor((Communication.MAX_PPK+0.1f)*100)/100;
+            chart1.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
             chart1.AxisY.IntervalType = DateTimeIntervalType.Number;
-            this.chartA1.Series.Add("A1 Max Offset");
-            this.chartA1.Series["A1 Max Offset"].ChartType = SeriesChartType.Line;
-            this.chartA1.Series["A1 Max Offset"].Color = Color.Red;
-            this.chartA1.Series["A1 Max Offset"].BorderWidth = 3;
-            this.chartA1.Series.Add("A1 Measuring");
-            this.chartA1.Series["A1 Measuring"].ChartType = SeriesChartType.Line;
-            this.chartA1.Series["A1 Measuring"].Color = Color.Blue;
-            this.chartA1.Series["A1 Measuring"].BorderWidth = 3;
-            this.chartA1.Series.Add("A1 Min Offset");
-            this.chartA1.Series["A1 Min Offset"].ChartType = SeriesChartType.Line;
-            this.chartA1.Series["A1 Min Offset"].Color = Color.Red;
-            this.chartA1.Series["A1 Min Offset"].BorderWidth = 3;
-            DataPointCollection points = this.chartA1.Series["A1 Max Offset"].Points;
-            int num = frmMain.i;
-            frmMain.i = num + 1;
-            points.AddXY((double)num, (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection dataPointCollection = this.chartA1.Series["A1 Measuring"].Points;
-            int num1 = frmMain.i;
-            frmMain.i = num1 + 1;
-            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection points1 = this.chartA1.Series["A1 Min Offset"].Points;
-            int num2 = frmMain.i;
-            frmMain.i = num2 + 1;
-            points1.AddXY((double)num2, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
+            this.chartA1.Series.Add("A1 Max PPK");
+            this.chartA1.Series["A1 Max PPK"].ChartType = SeriesChartType.Line;
+            this.chartA1.Series["A1 Max PPK"].Color = Color.Red;
+            this.chartA1.Series["A1 Max PPK"].BorderWidth = 3;
+
+            this.chartA1.Series.Add("A1 Actual PPK");
+            this.chartA1.Series["A1 Actual PPK"].ChartType = SeriesChartType.Line;
+            this.chartA1.Series["A1 Actual PPK"].Color = Color.Blue;
+            this.chartA1.Series["A1 Actual PPK"].BorderWidth = 3;
+
+            this.chartA1.Series.Add("A1 Min PPK");
+            this.chartA1.Series["A1 Min PPK"].ChartType = SeriesChartType.Line;
+            this.chartA1.Series["A1 Min PPK"].Color = Color.Red;
+            this.chartA1.Series["A1 Min PPK"].BorderWidth = 3;
+
+            //DataPointCollection points = this.chartA1.Series["A1 Max PPK"].Points;
+            //int num = frmMain.i;
+            ////frmMain.i = num + 1;
+            //points.AddXY((double)num, Communication.MAX_PPK);
+
+            //DataPointCollection dataPointCollection = this.chartA1.Series["A1 Actual PPK"].Points;
+            //int num1 = frmMain.i;
+            ////frmMain.i = num1 + 1;
+            //dataPointCollection.AddXY((double)num1, Communication.A1PPK);
+
+            //DataPointCollection points1 = this.chartA1.Series["A1 Min PPK"].Points;
+            //int num2 = frmMain.i;
+            //points1.AddXY((double)num2, Communication.MIN_PPK);
+
+            //frmMain.i = num2 + 1;
         }
 
         private void chartA2Display()
         {
-            DataPointCollection points = this.chartA2.Series["A2 Max Offset"].Points;
+            DataPointCollection points = this.chartA2.Series["A2 Max PPK"].Points;
             int num = frmMain.j;
-            frmMain.j = num + 1;
-            points.AddXY((double)num, (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection dataPointCollection = this.chartA2.Series["A2 Measuring"].Points;
+            //frmMain.i = num + 1;
+            points.AddXY((double)num, Communication.MAX_PPK);
+
+            DataPointCollection dataPointCollection = this.chartA2.Series["A2 Actual PPK"].Points;
             int num1 = frmMain.j;
-            frmMain.j = num1 + 1;
-            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A2MeasuredValue.Replace(".", "")) / 1000f));
-            DataPointCollection points1 = this.chartA2.Series["A2 Min Offset"].Points;
+            //frmMain.i = num1 + 1;
+            dataPointCollection.AddXY((double)num1, Communication.A2PPK);
+
+            DataPointCollection points1 = this.chartA2.Series["A2 Min PPK"].Points;
             int num2 = frmMain.j;
+            points1.AddXY((double)num2, Communication.MIN_PPK);
             frmMain.j = num2 + 1;
-            points1.AddXY((double)num2, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
         }
 
         private void chartA2Setting()
@@ -485,33 +571,64 @@ namespace Diameter_Checker
             ChartArea chart2 = this.chartA2.ChartAreas[0];
             this.chartA2.Series.Clear();
             chart2.AxisX.Minimum = 0;
-            chart2.AxisY.Maximum = (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f) + 0.01;
-            chart2.AxisY.Minimum = (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f) - 0.01;
+            chart2.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
+            chart2.AxisY.Minimum = Math.Floor((Communication.MIN_PPK - 0.1f) * 100) / 100;
             chart2.AxisY.IntervalType = DateTimeIntervalType.Number;
-            this.chartA2.Series.Add("A2 Max Offset");
-            this.chartA2.Series["A2 Max Offset"].ChartType = SeriesChartType.Line;
-            this.chartA2.Series["A2 Max Offset"].Color = Color.Red;
-            this.chartA2.Series["A2 Max Offset"].BorderWidth = 3;
-            this.chartA2.Series.Add("A2 Measuring");
-            this.chartA2.Series["A2 Measuring"].ChartType = SeriesChartType.Line;
-            this.chartA2.Series["A2 Measuring"].Color = Color.Blue;
-            this.chartA2.Series["A2 Measuring"].BorderWidth = 3;
-            this.chartA2.Series.Add("A2 Min Offset");
-            this.chartA2.Series["A2 Min Offset"].ChartType = SeriesChartType.Line;
-            this.chartA2.Series["A2 Min Offset"].Color = Color.Red;
-            this.chartA2.Series["A2 Min Offset"].BorderWidth = 3;
-            DataPointCollection points = this.chartA2.Series["A2 Max Offset"].Points;
-            int num = frmMain.j;
-            frmMain.j = num + 1;
-            points.AddXY((double)num, (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection dataPointCollection = this.chartA2.Series["A2 Measuring"].Points;
-            int num1 = frmMain.j;
-            frmMain.j = num1 + 1;
-            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
-            DataPointCollection points1 = this.chartA2.Series["A2 Min Offset"].Points;
-            int num2 = frmMain.j;
-            frmMain.j = num2 + 1;
-            points1.AddXY((double)num2, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
+            this.chartA2.Series.Add("A2 Max PPK");
+            this.chartA2.Series["A2 Max PPK"].ChartType = SeriesChartType.Line;
+            this.chartA2.Series["A2 Max PPK"].Color = Color.Red;
+            this.chartA2.Series["A2 Max PPK"].BorderWidth = 3;
+
+            this.chartA2.Series.Add("A2 Actual PPK");
+            this.chartA2.Series["A2 Actual PPK"].ChartType = SeriesChartType.Line;
+            this.chartA2.Series["A2 Actual PPK"].Color = Color.Blue;
+            this.chartA2.Series["A2 Actual PPK"].BorderWidth = 3;
+
+            this.chartA2.Series.Add("A2 Min PPK");
+            this.chartA2.Series["A2 Min PPK"].ChartType = SeriesChartType.Line;
+            this.chartA2.Series["A2 Min PPK"].Color = Color.Red;
+            this.chartA2.Series["A2 Min PPK"].BorderWidth = 3;
+        }
+        private void chartWDisplay()
+        {
+            DataPointCollection points = this.chartWeight.Series["Weight Max PPK"].Points;
+            int num = frmMain.k;
+            //frmMain.i = num + 1;
+            points.AddXY((double)num, Communication.MAX_PPK);
+
+            DataPointCollection dataPointCollection = this.chartWeight.Series["Weight Actual PPK"].Points;
+            int num1 = frmMain.k;
+            //frmMain.i = num1 + 1;
+            dataPointCollection.AddXY((double)num1, Communication.WeightPPK);
+
+            DataPointCollection points1 = this.chartWeight.Series["Weight Min PPK"].Points;
+            int num2 = frmMain.k;
+            points1.AddXY((double)num2, Communication.MIN_PPK);
+            frmMain.k = num2 + 1;
+        }
+        private void chartWeightSetting()
+        {
+            frmMain.k = 0;
+            ChartArea chart3 = this.chartWeight.ChartAreas[0];
+            this.chartWeight.Series.Clear();
+            chart3.AxisX.Minimum = 0;
+            chart3.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
+            chart3.AxisY.Minimum = Math.Floor((Communication.MIN_PPK - 0.1f) * 100) / 100;
+            chart3.AxisY.IntervalType = DateTimeIntervalType.Number;
+            this.chartWeight.Series.Add("Weight Max PPK");
+            this.chartWeight.Series["Weight Max PPK"].ChartType = SeriesChartType.Line;
+            this.chartWeight.Series["Weight Max PPK"].Color = Color.Red;
+            this.chartWeight.Series["Weight Max PPK"].BorderWidth = 3;
+
+            this.chartWeight.Series.Add("Weight Actual PPK");
+            this.chartWeight.Series["Weight Actual PPK"].ChartType = SeriesChartType.Line;
+            this.chartWeight.Series["Weight Actual PPK"].Color = Color.Blue;
+            this.chartWeight.Series["Weight Actual PPK"].BorderWidth = 3;
+
+            this.chartWeight.Series.Add("Weight Min PPK");
+            this.chartWeight.Series["Weight Min PPK"].ChartType = SeriesChartType.Line;
+            this.chartWeight.Series["Weight Min PPK"].Color = Color.Red;
+            this.chartWeight.Series["Weight Min PPK"].BorderWidth = 3;
         }
 
         private void chkStopScan_CheckedChanged(object sender, EventArgs e)
@@ -615,19 +732,18 @@ namespace Diameter_Checker
                 {
                     frmMain.deleteData.ID = row.Cells[0].Value.ToString();
                     frmMain.deleteData.model = row.Cells[1].Value.ToString();
-                    frmMain.deleteData.QrCode = row.Cells[2].Value.ToString();
-                    frmMain.deleteData.A1MaximumValue = row.Cells[3].Value.ToString();
-                    frmMain.deleteData.A1MinimumValue = row.Cells[4].Value.ToString();
-                    frmMain.deleteData.A1Result = row.Cells[5].Value.ToString();
-                    frmMain.deleteData.A2MaximumValue = row.Cells[6].Value.ToString();
-                    frmMain.deleteData.A2MinimumValue = row.Cells[7].Value.ToString();
-                    frmMain.deleteData.A2Result = row.Cells[8].Value.ToString();
-                    frmMain.deleteData.Date = row.Cells[9].Value.ToString();
-                    frmMain.deleteData.Time = row.Cells[10].Value.ToString();
-                    frmMain.deleteData.Judge = row.Cells[11].Value.ToString();
-                    frmMain.deleteData.totalProcessed = Convert.ToInt32(row.Cells[12].Value.ToString());
-                    frmMain.deleteData.totalPASS = Convert.ToInt32(row.Cells[13].Value.ToString());
-                    frmMain.deleteData.totalFAIL = Convert.ToInt32(row.Cells[14].Value.ToString());
+                    frmMain.deleteData.A1MaximumValue = row.Cells[2].Value.ToString();
+                    frmMain.deleteData.A1MinimumValue = row.Cells[3].Value.ToString();
+                    frmMain.deleteData.A1Result = row.Cells[4].Value.ToString();
+                    frmMain.deleteData.A2MaximumValue = row.Cells[5].Value.ToString();
+                    frmMain.deleteData.A2MinimumValue = row.Cells[6].Value.ToString();
+                    frmMain.deleteData.A2Result = row.Cells[7].Value.ToString();
+                    frmMain.deleteData.Date = row.Cells[8].Value.ToString();
+                    frmMain.deleteData.Time = row.Cells[9].Value.ToString();
+                    frmMain.deleteData.Judge = row.Cells[10].Value.ToString();
+                    frmMain.deleteData.totalProcessed = Convert.ToInt32(row.Cells[11].Value.ToString());
+                    frmMain.deleteData.totalPASS = Convert.ToInt32(row.Cells[12].Value.ToString());
+                    frmMain.deleteData.totalFAIL = Convert.ToInt32(row.Cells[13].Value.ToString());
                 }
             }
         }
@@ -743,7 +859,6 @@ namespace Diameter_Checker
             this.txtSystemMessage.Text = "Please press the 'Start' button to begin!";
             this.dataGridView1.Columns["ID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             this.dataGridView1.Columns["model"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            this.dataGridView1.Columns["QrCode"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             this.dataGridView1.Columns["A1MaxValue"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             this.dataGridView1.Columns["A1MinValue"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             this.dataGridView1.Columns["A1Result"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -758,6 +873,7 @@ namespace Diameter_Checker
             this.dataGridView1.Columns["TotalFAIL"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             this.chartA1Setting();
             this.chartA2Setting();
+            chartWeightSetting();
             using (ManagementObjectCollection.ManagementObjectEnumerator enumerator = (new ManagementClass("win32_processor")).GetInstances().GetEnumerator())
             {
                 if (enumerator.MoveNext())
@@ -865,43 +981,45 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtWeightPPK = new System.Windows.Forms.TextBox();
+            this.txtWeightPP = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.txtA2PPK = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtA1PPK = new System.Windows.Forms.TextBox();
+            this.txtA2PP = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.txtWeightResult = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.txtWeight = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
-            this.txtQrCode = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.txtA1PP = new System.Windows.Forms.TextBox();
             this.btnCntProduct = new System.Windows.Forms.Button();
             this.numProductInSet = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dateTimeFilter = new System.Windows.Forms.DateTimePicker();
-            this.txtA1PPK = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.txtA1PP = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.txtA2PPK = new System.Windows.Forms.TextBox();
-            this.txtA2PP = new System.Windows.Forms.TextBox();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartWeight = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartA1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chartA2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label22 = new System.Windows.Forms.Label();
@@ -916,7 +1034,6 @@ namespace Diameter_Checker
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.model = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QrCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Weight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.A1MinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -963,6 +1080,7 @@ namespace Diameter_Checker
             this.label4 = new System.Windows.Forms.Label();
             this.cmbModel = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.dateTimeFilter = new System.Windows.Forms.DateTimePicker();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.communicatiomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -973,6 +1091,7 @@ namespace Diameter_Checker
             this.lblConnectStatus = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.checkBoxFilterDate = new System.Windows.Forms.CheckBox();
             this.lblDateTime = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tmrConnectionStatus = new System.Windows.Forms.Timer(this.components);
@@ -997,18 +1116,12 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
-            this.label29 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.checkBoxFilterDate = new System.Windows.Forms.CheckBox();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).BeginInit();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).BeginInit();
             this.groupBox4.SuspendLayout();
@@ -1037,8 +1150,8 @@ namespace Diameter_Checker
             // 
             this.panel6.BackColor = System.Drawing.SystemColors.HighlightText;
             this.panel6.Controls.Add(this.label14);
-            this.panel6.Controls.Add(this.textBox4);
-            this.panel6.Controls.Add(this.textBox3);
+            this.panel6.Controls.Add(this.txtWeightPPK);
+            this.panel6.Controls.Add(this.txtWeightPP);
             this.panel6.Controls.Add(this.label13);
             this.panel6.Controls.Add(this.label29);
             this.panel6.Controls.Add(this.txtA2PPK);
@@ -1063,6 +1176,116 @@ namespace Diameter_Checker
             this.panel6.Size = new System.Drawing.Size(1908, 771);
             this.panel6.TabIndex = 2;
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(1537, 456);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(56, 16);
+            this.label14.TabIndex = 33;
+            this.label14.Text = "Weight";
+            // 
+            // txtWeightPPK
+            // 
+            this.txtWeightPPK.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtWeightPPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightPPK.ForeColor = System.Drawing.Color.Yellow;
+            this.txtWeightPPK.Location = new System.Drawing.Point(1764, 456);
+            this.txtWeightPPK.Name = "txtWeightPPK";
+            this.txtWeightPPK.Size = new System.Drawing.Size(132, 35);
+            this.txtWeightPPK.TabIndex = 32;
+            this.txtWeightPPK.Text = "0";
+            this.txtWeightPPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtWeightPP
+            // 
+            this.txtWeightPP.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtWeightPP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtWeightPP.ForeColor = System.Drawing.Color.Yellow;
+            this.txtWeightPP.Location = new System.Drawing.Point(1610, 456);
+            this.txtWeightPP.Name = "txtWeightPP";
+            this.txtWeightPP.Size = new System.Drawing.Size(132, 35);
+            this.txtWeightPP.TabIndex = 31;
+            this.txtWeightPP.Text = "0";
+            this.txtWeightPP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(1537, 410);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(67, 16);
+            this.label13.TabIndex = 30;
+            this.label13.Text = "A2 Index";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(1537, 364);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(67, 16);
+            this.label29.TabIndex = 29;
+            this.label29.Text = "A1 Index";
+            // 
+            // txtA2PPK
+            // 
+            this.txtA2PPK.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA2PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA2PPK.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA2PPK.Location = new System.Drawing.Point(1764, 410);
+            this.txtA2PPK.Name = "txtA2PPK";
+            this.txtA2PPK.Size = new System.Drawing.Size(132, 35);
+            this.txtA2PPK.TabIndex = 25;
+            this.txtA2PPK.Text = "0";
+            this.txtA2PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label27.Location = new System.Drawing.Point(1760, 341);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(39, 20);
+            this.label27.TabIndex = 26;
+            this.label27.Text = "PPK";
+            // 
+            // txtA1PPK
+            // 
+            this.txtA1PPK.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA1PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA1PPK.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA1PPK.Location = new System.Drawing.Point(1764, 364);
+            this.txtA1PPK.Name = "txtA1PPK";
+            this.txtA1PPK.Size = new System.Drawing.Size(132, 35);
+            this.txtA1PPK.TabIndex = 25;
+            this.txtA1PPK.Text = "0";
+            this.txtA1PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtA2PP
+            // 
+            this.txtA2PP.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA2PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA2PP.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA2PP.Location = new System.Drawing.Point(1610, 410);
+            this.txtA2PP.Name = "txtA2PP";
+            this.txtA2PP.Size = new System.Drawing.Size(132, 35);
+            this.txtA2PP.TabIndex = 20;
+            this.txtA2PP.Text = "0";
+            this.txtA2PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label28.Location = new System.Drawing.Point(1606, 341);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(29, 20);
+            this.label28.TabIndex = 24;
+            this.label28.Text = "PP";
+            // 
             // label24
             // 
             this.label24.AutoSize = true;
@@ -1079,14 +1302,12 @@ namespace Diameter_Checker
             this.groupBox8.Controls.Add(this.groupBox6);
             this.groupBox8.Controls.Add(this.txtWeight);
             this.groupBox8.Controls.Add(this.label23);
-            this.groupBox8.Controls.Add(this.txtQrCode);
-            this.groupBox8.Controls.Add(this.label21);
             this.groupBox8.Location = new System.Drawing.Point(1535, 6);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(366, 90);
             this.groupBox8.TabIndex = 28;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "QR code && Weight";
+            this.groupBox8.Text = "Weight";
             // 
             // txtWeightResult
             // 
@@ -1110,39 +1331,32 @@ namespace Diameter_Checker
             // txtWeight
             // 
             this.txtWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtWeight.Location = new System.Drawing.Point(86, 52);
+            this.txtWeight.Location = new System.Drawing.Point(84, 22);
             this.txtWeight.Name = "txtWeight";
-            this.txtWeight.Size = new System.Drawing.Size(100, 26);
+            this.txtWeight.Size = new System.Drawing.Size(84, 26);
             this.txtWeight.TabIndex = 7;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label23.Location = new System.Drawing.Point(5, 55);
+            this.label23.Location = new System.Drawing.Point(13, 26);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(53, 16);
             this.label23.TabIndex = 6;
             this.label23.Text = "Weight:";
             // 
-            // txtQrCode
+            // txtA1PP
             // 
-            this.txtQrCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtQrCode.Location = new System.Drawing.Point(86, 22);
-            this.txtQrCode.Name = "txtQrCode";
-            this.txtQrCode.Size = new System.Drawing.Size(100, 26);
-            this.txtQrCode.TabIndex = 1;
-            this.txtQrCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtQrCode_KeyDown);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label21.Location = new System.Drawing.Point(5, 26);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(67, 16);
-            this.label21.TabIndex = 0;
-            this.label21.Text = "QR Code:";
+            this.txtA1PP.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtA1PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.txtA1PP.ForeColor = System.Drawing.Color.Yellow;
+            this.txtA1PP.Location = new System.Drawing.Point(1610, 364);
+            this.txtA1PP.Name = "txtA1PP";
+            this.txtA1PP.Size = new System.Drawing.Size(132, 35);
+            this.txtA1PP.TabIndex = 20;
+            this.txtA1PP.Text = "0";
+            this.txtA1PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnCntProduct
             // 
@@ -1173,7 +1387,7 @@ namespace Diameter_Checker
             // groupBox3
             // 
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox3.Controls.Add(this.chart1);
+            this.groupBox3.Controls.Add(this.chartWeight);
             this.groupBox3.Controls.Add(this.chartA1);
             this.groupBox3.Controls.Add(this.chartA2);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
@@ -1185,163 +1399,86 @@ namespace Diameter_Checker
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Time Chart";
             // 
-            // dateTimeFilter
+            // chartWeight
             // 
-            this.dateTimeFilter.Enabled = false;
-            this.dateTimeFilter.Location = new System.Drawing.Point(996, 7);
-            this.dateTimeFilter.Name = "dateTimeFilter";
-            this.dateTimeFilter.Size = new System.Drawing.Size(207, 20);
-            this.dateTimeFilter.TabIndex = 28;
-            this.dateTimeFilter.ValueChanged += new System.EventHandler(this.dateTimeFilter_ValueChanged);
-            // 
-            // txtA1PPK
-            // 
-            this.txtA1PPK.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA1PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA1PPK.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA1PPK.Location = new System.Drawing.Point(1764, 364);
-            this.txtA1PPK.Name = "txtA1PPK";
-            this.txtA1PPK.Size = new System.Drawing.Size(132, 35);
-            this.txtA1PPK.TabIndex = 25;
-            this.txtA1PPK.Text = "0";
-            this.txtA1PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label27.Location = new System.Drawing.Point(1760, 341);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(39, 20);
-            this.label27.TabIndex = 26;
-            this.label27.Text = "PPK";
-            // 
-            // txtA1PP
-            // 
-            this.txtA1PP.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA1PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA1PP.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA1PP.Location = new System.Drawing.Point(1610, 364);
-            this.txtA1PP.Name = "txtA1PP";
-            this.txtA1PP.Size = new System.Drawing.Size(132, 35);
-            this.txtA1PP.TabIndex = 20;
-            this.txtA1PP.Text = "0";
-            this.txtA1PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label28.Location = new System.Drawing.Point(1606, 341);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(29, 20);
-            this.label28.TabIndex = 24;
-            this.label28.Text = "PP";
-            // 
-            // txtA2PPK
-            // 
-            this.txtA2PPK.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA2PPK.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA2PPK.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA2PPK.Location = new System.Drawing.Point(1764, 410);
-            this.txtA2PPK.Name = "txtA2PPK";
-            this.txtA2PPK.Size = new System.Drawing.Size(132, 35);
-            this.txtA2PPK.TabIndex = 25;
-            this.txtA2PPK.Text = "0";
-            this.txtA2PPK.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtA2PP
-            // 
-            this.txtA2PP.BackColor = System.Drawing.SystemColors.MenuText;
-            this.txtA2PP.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.txtA2PP.ForeColor = System.Drawing.Color.Yellow;
-            this.txtA2PP.Location = new System.Drawing.Point(1610, 410);
-            this.txtA2PP.Name = "txtA2PP";
-            this.txtA2PP.Size = new System.Drawing.Size(132, 35);
-            this.txtA2PP.TabIndex = 20;
-            this.txtA2PP.Text = "0";
-            this.txtA2PP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // chart1
-            // 
-            chartArea4.AxisY.Title = "A1 Air Pressure";
-            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea4.Name = "ChartArea1";
-            chartArea4.ShadowColor = System.Drawing.Color.Gray;
-            this.chart1.ChartAreas.Add(chartArea4);
-            legend4.DockedToChartArea = "ChartArea1";
-            legend4.Enabled = false;
-            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend4.IsTextAutoFit = false;
-            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend4.Name = "Legend1";
-            this.chart1.Legends.Add(legend4);
-            this.chart1.Location = new System.Drawing.Point(2, 270);
-            this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series4.BorderWidth = 2;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series4.Legend = "Legend1";
-            series4.Name = "A2";
-            this.chart1.Series.Add(series4);
-            this.chart1.Size = new System.Drawing.Size(752, 243);
-            this.chart1.TabIndex = 3;
-            this.chart1.Text = "Chart A1";
+            chartArea1.AxisY.Title = "Weight PPK";
+            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.Gray;
+            this.chartWeight.ChartAreas.Add(chartArea1);
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Enabled = false;
+            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend1.IsTextAutoFit = false;
+            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend1.Name = "Legend1";
+            this.chartWeight.Legends.Add(legend1);
+            this.chartWeight.Location = new System.Drawing.Point(2, 270);
+            this.chartWeight.Name = "chartWeight";
+            this.chartWeight.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series1.Legend = "Legend1";
+            series1.Name = "Weight";
+            this.chartWeight.Series.Add(series1);
+            this.chartWeight.Size = new System.Drawing.Size(752, 243);
+            this.chartWeight.TabIndex = 3;
+            this.chartWeight.Text = "Chart Weight";
             // 
             // chartA1
             // 
-            chartArea5.AxisY.Title = "A1 Air Pressure";
-            chartArea5.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea5.Name = "ChartArea1";
-            chartArea5.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea5);
-            legend5.DockedToChartArea = "ChartArea1";
-            legend5.Enabled = false;
-            legend5.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend5.IsTextAutoFit = false;
-            legend5.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend5.Name = "Legend1";
-            this.chartA1.Legends.Add(legend5);
+            chartArea2.AxisY.Title = "A1 PPK";
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea2);
+            legend2.DockedToChartArea = "ChartArea1";
+            legend2.Enabled = false;
+            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend2.IsTextAutoFit = false;
+            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend2.Name = "Legend1";
+            this.chartA1.Legends.Add(legend2);
             this.chartA1.Location = new System.Drawing.Point(2, 16);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series5.BorderWidth = 2;
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series5.Legend = "Legend1";
-            series5.Name = "A2";
-            this.chartA1.Series.Add(series5);
+            series2.BorderWidth = 2;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series2.Legend = "Legend1";
+            series2.Name = "A1";
+            this.chartA1.Series.Add(series2);
             this.chartA1.Size = new System.Drawing.Size(752, 243);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea6.AxisY.Title = "A2 Air Pressure";
-            chartArea6.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea6.Name = "ChartArea1";
-            chartArea6.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea6);
-            legend6.DockedToChartArea = "ChartArea1";
-            legend6.Enabled = false;
-            legend6.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend6.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend6.Name = "Legend1";
-            this.chartA2.Legends.Add(legend6);
+            chartArea3.AxisY.Title = "A2 PPK";
+            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea3.Name = "ChartArea1";
+            chartArea3.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea3);
+            legend3.DockedToChartArea = "ChartArea1";
+            legend3.Enabled = false;
+            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend3.Name = "Legend1";
+            this.chartA2.Legends.Add(legend3);
             this.chartA2.Location = new System.Drawing.Point(742, 16);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series6.BorderWidth = 2;
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series6.IsXValueIndexed = true;
-            series6.Legend = "Legend1";
-            series6.Name = "A2";
-            this.chartA2.Series.Add(series6);
+            series3.BorderWidth = 2;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series3.IsXValueIndexed = true;
+            series3.Legend = "Legend1";
+            series3.Name = "A2";
+            this.chartA2.Series.Add(series3);
             this.chartA2.Size = new System.Drawing.Size(752, 243);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
@@ -1449,31 +1586,30 @@ namespace Diameter_Checker
             // 
             // dataGridView1
             // 
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.HighlightText;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.GrayText;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.GrayText;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ID,
             this.model,
-            this.QrCode,
             this.Weight,
             this.A1MaxValue,
             this.A1MinValue,
@@ -1487,32 +1623,32 @@ namespace Diameter_Checker
             this.TotalProcessed,
             this.TotalPASS,
             this.TotalFAIL});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.GridColor = System.Drawing.Color.White;
             this.dataGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dataGridView1.Location = new System.Drawing.Point(4, 622);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.Red;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.LightGray;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle14;
-            this.dataGridView1.Size = new System.Drawing.Size(1899, 228);
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.Red;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.LightGray;
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridView1.Size = new System.Drawing.Size(1899, 420);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
@@ -1521,11 +1657,11 @@ namespace Diameter_Checker
             // 
             this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
-            this.ID.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            this.ID.DefaultCellStyle = dataGridViewCellStyle3;
             this.ID.FillWeight = 120F;
             this.ID.HeaderText = "ID";
             this.ID.MinimumWidth = 100;
@@ -1536,22 +1672,16 @@ namespace Diameter_Checker
             // 
             this.model.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.model.DataPropertyName = "model";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.White;
-            this.model.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            this.model.DefaultCellStyle = dataGridViewCellStyle4;
             this.model.FillWeight = 120F;
             this.model.HeaderText = "Model";
             this.model.MinimumWidth = 100;
             this.model.Name = "model";
             this.model.ReadOnly = true;
-            // 
-            // QrCode
-            // 
-            this.QrCode.DataPropertyName = "QrCode";
-            this.QrCode.HeaderText = "QrCode";
-            this.QrCode.Name = "QrCode";
             // 
             // Weight
             // 
@@ -2025,6 +2155,15 @@ namespace Diameter_Checker
             this.label2.Text = "Model";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
+            // dateTimeFilter
+            // 
+            this.dateTimeFilter.Enabled = false;
+            this.dateTimeFilter.Location = new System.Drawing.Point(996, 7);
+            this.dateTimeFilter.Name = "dateTimeFilter";
+            this.dateTimeFilter.Size = new System.Drawing.Size(207, 20);
+            this.dateTimeFilter.TabIndex = 28;
+            this.dateTimeFilter.ValueChanged += new System.EventHandler(this.dateTimeFilter_ValueChanged);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -2133,6 +2272,17 @@ namespace Diameter_Checker
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1216, 37);
             this.panel4.TabIndex = 59;
+            // 
+            // checkBoxFilterDate
+            // 
+            this.checkBoxFilterDate.AutoSize = true;
+            this.checkBoxFilterDate.Location = new System.Drawing.Point(910, 8);
+            this.checkBoxFilterDate.Name = "checkBoxFilterDate";
+            this.checkBoxFilterDate.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxFilterDate.TabIndex = 60;
+            this.checkBoxFilterDate.Text = "Filter date";
+            this.checkBoxFilterDate.UseVisualStyleBackColor = true;
+            this.checkBoxFilterDate.CheckedChanged += new System.EventHandler(this.checkBoxFilterDate_CheckedChanged);
             // 
             // lblDateTime
             // 
@@ -2355,71 +2505,6 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(1537, 364);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(67, 16);
-            this.label29.TabIndex = 29;
-            this.label29.Text = "A1 Index";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(1537, 410);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(67, 16);
-            this.label13.TabIndex = 30;
-            this.label13.Text = "A2 Index";
-            // 
-            // textBox3
-            // 
-            this.textBox3.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.textBox3.ForeColor = System.Drawing.Color.Yellow;
-            this.textBox3.Location = new System.Drawing.Point(1610, 456);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(132, 35);
-            this.textBox3.TabIndex = 31;
-            this.textBox3.Text = "0";
-            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // textBox4
-            // 
-            this.textBox4.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.textBox4.ForeColor = System.Drawing.Color.Yellow;
-            this.textBox4.Location = new System.Drawing.Point(1764, 456);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(132, 35);
-            this.textBox4.TabIndex = 32;
-            this.textBox4.Text = "0";
-            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(1537, 456);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(56, 16);
-            this.label14.TabIndex = 33;
-            this.label14.Text = "Weight";
-            // 
-            // checkBoxFilterDate
-            // 
-            this.checkBoxFilterDate.AutoSize = true;
-            this.checkBoxFilterDate.Location = new System.Drawing.Point(910, 8);
-            this.checkBoxFilterDate.Name = "checkBoxFilterDate";
-            this.checkBoxFilterDate.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxFilterDate.TabIndex = 60;
-            this.checkBoxFilterDate.Text = "Filter date";
-            this.checkBoxFilterDate.UseVisualStyleBackColor = true;
-            this.checkBoxFilterDate.CheckedChanged += new System.EventHandler(this.checkBoxFilterDate_CheckedChanged);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2439,7 +2524,7 @@ namespace Diameter_Checker
             this.groupBox8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProductInSet)).EndInit();
             this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartA2)).EndInit();
             this.groupBox4.ResumeLayout(false);
@@ -2477,13 +2562,13 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                string whereClause = "";
+                string whereClause = " where Display = 1";
                 if(!string.IsNullOrEmpty(d))
                 {
                     whereClause = " where Date = '" + d + "'";
                 }
                 
-                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("select ID, model, QrCode, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data"+whereClause+")A1 order by NEWID DESC)B1 order by NEWID", con));
+                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("select ID, model, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data"+whereClause+")A1 order by NEWID DESC)B1 order by NEWID", con));
 
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -2627,7 +2712,7 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                string add = string.Concat(new object[] { "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL, QrCode) VALUES ('", Communication.ID, "','", Communication.model, "','", Communication.Weight, "','", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','", Communication.A1Result, "','", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','", Communication.A2Result, "','", Communication.Date, "','", Communication.Time, "','", Communication.Judge, "','", Communication.totalProcessed, "','", Communication.totalPASS, "','", Communication.totalFAIL, "','", this.txtQrCode.Text, "')" });
+                string add = string.Concat(new object[] { "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL) VALUES ('", Communication.ID, "','", Communication.model, "','", float.Parse(Communication.Weight.Replace("g","").Trim()), "','", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','", Communication.A1Result, "','", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','", Communication.A2Result, "','", Communication.Date, "','", Communication.Time, "','", Communication.Judge, "','", Communication.totalProcessed, "','", Communication.totalPASS, "','", Communication.totalFAIL, "')" });
                 SqlCommand cmd_saveData = new SqlCommand()
                 {
                     Connection = con,
@@ -2778,19 +2863,15 @@ namespace Diameter_Checker
                             {
                                 ClearAllData();
                             }
-                            Communication.Weight = weightResult = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
+                            weightResult = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
                             Communication.receivedWeightFlg = true;
-                            //bool isKg = this.txtWeight.Text.ToUpper().Contains("KG");
-                            weightResult = weightResult.Replace("g", "").Trim();
-                            //weightResult = weightResult.Replace("Kg", "").Trim();
-                            //weightResult = weightResult.Replace("KG", "").Trim();
-                            //parseResult = decimal.TryParse(s.Trim(), out decimal weight);
+                            Communication.Weight = weightResult = weightResult.Replace("g", "").Trim();
                             try
                             {
                                 weight = float.Parse(weightResult.Replace(".", "")) / 10f;
-                                //weight = isKg ? weight * 1000 : weight;
                                 minWeight = float.Parse(txtWeightMin.Text);
                                 maxWeight = float.Parse(txtWeightMax.Text);
+                                
                                 if (weight < minWeight || weight > maxWeight)
                                 {
                                     this.txtWeightResult.ForeColor = Color.Red;
@@ -3045,7 +3126,7 @@ namespace Diameter_Checker
                                 txtA1MinimumValue.Text = Communication.A1MinimumValue;
                             }
                             saveA1BufferData();
-                            chartA1Display();
+                            //chartA1Display();
                             ClearAllData();
                         }
                     }
@@ -3119,7 +3200,7 @@ namespace Diameter_Checker
                                 txtA2MinimumValue.Text = Communication.A2MinimumValue;
                             }
                             saveA2BufferData();
-                            chartA2Display();
+                            //chartA2Display();
                             ClearAllData();
                         }
                     }
@@ -3138,7 +3219,7 @@ namespace Diameter_Checker
                         Communication.A2RecevingData = false;
                     }
                 }
-                if (Communication.receivedQrCodeFlg &&
+                if (
                     Communication.receivedWeightFlg &&
                     Communication.A1EnableSave &&
                     Communication.A2EnableSave)
@@ -3158,18 +3239,20 @@ namespace Diameter_Checker
             if (Communication.enableClearData)
             {
                 Communication.enableClearData = false;
-                chartA1.Series.Clear();
-                chartA1Setting();
-                chartA2.Series.Clear();
-                chartA2Setting();
+                //chartA1.Series.Clear();
+                //chartA1Setting();
+                //chartA2.Series.Clear();
+                //chartA2Setting();
+                //chartWeight.Series.Clear();
+                //chartWeightSetting();
                 txtA1Result.Text = "";
                 txtA2Result.Text = "";
+                //txtWeight.Text = "";
                 txtWeightResult.Text = "";
                 btnJudge.Text = "";
                 controlAlarm_A1ResetAlarm();
                 controlAlarm_A2ResetAlarm();
                 if (!Communication.receivedWeightFlg) txtWeight.Text = "";
-                if (!Communication.receivedQrCodeFlg) txtQrCode.Text = "";
             }
         }
 
@@ -3179,7 +3262,6 @@ namespace Diameter_Checker
             Communication.Weight = this.txtWeight.Text.Trim();
             if (
                 (!(this.txtWeightResult.Text == "OK") && !(this.txtWeightResult.Text == "NG")) ||
-                !Communication.receivedQrCodeFlg ||
                 !Communication.A1EnableSave || !Communication.A2EnableSave ||
                 Communication.A1Detected || Communication.A2Detected ||
                 !(txtA1Result.Text == "OK") && !(txtA1Result.Text == "NG"))
@@ -3229,7 +3311,6 @@ namespace Diameter_Checker
                 Communication.A2MaximumValue = null;
                 Communication.A2MinimumValue = null;
                 Communication.enableClearData = true;
-                Communication.receivedQrCodeFlg = false;
                 Communication.receivedWeightFlg = false;
                 loadData();
                 tmrEnableReadA1Data.Enabled = false;
@@ -3279,8 +3360,6 @@ namespace Diameter_Checker
         {
             public static string ID;
 
-            public static string QrCode;
-
             public static string model;
 
             public static string A1MaximumValue;
@@ -3313,14 +3392,6 @@ namespace Diameter_Checker
         }
 
         private delegate void SetTextCallback(string text);
-
-        private void txtQrCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Communication.receivedQrCodeFlg = true;
-            }
-        }
 
         private void dateTimeFilter_ValueChanged(object sender, EventArgs e)
         {

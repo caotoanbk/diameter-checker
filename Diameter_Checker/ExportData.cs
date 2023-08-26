@@ -124,19 +124,19 @@ namespace Diameter_Checker
                     {
                         if ((!(this.cmbModel.Text != "") || !(this.cmbFromYear.Text != "") || !(this.cmbFromMonth.Text != "") || !(this.cmbFromDay.Text != "") || !(this.cmbToYear.Text != "") || !(this.cmbToMonth.Text != "") ? false : this.cmbToDay.Text != ""))
                         {
-                            this.stringCommand = string.Concat(new string[] { "DELETE from Data WHERE model='", this.cmbModel.Text, "'and Date >= convert(date,'", ExportData.fromDate, "',23) and Date <= convert(date,'", ExportData.toDate, "',23)" });
+                            this.stringCommand = string.Concat(new string[] { "UPDATE Data set Display = 0 WHERE model='", this.cmbModel.Text, "'and Date >= convert(date,'", ExportData.fromDate, "',23) and Date <= convert(date,'", ExportData.toDate, "',23)" });
                         }
                         if ((!(this.cmbModel.Text == "ALL") || !(this.cmbFromYear.Text != "") || !(this.cmbFromMonth.Text != "") || !(this.cmbFromDay.Text != "") || !(this.cmbToYear.Text != "") || !(this.cmbToMonth.Text != "") ? false : this.cmbToDay.Text != ""))
                         {
-                            this.stringCommand = string.Concat(new string[] { "DELETE from Data WHERE Date >= convert(date,'", ExportData.fromDate, "',23) and Date <= convert(date,'", ExportData.toDate, "',23)" });
+                            this.stringCommand = string.Concat(new string[] { "UPDATE Data set Display = 0 WHERE Date >= convert(date,'", ExportData.fromDate, "',23) and Date <= convert(date,'", ExportData.toDate, "',23)" });
                         }
                         if ((!(this.cmbModel.Text == "ALL") || !(this.cmbFromYear.Text == "") || !(this.cmbFromMonth.Text == "") || !(this.cmbFromDay.Text == "") || !(this.cmbToYear.Text == "") || !(this.cmbToMonth.Text == "") ? false : this.cmbToDay.Text == ""))
                         {
-                            this.stringCommand = "DELETE from Data";
+                            this.stringCommand = "UPDATE Data set Display = 0";
                         }
                         if ((!(this.cmbModel.Text != "ALL") || !(this.cmbFromYear.Text == "") || !(this.cmbFromMonth.Text == "") || !(this.cmbFromDay.Text == "") || !(this.cmbToYear.Text == "") || !(this.cmbToMonth.Text == "") ? false : this.cmbToDay.Text == ""))
                         {
-                            this.stringCommand = string.Concat("DELETE from Data WHERE model='", this.cmbModel.Text, "'");
+                            this.stringCommand = string.Concat("UPDATE Data set Display=0 WHERE model='", this.cmbModel.Text, "'");
                         }
                         string cmdSearch = this.stringCommand;
                         Communication.connect.Open();
@@ -344,7 +344,7 @@ namespace Diameter_Checker
                 {
                     worksheet.Cell(1, i + 1).Value = dataGridView1.Columns[i].Name;
                 }
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                for (int i = 0; i < dataGridView1.Rows.Count-1; i++)
                 {
                     for (int j = 0; j < dataGridView1.Columns.Count; j++)
                     {
@@ -825,23 +825,23 @@ namespace Diameter_Checker
 
         public void RowsColor()
         {
-            for (int i = 0; i < this.dataGridView1.Rows.Count; i++)
+            for (int i = 0; i < this.dataGridView1.RowCount-1; i++)
             {
-                if (this.dataGridView1.Rows[i].Cells[4].Value.ToString().Trim() == "NG")
+                if (this.dataGridView1.Rows[i].Cells[6].Value.ToString().Trim() == "NG")
                 {
-                    this.dataGridView1.Rows[i].Cells[4].Style.ForeColor = Color.Red;
+                    this.dataGridView1.Rows[i].Cells[6].Style.ForeColor = Color.Red;
                 }
-                if (this.dataGridView1.Rows[i].Cells[7].Value.ToString().Trim() == "NG")
+                if (this.dataGridView1.Rows[i].Cells[9].Value.ToString().Trim() == "NG")
                 {
-                    this.dataGridView1.Rows[i].Cells[7].Style.ForeColor = Color.Red;
+                    this.dataGridView1.Rows[i].Cells[9].Style.ForeColor = Color.Red;
                 }
-                if (this.dataGridView1.Rows[i].Cells[10].Value.ToString().Trim() != "FAIL")
+                if (this.dataGridView1.Rows[i].Cells[12].Value.ToString().Trim() != "FAIL")
                 {
-                    this.dataGridView1.Rows[i].Cells[10].Style.ForeColor = Color.Green;
+                    this.dataGridView1.Rows[i].Cells[12].Style.ForeColor = Color.Green;
                 }
                 else
                 {
-                    this.dataGridView1.Rows[i].Cells[10].Style.ForeColor = Color.Red;
+                    this.dataGridView1.Rows[i].Cells[12].Style.ForeColor = Color.Red;
                 }
             }
         }

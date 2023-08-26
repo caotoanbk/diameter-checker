@@ -56,15 +56,21 @@ namespace Diameter_Checker
         public static double A1SD;
         public static string Weight;
         public static string A1PP;
-        public static string A1PPK;
+        public static double A1PPK;
         public static double A1PPU;
         public static double A1PPL;
         public static string A2Average;
         public static double A2SD;
         public static string A2PP;
-        public static string A2PPK;
+        public static double A2PPK;
         public static double A2PPU;
         public static double A2PPL;
+        public static string WeightAverage;
+        public static double WeightSD;
+        public static string WeightPP;
+        public static double WeightPPK;
+        public static double WeightPPU;
+        public static double WeightPPL;
         public static string loginUser;
         public static string processorID1;
         public static string processorID2;
@@ -86,8 +92,9 @@ namespace Diameter_Checker
         public static SerialPort serialport2;
         public static SqlConnection connect;
         public static string con_string;
-        public static bool receivedQrCodeFlg;
         public static bool receivedWeightFlg;
+        public static double MIN_PPK = 1.33;
+        public static double MAX_PPK = 1.67;
 
         static Communication()
         {
@@ -131,6 +138,8 @@ namespace Diameter_Checker
             A1MinimumOffset = " ";
             A2MaximumOffset = " ";
             A2MinimumOffset = " ";
+            maxWeight = " ";
+            minWeight = " ";
             detectionOffset = 1f;
             closeComport = false;
             subformIsOpen = false;
@@ -139,7 +148,6 @@ namespace Diameter_Checker
             serialport2 = new SerialPort();
             cntProductInSet = 0;
             receivedWeightFlg = false;
-            receivedQrCodeFlg = false;
         }
 
         public Communication()
