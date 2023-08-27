@@ -93,11 +93,12 @@ namespace Diameter_Checker
         public static SqlConnection connect;
         public static string con_string;
         public static bool receivedWeightFlg;
-        public static double MIN_PPK = 1.33;
+        public static double MIN_PPK = 1;
         public static double MAX_PPK = 1.67;
 
         static Communication()
         {
+            Weight = "0";
             test = 0;
             test2 = 0;
             charNumberOfCom_data = 27;

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace Diameter_Checker
         private static int i;
         private static int j;
         private static int k;
+        private static int l;
+        private static int m;
         private static int rowIndex;
         private IContainer components = null;
         private Panel panel3;
@@ -151,6 +154,8 @@ namespace Diameter_Checker
         private Label label13;
         private Label label29;
         private CheckBox checkBoxFilterDate;
+        private Chart chart2;
+        private Chart chart1;
         private Timer tmrDisplayJudge;
 
         static frmMain()
@@ -158,6 +163,9 @@ namespace Diameter_Checker
             frmMain.i = 0;
             frmMain.j = 0;
             frmMain.k = 0;
+            frmMain.l = 0; 
+            frmMain.m = 0;
+
         }
 
         public frmMain()
@@ -200,7 +208,7 @@ namespace Diameter_Checker
                 Communication.A1MinimumValue = null;
                 Communication.A2MaximumValue = null;
                 Communication.A2MinimumValue = null;
-                Communication.Weight = null;
+                Communication.Weight = "0";
                 this.controlAlarm_A1ResetAlarm();
                 this.controlAlarm_A2ResetAlarm();
                 this.txtA1MaximumValue.Text = null;
@@ -211,10 +219,10 @@ namespace Diameter_Checker
                 this.txtA2Result.Text = null;
                 this.txtWeight.Text = null;
                 this.txtWeightResult.Text = null;
-                //this.chartA1.Series.Clear();
-                //this.chartA1Setting();
-                //this.chartA2.Series.Clear();
-                //this.chartA2Setting();
+                this.chart1.Series.Clear();
+                this.chart1Setting();
+                this.chart2.Series.Clear();
+                this.chart2Setting();
                 //this.chartWeight.Series.Clear();
                 //this.chartWeightSetting();
             }
@@ -246,7 +254,8 @@ namespace Diameter_Checker
         {
             this.tmrRefreshDataGridView.Enabled = true;
             Communication.connect.Close();
-            (new ExportData()).ShowDialog();
+            ExportData child = new ExportData();
+            child.ShowDialog();
         }
 
         private void btnSelect_Click(object sender, EventArgs e)
@@ -325,12 +334,12 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(CAST(A1MaxValue as float)), AVG(CAST(A1MinValue as float)), AVG(CAST(A2MaxValue as float)), AVG(CAST(A2MinValue as float))  FROM Data", con));
+                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(CAST(A1MaxValue as float)), AVG(CAST(A1MinValue as float)), AVG(CAST(A2MaxValue as float)), AVG(CAST(A2MinValue as float))  FROM Data where Display = 1", con));
                 DataTable dataTableGetAverage = new DataTable();
                 adapterGetAverage.Fill(dataTableGetAverage);
                 single = (float.Parse(dataTableGetAverage.Rows[0][0].ToString()) + float.Parse(dataTableGetAverage.Rows[0][1].ToString())) / 2f * 1000f;
                 Communication.A1Average = single.ToString();
-                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT A1MaxValue, A1MinValue, A2MaxValue, A2MinValue FROM Data Where model='", this.cmbModel.Text, "'"), con);
+                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT A1MaxValue, A1MinValue, A2MaxValue, A2MinValue FROM Data Where model='", this.cmbModel.Text, "' and Display = 1"), con);
                 SqlDataAdapter adapterLoadAllValue = new SqlDataAdapter(cmd_LoadAllValue);
                 DataTable dataTableLoadAllValue = new DataTable();
                 adapterLoadAllValue.Fill(dataTableLoadAllValue);
@@ -367,13 +376,13 @@ namespace Diameter_Checker
                     Communication.A1PPK = Communication.A1PPU;
                 }
 
-                //for testing
-                //Communication.A1PPK = 1.33f + rnd.NextDouble()*0.34;
 
                 con.Close();
             }
             catch
             {
+                Communication.A1PPK = 0;
+                this.txtA1PPK.Text = "0";
             }
 
             //A2
@@ -381,12 +390,12 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(CAST(A1MaxValue as float)), AVG(CAST(A1MinValue as float)), AVG(CAST(A2MaxValue as float)), AVG(CAST(A2MinValue as float))  FROM Data", con));
+                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(CAST(A1MaxValue as float)), AVG(CAST(A1MinValue as float)), AVG(CAST(A2MaxValue as float)), AVG(CAST(A2MinValue as float))  FROM Data Where Display = 1", con));
                 DataTable dataTableGetAverage = new DataTable();
                 adapterGetAverage.Fill(dataTableGetAverage);
                 single = (float.Parse(dataTableGetAverage.Rows[0][2].ToString()) + float.Parse(dataTableGetAverage.Rows[0][3].ToString())) / 2f * 1000f;
                 Communication.A2Average = single.ToString();
-                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT A1MaxValue, A1MinValue, A2MaxValue, A2MinValue FROM Data Where model='", this.cmbModel.Text, "'"), con);
+                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT A1MaxValue, A1MinValue, A2MaxValue, A2MinValue FROM Data Where model='", this.cmbModel.Text, "' and Display = 1"), con);
                 SqlDataAdapter adapterLoadAllValue = new SqlDataAdapter(cmd_LoadAllValue);
                 DataTable dataTableLoadAllValue = new DataTable();
                 adapterLoadAllValue.Fill(dataTableLoadAllValue);
@@ -421,12 +430,12 @@ namespace Diameter_Checker
                     this.txtA2PPK.Text = Communication.A2PPU.ToString().Substring(0, 10);
                     Communication.A2PPK = Communication.A2PPU;
                 }
-                //for testing
-                //Communication.A2PPK = 1.33f + rnd.NextDouble()*0.34;
                 con.Close();
             }
             catch
             {
+                Communication.A2PPK = 0;
+                this.txtA2PPK.Text = "0";
             }
 
             //Weight
@@ -434,13 +443,18 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(weight)  FROM Data", con));
+                SqlDataAdapter adapterGetAverage = new SqlDataAdapter(new SqlCommand("SELECT AVG(CAST(weight as float))  FROM Data where Display = 1", con));
                 DataTable dataTableGetAverage = new DataTable();
                 adapterGetAverage.Fill(dataTableGetAverage);
-                single = float.Parse(dataTableGetAverage.Rows[0][0].ToString()) * 1000f;
+                int decimalIndex = dataTableGetAverage.Rows[0][0].ToString().IndexOf('.');
+                single = 0;
+                if(dataTableGetAverage.Rows[0][0] != null)
+                {
+                    single = float.Parse(dataTableGetAverage.Rows[0][0].ToString());
+                }
                 Communication.WeightAverage = single.ToString();
 
-                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT weight FROM Data Where model='", this.cmbModel.Text, "'"), con);
+                SqlCommand cmd_LoadAllValue = new SqlCommand(string.Concat("SELECT weight FROM Data Where model='", this.cmbModel.Text, "' and Display = 1"), con);
                 SqlDataAdapter adapterLoadAllValue = new SqlDataAdapter(cmd_LoadAllValue);
                 DataTable dataTableLoadAllValue = new DataTable();
                 adapterLoadAllValue.Fill(dataTableLoadAllValue);
@@ -449,38 +463,51 @@ namespace Diameter_Checker
                 frmMain.rowIndex = 0;
                 while (frmMain.rowIndex <= dataTableLoadAllValue.Rows.Count - 1)
                 {
-                    double a = double.Parse(dataTableLoadAllValue.Rows[frmMain.rowIndex][0].ToString());
-                    b = double.Parse(Communication.WeightAverage.ToString());
-                    Communication.WeightSD += Math.Pow(a - b, 2);
+                    float a = float.Parse(dataTableLoadAllValue.Rows[frmMain.rowIndex][0].ToString().Replace(".", ","));
+                    b = single;
+                    if(a-b != 0)
+                    {
+
+                    Communication.WeightSD += Math.Pow(a-b, 2);
+                    }
                     frmMain.rowIndex++;
                 }
-                Communication.WeightSD = Math.Sqrt(Communication.WeightSD / (double)(frmMain.rowIndex - 1));
-                Communication.WeightSD /= 1000;
-                num = (double.Parse(Communication.maxWeight) - double.Parse(Communication.minWeight)) / (6 * Communication.WeightSD);
+                if(Communication.WeightSD > 0)
+                {
+                    Communication.WeightSD = Math.Sqrt(Communication.WeightSD / (double)(frmMain.rowIndex - 1));
+                }
+                num = (float.Parse(Communication.maxWeight) - float.Parse(Communication.minWeight)) / (6 * Communication.WeightSD);
                 Communication.WeightPP = num.ToString();
-                num = double.Parse(Communication.WeightPP) / 1000;
                 Communication.WeightPP = num.ToString();
-                this.txtWeightPP.Text = Communication.WeightPP.Substring(0, 10);
-                Communication.WeightPPU = (double.Parse(Communication.maxWeight) - double.Parse(Communication.WeightAverage)) / (3 * Communication.WeightSD);
-                Communication.WeightPPU /= 1000;
-                Communication.WeightPPL = (double.Parse(Communication.WeightAverage) - double.Parse(Communication.minWeight)) / (3 * Communication.WeightSD);
-                Communication.WeightPPL /= 1000;
+                if(Communication.WeightPP.Length > 10)
+                {
+                    this.txtWeightPP.Text = Communication.WeightPP.Substring(0, 10);
+                }
+                Communication.WeightPPU = (float.Parse(Communication.maxWeight) - single) / (3 * Communication.WeightSD);
+                Communication.WeightPPL = (single - double.Parse(Communication.minWeight)) / (3 * Communication.WeightSD);
                 if (Communication.WeightPPU >= Communication.WeightPPL)
                 {
-                    this.txtWeightPPK.Text = Communication.WeightPPL.ToString().Substring(0, 10);
+                    //int len = Communication.WeightPPL.ToString().Length > 10 ? 10 : Communication.WeightPPL.ToString().Length;
+                    //this.txtWeightPPK.Text = Communication.WeightPPL.ToString().Substring(0, len);
                     Communication.WeightPPK = Communication.WeightPPL;
                 }
                 else
                 {
-                    this.txtWeightPPK.Text = Communication.WeightPPU.ToString().Substring(0, 10);
+                    //int len = (Communication.WeightPPU.ToString().Length > 10) ? 10 : Communication.WeightPPU.ToString().Length;
+                    //this.txtWeightPPK.Text = Communication.WeightPPU.ToString().Substring(0, len);
                     Communication.WeightPPK = Communication.WeightPPU;
                 }
-                //for testing
-                //Communication.WeightPPK = 1.33f + rnd.NextDouble()*0.34;
+                if (Double.IsInfinity(Communication.WeightPPK))
+                {
+                    Communication.WeightPPK = 0;
+                }
+                this.txtWeightPPK.Text = Communication.WeightPPK.ToString();
                 con.Close();
             }
-            catch
+            catch(Exception ex)
             {
+                Communication.WeightPPK = 0;
+                this.txtWeightPPK.Text = "0";
             }
 
             chartA1Display();
@@ -490,10 +517,10 @@ namespace Diameter_Checker
 
         private void chartA1Display()
         {
-            DataPointCollection points = this.chartA1.Series["A1 Max PPK"].Points;
             int num = frmMain.i;
-            //frmMain.i = num + 1;
-            points.AddXY((double)num, Communication.MAX_PPK);
+            //DataPointCollection points = this.chartA1.Series["A1 Max PPK"].Points;
+            ////frmMain.i = num + 1;
+            //points.AddXY((double)num, Communication.MAX_PPK);
 
             DataPointCollection dataPointCollection = this.chartA1.Series["A1 Actual PPK"].Points;
             int num1 = frmMain.i;
@@ -509,16 +536,16 @@ namespace Diameter_Checker
         private void chartA1Setting()
         {
             frmMain.i = 0;
-            ChartArea chart1 = this.chartA1.ChartAreas[0];
+            ChartArea chart1PPK = this.chartA1.ChartAreas[0];
             this.chartA1.Series.Clear();
-            chart1.AxisX.Minimum = 0;
-            chart1.AxisY.Maximum = Math.Floor((Communication.MAX_PPK+0.1f)*100)/100;
-            chart1.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
-            chart1.AxisY.IntervalType = DateTimeIntervalType.Number;
-            this.chartA1.Series.Add("A1 Max PPK");
-            this.chartA1.Series["A1 Max PPK"].ChartType = SeriesChartType.Line;
-            this.chartA1.Series["A1 Max PPK"].Color = Color.Red;
-            this.chartA1.Series["A1 Max PPK"].BorderWidth = 3;
+            chart1PPK.AxisX.Minimum = 0;
+            //chart1.AxisY.Maximum = Math.Floor((Communication.MAX_PPK+0.1f)*100)/100;
+            chart1PPK.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
+            chart1PPK.AxisY.IntervalType = DateTimeIntervalType.Number;
+            //this.chartA1.Series.Add("A1 Max PPK");
+            //this.chartA1.Series["A1 Max PPK"].ChartType = SeriesChartType.Line;
+            //this.chartA1.Series["A1 Max PPK"].Color = Color.Red;
+            //this.chartA1.Series["A1 Max PPK"].BorderWidth = 3;
 
             this.chartA1.Series.Add("A1 Actual PPK");
             this.chartA1.Series["A1 Actual PPK"].ChartType = SeriesChartType.Line;
@@ -549,10 +576,10 @@ namespace Diameter_Checker
 
         private void chartA2Display()
         {
-            DataPointCollection points = this.chartA2.Series["A2 Max PPK"].Points;
             int num = frmMain.j;
-            //frmMain.i = num + 1;
-            points.AddXY((double)num, Communication.MAX_PPK);
+            //DataPointCollection points = this.chartA2.Series["A2 Max PPK"].Points;
+            ////frmMain.i = num + 1;
+            //points.AddXY((double)num, Communication.MAX_PPK);
 
             DataPointCollection dataPointCollection = this.chartA2.Series["A2 Actual PPK"].Points;
             int num1 = frmMain.j;
@@ -568,16 +595,16 @@ namespace Diameter_Checker
         private void chartA2Setting()
         {
             frmMain.j = 0;
-            ChartArea chart2 = this.chartA2.ChartAreas[0];
+            ChartArea chart2PPK = this.chartA2.ChartAreas[0];
             this.chartA2.Series.Clear();
-            chart2.AxisX.Minimum = 0;
-            chart2.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
-            chart2.AxisY.Minimum = Math.Floor((Communication.MIN_PPK - 0.1f) * 100) / 100;
-            chart2.AxisY.IntervalType = DateTimeIntervalType.Number;
-            this.chartA2.Series.Add("A2 Max PPK");
-            this.chartA2.Series["A2 Max PPK"].ChartType = SeriesChartType.Line;
-            this.chartA2.Series["A2 Max PPK"].Color = Color.Red;
-            this.chartA2.Series["A2 Max PPK"].BorderWidth = 3;
+            chart2PPK.AxisX.Minimum = 0;
+            //chart2.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
+            chart2PPK.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
+            chart2PPK.AxisY.IntervalType = DateTimeIntervalType.Number;
+            //this.chartA2.Series.Add("A2 Max PPK");
+            //this.chartA2.Series["A2 Max PPK"].ChartType = SeriesChartType.Line;
+            //this.chartA2.Series["A2 Max PPK"].Color = Color.Red;
+            //this.chartA2.Series["A2 Max PPK"].BorderWidth = 3;
 
             this.chartA2.Series.Add("A2 Actual PPK");
             this.chartA2.Series["A2 Actual PPK"].ChartType = SeriesChartType.Line;
@@ -591,20 +618,18 @@ namespace Diameter_Checker
         }
         private void chartWDisplay()
         {
-            DataPointCollection points = this.chartWeight.Series["Weight Max PPK"].Points;
             int num = frmMain.k;
-            //frmMain.i = num + 1;
-            points.AddXY((double)num, Communication.MAX_PPK);
+            //DataPointCollection points = this.chartWeight.Series["Weight Max PPK"].Points;
+            //MessageBox.Show(String.Concat("k: ", frmMain.k));
+            //points.AddXY((double)num, Communication.MAX_PPK);
 
             DataPointCollection dataPointCollection = this.chartWeight.Series["Weight Actual PPK"].Points;
-            int num1 = frmMain.k;
-            //frmMain.i = num1 + 1;
-            dataPointCollection.AddXY((double)num1, Communication.WeightPPK);
+            dataPointCollection.AddXY((double)num, Communication.WeightPPK);
 
             DataPointCollection points1 = this.chartWeight.Series["Weight Min PPK"].Points;
-            int num2 = frmMain.k;
-            points1.AddXY((double)num2, Communication.MIN_PPK);
-            frmMain.k = num2 + 1;
+            points1.AddXY((double)num, Communication.MIN_PPK);
+            frmMain.k++;
+
         }
         private void chartWeightSetting()
         {
@@ -612,13 +637,13 @@ namespace Diameter_Checker
             ChartArea chart3 = this.chartWeight.ChartAreas[0];
             this.chartWeight.Series.Clear();
             chart3.AxisX.Minimum = 0;
-            chart3.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
-            chart3.AxisY.Minimum = Math.Floor((Communication.MIN_PPK - 0.1f) * 100) / 100;
+            //chart3.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
+            chart3.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
             chart3.AxisY.IntervalType = DateTimeIntervalType.Number;
-            this.chartWeight.Series.Add("Weight Max PPK");
-            this.chartWeight.Series["Weight Max PPK"].ChartType = SeriesChartType.Line;
-            this.chartWeight.Series["Weight Max PPK"].Color = Color.Red;
-            this.chartWeight.Series["Weight Max PPK"].BorderWidth = 3;
+            //this.chartWeight.Series.Add("Weight Max PPK");
+            //this.chartWeight.Series["Weight Max PPK"].ChartType = SeriesChartType.Line;
+            //this.chartWeight.Series["Weight Max PPK"].Color = Color.Red;
+            //this.chartWeight.Series["Weight Max PPK"].BorderWidth = 3;
 
             this.chartWeight.Series.Add("Weight Actual PPK");
             this.chartWeight.Series["Weight Actual PPK"].ChartType = SeriesChartType.Line;
@@ -629,6 +654,109 @@ namespace Diameter_Checker
             this.chartWeight.Series["Weight Min PPK"].ChartType = SeriesChartType.Line;
             this.chartWeight.Series["Weight Min PPK"].Color = Color.Red;
             this.chartWeight.Series["Weight Min PPK"].BorderWidth = 3;
+        }
+
+        private void chart1Display()
+        {
+            DataPointCollection points = this.chart1.Series["A1 Max Offset"].Points;
+            int num = frmMain.l;
+            frmMain.l = num + 1;
+            points.AddXY((double)num, (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection dataPointCollection = this.chart1.Series["A1 Measuring"].Points;
+            int num1 = frmMain.l;
+            frmMain.l = num1 + 1;
+            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A1MeasuredValue.Replace(".", "")) / 1000f));
+            DataPointCollection points1 = this.chart1.Series["A1 Min Offset"].Points;
+            int num2 = frmMain.l;
+            frmMain.l = num2 + 1;
+            points1.AddXY((double)num2, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
+        }
+
+        private void chart1Setting()
+        {
+            frmMain.l = 0;
+            ChartArea chart1 = this.chart1.ChartAreas[0];
+            this.chart1.Series.Clear();
+            chart1.AxisX.Minimum = 0;
+            chart1.AxisY.Maximum = (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f) + 0.01;
+            chart1.AxisY.Minimum = (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f) - 0.01;
+            chart1.AxisY.IntervalType = DateTimeIntervalType.Number;
+            this.chart1.Series.Add("A1 Max Offset");
+            this.chart1.Series["A1 Max Offset"].ChartType = SeriesChartType.Line;
+            this.chart1.Series["A1 Max Offset"].Color = Color.Red;
+            this.chart1.Series["A1 Max Offset"].BorderWidth = 3;
+            this.chart1.Series.Add("A1 Measuring");
+            this.chart1.Series["A1 Measuring"].ChartType = SeriesChartType.Line;
+            this.chart1.Series["A1 Measuring"].Color = Color.Blue;
+            this.chart1.Series["A1 Measuring"].BorderWidth = 3;
+            this.chart1.Series.Add("A1 Min Offset");
+            this.chart1.Series["A1 Min Offset"].ChartType = SeriesChartType.Line;
+            this.chart1.Series["A1 Min Offset"].Color = Color.Red;
+            this.chart1.Series["A1 Min Offset"].BorderWidth = 3;
+            DataPointCollection points = this.chart1.Series["A1 Max Offset"].Points;
+            int num = frmMain.l;
+            frmMain.l = num + 1;
+            points.AddXY((double)num, (double)(float.Parse(Communication.A1MaximumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection dataPointCollection = this.chart1.Series["A1 Measuring"].Points;
+            int num1 = frmMain.l;
+            frmMain.l = num1 + 1;
+            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection points1 = this.chart1.Series["A1 Min Offset"].Points;
+            int num2 = frmMain.l;
+            frmMain.l = num2 + 1;
+            points1.AddXY((double)num2, (double)(float.Parse(Communication.A1MinimumOffset.Replace(".", "")) / 1000f));
+        }
+
+        private void chart2Display()
+        {
+            DataPointCollection points = this.chart2.Series["A2 Max Offset"].Points;
+            int num = frmMain.m;
+            frmMain.m = num + 1;
+            points.AddXY((double)num, (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection dataPointCollection = this.chart2.Series["A2 Measuring"].Points;
+            int num1 = frmMain.m;
+            frmMain.m = num1 + 1;
+
+            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A2MeasuredValue.Replace(".", "")) / 1000f));
+            DataPointCollection points1 = this.chart2.Series["A2 Min Offset"].Points;
+            int num2 = frmMain.m;
+            frmMain.m = num2 + 1;
+            points1.AddXY((double)num2, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
+        }
+
+        private void chart2Setting()
+        {
+            frmMain.m = 0;
+            ChartArea chart2 = this.chart2.ChartAreas[0];
+            this.chart2.Series.Clear();
+            chart2.AxisX.Minimum = 0;
+            chart2.AxisY.Maximum = (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f) + 0.01;
+            chart2.AxisY.Minimum = (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f) - 0.01;
+            chart2.AxisY.IntervalType = DateTimeIntervalType.Number;
+            this.chart2.Series.Add("A2 Max Offset");
+            this.chart2.Series["A2 Max Offset"].ChartType = SeriesChartType.Line;
+            this.chart2.Series["A2 Max Offset"].Color = Color.Red;
+            this.chart2.Series["A2 Max Offset"].BorderWidth = 3;
+            this.chart2.Series.Add("A2 Measuring");
+            this.chart2.Series["A2 Measuring"].ChartType = SeriesChartType.Line;
+            this.chart2.Series["A2 Measuring"].Color = Color.Blue;
+            this.chart2.Series["A2 Measuring"].BorderWidth = 3;
+            this.chart2.Series.Add("A2 Min Offset");
+            this.chart2.Series["A2 Min Offset"].ChartType = SeriesChartType.Line;
+            this.chart2.Series["A2 Min Offset"].Color = Color.Red;
+            this.chart2.Series["A2 Min Offset"].BorderWidth = 3;
+            DataPointCollection points = this.chart2.Series["A2 Max Offset"].Points;
+            int num = frmMain.m;
+            frmMain.m = num + 1;
+            points.AddXY((double)num, (double)(float.Parse(Communication.A2MaximumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection dataPointCollection = this.chart2.Series["A2 Measuring"].Points;
+            int num1 = frmMain.m;
+            frmMain.m = num1 + 1;
+            dataPointCollection.AddXY((double)num1, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
+            DataPointCollection points1 = this.chart2.Series["A2 Min Offset"].Points;
+            int num2 = frmMain.m;
+            frmMain.m = num2 + 1;
+            points1.AddXY((double)num2, (double)(float.Parse(Communication.A2MinimumOffset.Replace(".", "")) / 1000f));
         }
 
         private void chkStopScan_CheckedChanged(object sender, EventArgs e)
@@ -874,6 +1002,8 @@ namespace Diameter_Checker
             this.chartA1Setting();
             this.chartA2Setting();
             chartWeightSetting();
+            chart1Setting();
+            chart2Setting();
             using (ManagementObjectCollection.ManagementObjectEnumerator enumerator = (new ManagementClass("win32_processor")).GetInstances().GetEnumerator())
             {
                 if (enumerator.MoveNext())
@@ -882,11 +1012,11 @@ namespace Diameter_Checker
                     strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            //if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
-            //{
-            //    MessageBox.Show("System Error!", "WARNING!");
-            //    base.Dispose();
-            //}
+            if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
+            {
+                MessageBox.Show("System Error!", "WARNING!");
+                base.Dispose();
+            }
             this.calculatePPandPPKvalue();
         }
 
@@ -981,15 +1111,15 @@ namespace Diameter_Checker
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -997,6 +1127,12 @@ namespace Diameter_Checker
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
@@ -1116,6 +1252,8 @@ namespace Diameter_Checker
             this.tmrRefreshDataGridView = new System.Windows.Forms.Timer(this.components);
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.tmrDisplayJudge = new System.Windows.Forms.Timer(this.components);
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -1134,6 +1272,8 @@ namespace Diameter_Checker
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelResult.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel3
@@ -1387,6 +1527,8 @@ namespace Diameter_Checker
             // groupBox3
             // 
             this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox3.Controls.Add(this.chart2);
+            this.groupBox3.Controls.Add(this.chart1);
             this.groupBox3.Controls.Add(this.chartWeight);
             this.groupBox3.Controls.Add(this.chartA1);
             this.groupBox3.Controls.Add(this.chartA2);
@@ -1401,85 +1543,91 @@ namespace Diameter_Checker
             // 
             // chartWeight
             // 
-            chartArea1.AxisY.Title = "Weight PPK";
-            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea1.Name = "ChartArea1";
-            chartArea1.ShadowColor = System.Drawing.Color.Gray;
-            this.chartWeight.ChartAreas.Add(chartArea1);
-            legend1.DockedToChartArea = "ChartArea1";
-            legend1.Enabled = false;
-            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend1.IsTextAutoFit = false;
-            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend1.Name = "Legend1";
-            this.chartWeight.Legends.Add(legend1);
-            this.chartWeight.Location = new System.Drawing.Point(2, 270);
+            chartArea3.AxisX.Title = "Weight PPK";
+            chartArea3.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            chartArea3.AxisX.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea3.Name = "ChartArea1";
+            chartArea3.ShadowColor = System.Drawing.Color.Gray;
+            this.chartWeight.ChartAreas.Add(chartArea3);
+            legend3.DockedToChartArea = "ChartArea1";
+            legend3.Enabled = false;
+            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend3.IsTextAutoFit = false;
+            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend3.Name = "Legend1";
+            this.chartWeight.Legends.Add(legend3);
+            this.chartWeight.Location = new System.Drawing.Point(1024, 291);
             this.chartWeight.Name = "chartWeight";
             this.chartWeight.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series1.BorderWidth = 2;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series1.Legend = "Legend1";
-            series1.Name = "Weight";
-            this.chartWeight.Series.Add(series1);
-            this.chartWeight.Size = new System.Drawing.Size(752, 243);
+            series3.BorderWidth = 2;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series3.Legend = "Legend1";
+            series3.Name = "Weight";
+            this.chartWeight.Series.Add(series3);
+            this.chartWeight.Size = new System.Drawing.Size(486, 205);
             this.chartWeight.TabIndex = 3;
             this.chartWeight.Text = "Chart Weight";
             // 
             // chartA1
             // 
-            chartArea2.AxisY.Title = "A1 PPK";
-            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea2.Name = "ChartArea1";
-            chartArea2.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA1.ChartAreas.Add(chartArea2);
-            legend2.DockedToChartArea = "ChartArea1";
-            legend2.Enabled = false;
-            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend2.IsTextAutoFit = false;
-            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend2.Name = "Legend1";
-            this.chartA1.Legends.Add(legend2);
-            this.chartA1.Location = new System.Drawing.Point(2, 16);
+            chartArea4.AxisX.Title = "A1 PPK";
+            chartArea4.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            chartArea4.AxisX.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea4.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea4.Name = "ChartArea1";
+            chartArea4.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA1.ChartAreas.Add(chartArea4);
+            legend4.DockedToChartArea = "ChartArea1";
+            legend4.Enabled = false;
+            legend4.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend4.IsTextAutoFit = false;
+            legend4.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend4.Name = "Legend1";
+            this.chartA1.Legends.Add(legend4);
+            this.chartA1.Location = new System.Drawing.Point(24, 291);
             this.chartA1.Name = "chartA1";
             this.chartA1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series2.BorderWidth = 2;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series2.Legend = "Legend1";
-            series2.Name = "A1";
-            this.chartA1.Series.Add(series2);
-            this.chartA1.Size = new System.Drawing.Size(752, 243);
+            series4.BorderWidth = 2;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series4.Legend = "Legend1";
+            series4.Name = "A1";
+            this.chartA1.Series.Add(series4);
+            this.chartA1.Size = new System.Drawing.Size(486, 205);
             this.chartA1.TabIndex = 2;
             this.chartA1.Text = "Chart A1";
             // 
             // chartA2
             // 
-            chartArea3.AxisY.Title = "A2 PPK";
-            chartArea3.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.ShadowColor = System.Drawing.Color.Gray;
-            this.chartA2.ChartAreas.Add(chartArea3);
-            legend3.DockedToChartArea = "ChartArea1";
-            legend3.Enabled = false;
-            legend3.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
-            legend3.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
-            legend3.Name = "Legend1";
-            this.chartA2.Legends.Add(legend3);
-            this.chartA2.Location = new System.Drawing.Point(742, 16);
+            chartArea5.AxisX.Title = "A2 PPK";
+            chartArea5.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            chartArea5.AxisX.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea5.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea5.Name = "ChartArea1";
+            chartArea5.ShadowColor = System.Drawing.Color.Gray;
+            this.chartA2.ChartAreas.Add(chartArea5);
+            legend5.DockedToChartArea = "ChartArea1";
+            legend5.Enabled = false;
+            legend5.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend5.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend5.Name = "Legend1";
+            this.chartA2.Legends.Add(legend5);
+            this.chartA2.Location = new System.Drawing.Point(524, 291);
             this.chartA2.Name = "chartA2";
             this.chartA2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series3.BorderWidth = 2;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            series3.IsXValueIndexed = true;
-            series3.Legend = "Legend1";
-            series3.Name = "A2";
-            this.chartA2.Series.Add(series3);
-            this.chartA2.Size = new System.Drawing.Size(752, 243);
+            series5.BorderWidth = 2;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series5.IsXValueIndexed = true;
+            series5.Legend = "Legend1";
+            series5.Name = "A2";
+            this.chartA2.Series.Add(series5);
+            this.chartA2.Size = new System.Drawing.Size(486, 205);
             this.chartA2.TabIndex = 1;
             this.chartA2.Text = "Chart A2";
             // 
@@ -2505,6 +2653,67 @@ namespace Diameter_Checker
             this.tmrDisplayJudge.Interval = 500;
             this.tmrDisplayJudge.Tick += new System.EventHandler(this.displayJudge_Tick);
             // 
+            // chart1
+            // 
+            chartArea2.AxisX.Title = "A1 Air Pressure";
+            chartArea2.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            chartArea2.AxisX.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.AxisX2.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.ShadowColor = System.Drawing.Color.Gray;
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.DockedToChartArea = "ChartArea1";
+            legend2.Enabled = false;
+            legend2.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend2.IsTextAutoFit = false;
+            legend2.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(7, 25);
+            this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series2.BorderWidth = 2;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series2.Legend = "Legend1";
+            series2.Name = "A1 Pressue";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(746, 234);
+            this.chart1.TabIndex = 4;
+            this.chart1.Text = "Chart A1 Air Pressure";
+            // 
+            // chart2
+            // 
+            chartArea1.AxisX.Title = "A2 Air Pressure";
+            chartArea1.AxisX.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            chartArea1.AxisX.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.AxisY.TitleForeColor = System.Drawing.SystemColors.MenuHighlight;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.Gray;
+            this.chart2.ChartAreas.Add(chartArea1);
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Enabled = false;
+            legend1.HeaderSeparatorColor = System.Drawing.Color.DarkGray;
+            legend1.ItemColumnSeparatorColor = System.Drawing.Color.LightGray;
+            legend1.Name = "Legend1";
+            this.chart2.Legends.Add(legend1);
+            this.chart2.Location = new System.Drawing.Point(767, 25);
+            this.chart2.Name = "chart2";
+            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "A2Pressure";
+            this.chart2.Series.Add(series1);
+            this.chart2.Size = new System.Drawing.Size(746, 234);
+            this.chart2.TabIndex = 5;
+            this.chart2.Text = "Chart A2 Air Pressure";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2544,6 +2753,8 @@ namespace Diameter_Checker
             this.panel4.PerformLayout();
             this.panelResult.ResumeLayout(false);
             this.panelResult.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2712,7 +2923,7 @@ namespace Diameter_Checker
             {
                 SqlConnection con = new SqlConnection(Communication.con_string);
                 con.Open();
-                string add = string.Concat(new object[] { "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL) VALUES ('", Communication.ID, "','", Communication.model, "','", float.Parse(Communication.Weight.Replace("g","").Trim()), "','", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','", Communication.A1Result, "','", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','", Communication.A2Result, "','", Communication.Date, "','", Communication.Time, "','", Communication.Judge, "','", Communication.totalProcessed, "','", Communication.totalPASS, "','", Communication.totalFAIL, "')" });
+                string add = string.Concat(new object[] { "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Result, A2MaxValue, A2MinValue, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL) VALUES ('", Communication.ID, "','", Communication.model, "','", Communication.Weight.Trim(), "','", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','", Communication.A1Result, "','", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','", Communication.A2Result, "','", Communication.Date, "','", Communication.Time, "','", Communication.Judge, "','", Communication.totalProcessed, "','", Communication.totalPASS, "','", Communication.totalFAIL, "')" });
                 SqlCommand cmd_saveData = new SqlCommand()
                 {
                     Connection = con,
@@ -2868,7 +3079,8 @@ namespace Diameter_Checker
                             Communication.Weight = weightResult = weightResult.Replace("g", "").Trim();
                             try
                             {
-                                weight = float.Parse(weightResult.Replace(".", "")) / 10f;
+                                weight = float.Parse(weightResult.Replace(".", ""))/10f;
+                               
                                 minWeight = float.Parse(txtWeightMin.Text);
                                 maxWeight = float.Parse(txtWeightMax.Text);
                                 
@@ -2938,10 +3150,10 @@ namespace Diameter_Checker
                 this.txtA2MaximumValue.Text = null;
                 this.txtA2MinimumValue.Text = null;
                 this.txtA2Result.Text = null;
-                this.chartA1.Series.Clear();
-                this.chartA1Setting();
-                this.chartA2.Series.Clear();
-                this.chartA2Setting();
+                this.chart1.Series.Clear();
+                this.chart1Setting();
+                this.chart2.Series.Clear();
+                this.chart2Setting();
                 this.loadData();
             }
             if ((Communication.A1Detected ? false : !Communication.A2Detected))
@@ -3126,7 +3338,7 @@ namespace Diameter_Checker
                                 txtA1MinimumValue.Text = Communication.A1MinimumValue;
                             }
                             saveA1BufferData();
-                            //chartA1Display();
+                            chart1Display();
                             ClearAllData();
                         }
                     }
@@ -3200,7 +3412,7 @@ namespace Diameter_Checker
                                 txtA2MinimumValue.Text = Communication.A2MinimumValue;
                             }
                             saveA2BufferData();
-                            //chartA2Display();
+                            chart2Display();
                             ClearAllData();
                         }
                     }
@@ -3239,10 +3451,10 @@ namespace Diameter_Checker
             if (Communication.enableClearData)
             {
                 Communication.enableClearData = false;
-                //chartA1.Series.Clear();
-                //chartA1Setting();
-                //chartA2.Series.Clear();
-                //chartA2Setting();
+                chart1.Series.Clear();
+                chart1Setting();
+                chart2.Series.Clear();
+                chart2Setting();
                 //chartWeight.Series.Clear();
                 //chartWeightSetting();
                 txtA1Result.Text = "";
@@ -3259,7 +3471,7 @@ namespace Diameter_Checker
         private void CheckAndMakeDecision()
         {
             bool flag2;
-            Communication.Weight = this.txtWeight.Text.Trim();
+            //Communication.Weight = this.txtWeight.Text.Trim();
             if (
                 (!(this.txtWeightResult.Text == "OK") && !(this.txtWeightResult.Text == "NG")) ||
                 !Communication.A1EnableSave || !Communication.A2EnableSave ||
@@ -3353,6 +3565,10 @@ namespace Diameter_Checker
                 Communication.refreshDataGridView = false;
                 tmrRefreshDataGridView.Enabled = false;
                 loadData();
+                chartA1Setting();
+                chartA2Setting();
+                chartWeightSetting();
+                calculatePPandPPKvalue();
             }
         }
 
