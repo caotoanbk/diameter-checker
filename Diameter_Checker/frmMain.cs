@@ -383,6 +383,8 @@ namespace Diameter_Checker
             {
                 Communication.A1PPK = 0;
                 this.txtA1PPK.Text = "0";
+                Communication.A1PP = "0";
+                this.txtA1PP.Text = "0";
             }
 
             //A2
@@ -436,6 +438,8 @@ namespace Diameter_Checker
             {
                 Communication.A2PPK = 0;
                 this.txtA2PPK.Text = "0";
+                Communication.A2PP = "0";
+                this.txtA2PP.Text = "0";
             }
 
             //Weight
@@ -508,6 +512,8 @@ namespace Diameter_Checker
             {
                 Communication.WeightPPK = 0;
                 this.txtWeightPPK.Text = "0";
+                Communication.WeightPP = "0";
+                this.txtWeightPP.Text = "0";
             }
 
             chartA1Display();
@@ -539,8 +545,9 @@ namespace Diameter_Checker
             ChartArea chart1PPK = this.chartA1.ChartAreas[0];
             this.chartA1.Series.Clear();
             chart1PPK.AxisX.Minimum = 0;
-            //chart1.AxisY.Maximum = Math.Floor((Communication.MAX_PPK+0.1f)*100)/100;
-            chart1PPK.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
+            chart1PPK.AxisY.Maximum = 3;
+            chart1PPK.AxisY.Interval = 0.5;
+            chart1PPK.AxisY.Minimum = 0;
             chart1PPK.AxisY.IntervalType = DateTimeIntervalType.Number;
             //this.chartA1.Series.Add("A1 Max PPK");
             //this.chartA1.Series["A1 Max PPK"].ChartType = SeriesChartType.Line;
@@ -598,8 +605,9 @@ namespace Diameter_Checker
             ChartArea chart2PPK = this.chartA2.ChartAreas[0];
             this.chartA2.Series.Clear();
             chart2PPK.AxisX.Minimum = 0;
-            //chart2.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
-            chart2PPK.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
+            chart2PPK.AxisY.Maximum = 3;
+            chart2PPK.AxisY.Minimum = 0;
+            chart2PPK.AxisY.Interval = 0.5;
             chart2PPK.AxisY.IntervalType = DateTimeIntervalType.Number;
             //this.chartA2.Series.Add("A2 Max PPK");
             //this.chartA2.Series["A2 Max PPK"].ChartType = SeriesChartType.Line;
@@ -637,8 +645,9 @@ namespace Diameter_Checker
             ChartArea chart3 = this.chartWeight.ChartAreas[0];
             this.chartWeight.Series.Clear();
             chart3.AxisX.Minimum = 0;
-            //chart3.AxisY.Maximum = Math.Floor((Communication.MAX_PPK + 0.1f) * 100) / 100;
-            chart3.AxisY.Minimum = Math.Floor((Communication.MIN_PPK-0.1f)*100)/100;
+            chart3.AxisY.Maximum = 3;
+            chart3.AxisY.Minimum = 0;
+            chart3.AxisY.Interval = 0.5;
             chart3.AxisY.IntervalType = DateTimeIntervalType.Number;
             //this.chartWeight.Series.Add("Weight Max PPK");
             //this.chartWeight.Series["Weight Max PPK"].ChartType = SeriesChartType.Line;
