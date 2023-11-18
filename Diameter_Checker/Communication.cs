@@ -72,9 +72,7 @@ namespace Diameter_Checker
         public static double WeightPPU;
         public static double WeightPPL;
         public static string loginUser;
-        public static string processorID1;
-        public static string processorID2;
-        public static string processorID3;
+        public static string[] listProcessorId = { "BFEBFBFF000306C3", "BFEBFBFF000906E9", "BFEBFBFF000A0653" };
         public static bool A1Detected;
         public static bool A2Detected;
         public static string A1DetectionLevel;
@@ -95,6 +93,8 @@ namespace Diameter_Checker
         public static bool receivedWeightFlg;
         public static double MIN_PPK = 1;
         public static double MAX_PPK = 1.67;
+
+        public static bool isStartPassword = false;
 
         static Communication()
         {
@@ -128,9 +128,6 @@ namespace Diameter_Checker
             A1RecevingData = false;
             A2RecevingData = false;
             loginUser = "Admin";
-            processorID1 = "BFEBFBFF000306C3";
-            processorID2 = "BFEBFBFF000906E9";
-            processorID3 = "BFEBFBFF000A0653";
             A1Detected = false;
             A2Detected = false;
             A1DetectionLevel = "10";

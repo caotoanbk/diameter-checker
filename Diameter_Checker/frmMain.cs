@@ -298,16 +298,36 @@ namespace Diameter_Checker
             }
             else
             {
-                this.btnStart.Text = "Stop";
-                this.numProductInSet.Enabled = false;
-                this.btnStart.ForeColor = Color.DarkRed;
-                this.txtSystemMessage.Text = "Working mode";
-                Communication.start = true;
-                Communication.stop = false;
-                Communication.enableReceiveData = true;
-                Communication.cntProductInSet = 0;
-                this.btnCntProduct.Text = "0";
+                if (this.chkStopScan.Checked && Communication.totalProcessed > 0)
+                {
+                    PasswordToStart f = new PasswordToStart();
+                    f.StartPosition = FormStartPosition.CenterParent;
+                    f.ShowDialog();
+                    if (Communication.isStartPassword)
+                    {
+                        startWorking();
+                        Communication.isStartPassword = false;
+                    }
+                }
+                else
+                {
+                    startWorking();
+                }
+                
             }
+        }
+
+        private void startWorking()
+        {
+            this.btnStart.Text = "Stop";
+            this.numProductInSet.Enabled = false;
+            this.btnStart.ForeColor = Color.DarkRed;
+            this.txtSystemMessage.Text = "Working mode";
+            Communication.start = true;
+            Communication.stop = false;
+            Communication.enableReceiveData = true;
+            Communication.cntProductInSet = 0;
+            this.btnCntProduct.Text = "0";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -1021,7 +1041,7 @@ namespace Diameter_Checker
                     strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            if (strgetProcessorID != Communication.processorID1.Trim() && strgetProcessorID != Communication.processorID2.Trim() && strgetProcessorID != Communication.processorID3.Trim())
+            if (!Communication.listProcessorId.Contains(strgetProcessorID))
             {
                 MessageBox.Show("System Error!", "WARNING!");
                 base.Dispose();
