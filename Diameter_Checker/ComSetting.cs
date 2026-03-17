@@ -77,6 +77,7 @@ namespace Diameter_Checker
         private Label label1;
         private TextBox txtTimer2;
         private Timer tmr1Second2;
+        private LinkLabel linkLabel1;
         private TextBox txtTest;
 
         public ComSetting()
@@ -291,6 +292,7 @@ namespace Diameter_Checker
             this.tmrDisconnectComPort = new System.Windows.Forms.Timer(this.components);
             this.tmrDisconnectComPort2 = new System.Windows.Forms.Timer(this.components);
             this.tmr1Second2 = new System.Windows.Forms.Timer(this.components);
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -307,9 +309,9 @@ namespace Diameter_Checker
             this.groupBox1.Controls.Add(this.lblConnectStatus);
             this.groupBox1.Controls.Add(this.lblStatus);
             this.groupBox1.ForeColor = System.Drawing.Color.Black;
-            this.groupBox1.Location = new System.Drawing.Point(0, 65);
+            this.groupBox1.Location = new System.Drawing.Point(0, 42);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(428, 126);
+            this.groupBox1.Size = new System.Drawing.Size(428, 117);
             this.groupBox1.TabIndex = 89;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settting COM A1&&A2";
@@ -357,7 +359,7 @@ namespace Diameter_Checker
             this.panel1.Controls.Add(this.btnConnect);
             this.panel1.Controls.Add(this.label16);
             this.panel1.Controls.Add(this.label13);
-            this.panel1.Location = new System.Drawing.Point(137, 16);
+            this.panel1.Location = new System.Drawing.Point(135, 16);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(282, 97);
             this.panel1.TabIndex = 86;
@@ -506,7 +508,7 @@ namespace Diameter_Checker
             // btnExit
             // 
             this.btnExit.ForeColor = System.Drawing.Color.Black;
-            this.btnExit.Location = new System.Drawing.Point(219, 327);
+            this.btnExit.Location = new System.Drawing.Point(217, 315);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(76, 26);
             this.btnExit.TabIndex = 87;
@@ -517,7 +519,7 @@ namespace Diameter_Checker
             // btnSave
             // 
             this.btnSave.ForeColor = System.Drawing.Color.Black;
-            this.btnSave.Location = new System.Drawing.Point(137, 327);
+            this.btnSave.Location = new System.Drawing.Point(135, 315);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(76, 26);
             this.btnSave.TabIndex = 86;
@@ -527,6 +529,7 @@ namespace Diameter_Checker
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.linkLabel1);
             this.panel2.Controls.Add(this.groupBox2);
             this.panel2.Controls.Add(this.btnExit);
             this.panel2.Controls.Add(this.txtCommunicationData);
@@ -535,7 +538,7 @@ namespace Diameter_Checker
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(428, 361);
+            this.panel2.Size = new System.Drawing.Size(428, 354);
             this.panel2.TabIndex = 91;
             // 
             // groupBox2
@@ -547,9 +550,9 @@ namespace Diameter_Checker
             this.groupBox2.Controls.Add(this.lblConnectStatus2);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.ForeColor = System.Drawing.Color.Black;
-            this.groupBox2.Location = new System.Drawing.Point(0, 197);
+            this.groupBox2.Location = new System.Drawing.Point(3, 165);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(491, 126);
+            this.groupBox2.Size = new System.Drawing.Size(419, 126);
             this.groupBox2.TabIndex = 93;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settting COM Weight";
@@ -597,7 +600,7 @@ namespace Diameter_Checker
             this.panel3.Controls.Add(this.btnConnect2);
             this.panel3.Controls.Add(this.label3);
             this.panel3.Controls.Add(this.label4);
-            this.panel3.Location = new System.Drawing.Point(137, 16);
+            this.panel3.Location = new System.Drawing.Point(132, 19);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(282, 97);
             this.panel3.TabIndex = 86;
@@ -748,7 +751,7 @@ namespace Diameter_Checker
             this.txtCommunicationData.Location = new System.Drawing.Point(0, 0);
             this.txtCommunicationData.Multiline = true;
             this.txtCommunicationData.Name = "txtCommunicationData";
-            this.txtCommunicationData.Size = new System.Drawing.Size(428, 59);
+            this.txtCommunicationData.Size = new System.Drawing.Size(428, 36);
             this.txtCommunicationData.TabIndex = 90;
             // 
             // timer1
@@ -784,12 +787,23 @@ namespace Diameter_Checker
             this.tmr1Second2.Interval = 1000;
             this.tmr1Second2.Tick += new System.EventHandler(this.tmr1Second2_Tick);
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(3, 294);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(170, 13);
+            this.linkLabel1.TabIndex = 94;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Change password to start after NG";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // ComSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(428, 361);
+            this.ClientSize = new System.Drawing.Size(428, 354);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -1023,6 +1037,12 @@ namespace Diameter_Checker
         {
             Communication.timer2++;
             this.txtTimer2.Text = Communication.timer2.ToString();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            (new ChangePassWord()).ShowDialog();
+            base.Close();
         }
     }
 }

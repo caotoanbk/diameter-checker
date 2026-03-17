@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 
@@ -71,8 +73,9 @@ namespace Diameter_Checker
         public static double WeightPPK;
         public static double WeightPPU;
         public static double WeightPPL;
+        public static double D1Value=0, D2Value=0;
         public static string loginUser;
-        public static string[] listProcessorId = { "BFEBFBFF000306C3", "BFEBFBFF000906E9", "BFEBFBFF000A0653" };
+        public static List<string> listProcessorId;
         public static bool A1Detected;
         public static bool A2Detected;
         public static string A1DetectionLevel;
@@ -93,8 +96,11 @@ namespace Diameter_Checker
         public static bool receivedWeightFlg;
         public static double MIN_PPK = 1;
         public static double MAX_PPK = 1.67;
+        public static double MAX_D1 = 0.02;
+        public static double MAX_D2 = 0.02;
 
         public static bool isStartPassword = false;
+        public static bool isPreviousNG = false;
 
         static Communication()
         {
@@ -142,10 +148,28 @@ namespace Diameter_Checker
             closeComport = false;
             subformIsOpen = false;
             serialport = new SerialPort();
+            //con_string = "Data Source=.;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";//--DEBUG
             con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
             serialport2 = new SerialPort();
             cntProductInSet = 0;
             receivedWeightFlg = false;
+            listProcessorId = new List<string> { "BFEBFBFF000306C3", "BFEBFBFF000906E9", "BFEBFBFF000A0653" };
+
+            string configPath = @"config.ini";
+            if (File.Exists(configPath))
+            {
+                var lines = File.ReadAllLines(configPath);
+                for (var i = 0; i < lines.Length; i += 1)
+                {
+                    listProcessorId.Add(Base64Decode(lines[i]));
+                }
+            }
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         public Communication()
