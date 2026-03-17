@@ -1031,10 +1031,9 @@ namespace Diameter_Checker
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                (new SqlCommand("delete from A1BufferData", con)).ExecuteNonQuery();
-                con.Close();
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("DELETE FROM A1BufferData", con))
+                    cmd.ExecuteNonQuery();
             }
             catch
             {
@@ -1045,10 +1044,9 @@ namespace Diameter_Checker
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                (new SqlCommand("delete from A2BufferData", con)).ExecuteNonQuery();
-                con.Close();
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("DELETE FROM A2BufferData", con))
+                    cmd.ExecuteNonQuery();
             }
             catch
             {
@@ -3015,31 +3013,43 @@ namespace Diameter_Checker
         {
         }
 
-        private void loadData(string d="")
+        private void loadData(string d = "")
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                string whereClause = " where Display = 1";
-                if(!string.IsNullOrEmpty(d))
+                using (var con = Communication.CreateConnection())
                 {
-                    whereClause = " where Date = '" + d + "'";
+                    string sql;
+                    SqlCommand cmd;
+                    if (string.IsNullOrEmpty(d))
+                    {
+                        sql = "select ID, model, weight, A1MaxValue, A1MinValue, A1Roundness, A1Result, A2MaxValue, A2MinValue, A2Roundness, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data where Display = 1)A1 order by NEWID DESC)B1 order by NEWID";
+                        cmd = new SqlCommand(sql, con);
+                    }
+                    else
+                    {
+                        sql = "select ID, model, weight, A1MaxValue, A1MinValue, A1Roundness, A1Result, A2MaxValue, A2MinValue, A2Roundness, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data where Date = @Date)A1 order by NEWID DESC)B1 order by NEWID";
+                        cmd = new SqlCommand(sql, con);
+                        cmd.Parameters.AddWithValue("@Date", d);
+                    }
+                    using (cmd)
+                    {
+                        var da = new SqlDataAdapter(cmd);
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        this.dataGridView1.DataSource = dt;
+                        if (dt.Rows.Count > 0)
+                        {
+                            Communication.totalProcessed = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][14]);
+                            Communication.totalPASS      = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][15]);
+                            Communication.totalFAIL      = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][16]);
+                            this.txtTotalProcessed.Text  = Communication.totalProcessed.ToString();
+                            this.txtTotalPass.Text       = Communication.totalPASS.ToString();
+                            this.txtTotalFAIL.Text       = Communication.totalFAIL.ToString();
+                        }
+                        this.RowsColor();
+                    }
                 }
-                
-                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("select ID, model, weight, A1MaxValue, A1MinValue,A1Roundness, A1Result, A2MaxValue, A2MinValue, A2Roundness, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL from (select top 21 * from (select CAST(substring(ID,3,10) as int) as NEWID, * from Data"+whereClause+")A1 order by NEWID DESC)B1 order by NEWID", con));
-
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                this.dataGridView1.DataSource = dt;
-                Communication.totalProcessed = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][11]);
-                Communication.totalPASS = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][12]);
-                Communication.totalFAIL = Convert.ToInt32(dt.Rows[dt.Rows.Count - 1][13]);
-                this.txtTotalProcessed.Text = Communication.totalProcessed.ToString();
-                this.txtTotalPass.Text = Communication.totalPASS.ToString();
-                this.txtTotalFAIL.Text = Communication.totalFAIL.ToString();
-                this.RowsColor();
-                con.Close();
             }
             catch
             {
@@ -3051,14 +3061,15 @@ namespace Diameter_Checker
             try
             {
                 this.cmbModel.Text = null;
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                SqlDataAdapter da = new SqlDataAdapter(new SqlCommand("SELECT model FROM ProductSetting", con));
-                DataSet dt = new DataSet();
-                da.Fill(dt);
-                this.cmbModel.DataSource = dt.Tables[0];
-                this.cmbModel.ValueMember = "model";
-                con.Close();
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("SELECT model FROM ProductSetting", con))
+                {
+                    var da = new SqlDataAdapter(cmd);
+                    var dt = new DataSet();
+                    da.Fill(dt);
+                    this.cmbModel.DataSource = dt.Tables[0];
+                    this.cmbModel.ValueMember = "model";
+                }
                 this.SelectProductSetting();
             }
             catch
@@ -3129,16 +3140,14 @@ namespace Diameter_Checker
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                string add = string.Concat(new string[] { "INSERT INTO A1BufferData (A1MaxValue, A1MinValue, A1Result) VALUES ('", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','", Communication.A1Result, "')" });
-                SqlCommand cmd_saveData = new SqlCommand()
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("INSERT INTO A1BufferData (A1MaxValue, A1MinValue, A1Result) VALUES (@max, @min, @result)", con))
                 {
-                    Connection = con,
-                    CommandText = add
-                };
-                cmd_saveData.ExecuteNonQuery();
-                con.Close();
+                    cmd.Parameters.AddWithValue("@max",    Communication.A1MaximumValue);
+                    cmd.Parameters.AddWithValue("@min",    Communication.A1MinimumValue);
+                    cmd.Parameters.AddWithValue("@result", Communication.A1Result);
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch
             {
@@ -3149,16 +3158,14 @@ namespace Diameter_Checker
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                string add = string.Concat(new string[] { "INSERT INTO A2BufferData (A2MaxValue, A2MinValue, A2Result) VALUES ('", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','", Communication.A2Result, "')" });
-                SqlCommand cmd_saveData = new SqlCommand()
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("INSERT INTO A2BufferData (A2MaxValue, A2MinValue, A2Result) VALUES (@max, @min, @result)", con))
                 {
-                    Connection = con,
-                    CommandText = add
-                };
-                cmd_saveData.ExecuteNonQuery();
-                con.Close();
+                    cmd.Parameters.AddWithValue("@max",    Communication.A2MaximumValue);
+                    cmd.Parameters.AddWithValue("@min",    Communication.A2MinimumValue);
+                    cmd.Parameters.AddWithValue("@result", Communication.A2Result);
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch
             {
@@ -3169,23 +3176,36 @@ namespace Diameter_Checker
         {
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                double x =  double.Parse(Communication.A1MaximumValue, CultureInfo.InvariantCulture) - double.Parse(Communication.A1MinimumValue, CultureInfo.InvariantCulture);
-                double y =  double.Parse(Communication.A2MaximumValue, CultureInfo.InvariantCulture) - double.Parse(Communication.A2MinimumValue, CultureInfo.InvariantCulture);
+                double x = double.Parse(Communication.A1MaximumValue, CultureInfo.InvariantCulture) - double.Parse(Communication.A1MinimumValue, CultureInfo.InvariantCulture);
+                double y = double.Parse(Communication.A2MaximumValue, CultureInfo.InvariantCulture) - double.Parse(Communication.A2MinimumValue, CultureInfo.InvariantCulture);
                 this.txtA1Roundness.Text = x.ToString("0.000");
                 this.txtA2Roundness.Text = y.ToString("0.000");
                 Communication.D1Value = x;
                 Communication.D2Value = y;
-                string add = string.Concat(new object[] { "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Roundness, A1Result, A2MaxValue, A2MinValue, A2Roundness, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL) VALUES ('", Communication.ID, "','", Communication.model, "','", Communication.Weight.Trim(), "','", Communication.A1MaximumValue, "','", Communication.A1MinimumValue, "','",x.ToString("0.000"), "','", Communication.A1Result, "','", Communication.A2MaximumValue, "','", Communication.A2MinimumValue, "','",y.ToString("0.000"), "','", Communication.A2Result, "','", Communication.Date, "','", Communication.Time, "','", Communication.Judge, "','", Communication.totalProcessed, "','", Communication.totalPASS, "','", Communication.totalFAIL, "')" });
-                SqlCommand cmd_saveData = new SqlCommand()
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand(
+                    "INSERT INTO Data (ID, model, weight, A1MaxValue, A1MinValue, A1Roundness, A1Result, A2MaxValue, A2MinValue, A2Roundness, A2Result, Date, Time, Judge, TotalProcessed, TotalPASS, TotalFAIL) " +
+                    "VALUES (@ID, @model, @weight, @A1Max, @A1Min, @A1Round, @A1Result, @A2Max, @A2Min, @A2Round, @A2Result, @Date, @Time, @Judge, @TotalProcessed, @TotalPASS, @TotalFAIL)", con))
                 {
-                    Connection = con,
-                    CommandText = add
-                };
-                cmd_saveData.ExecuteNonQuery();
-                con.Close();
-                con.Dispose();
+                    cmd.Parameters.AddWithValue("@ID",             Communication.ID);
+                    cmd.Parameters.AddWithValue("@model",          Communication.model);
+                    cmd.Parameters.AddWithValue("@weight",         Communication.Weight.Trim());
+                    cmd.Parameters.AddWithValue("@A1Max",          Communication.A1MaximumValue);
+                    cmd.Parameters.AddWithValue("@A1Min",          Communication.A1MinimumValue);
+                    cmd.Parameters.AddWithValue("@A1Round",        x.ToString("0.000"));
+                    cmd.Parameters.AddWithValue("@A1Result",       Communication.A1Result);
+                    cmd.Parameters.AddWithValue("@A2Max",          Communication.A2MaximumValue);
+                    cmd.Parameters.AddWithValue("@A2Min",          Communication.A2MinimumValue);
+                    cmd.Parameters.AddWithValue("@A2Round",        y.ToString("0.000"));
+                    cmd.Parameters.AddWithValue("@A2Result",       Communication.A2Result);
+                    cmd.Parameters.AddWithValue("@Date",           Communication.Date);
+                    cmd.Parameters.AddWithValue("@Time",           Communication.Time);
+                    cmd.Parameters.AddWithValue("@Judge",          Communication.Judge);
+                    cmd.Parameters.AddWithValue("@TotalProcessed", Communication.totalProcessed);
+                    cmd.Parameters.AddWithValue("@TotalPASS",      Communication.totalPASS);
+                    cmd.Parameters.AddWithValue("@TotalFAIL",      Communication.totalFAIL);
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch
             {
@@ -3205,31 +3225,34 @@ namespace Diameter_Checker
 
             try
             {
-                SqlConnection con = new SqlConnection(Communication.con_string);
-                con.Open();
-                SqlCommand cmdProductSelect = new SqlCommand(string.Concat("SELECT * FROM ProductSetting WHERE model ='", this.cmbModel.Text, "'"), con);
-                SqlDataReader dt = cmdProductSelect.ExecuteReader();
-                while (dt.Read())
+                using (var con = Communication.CreateConnection())
+                using (var cmd = new SqlCommand("SELECT model, A1DetectionValue, A2DetectionValue, A1MinimumOffset, A1MaximumOffset, A2MinimumOffset, A2MaximumOffset, maxWeight, minWeight FROM ProductSetting WHERE model = @model", con))
                 {
-                    Communication.model = dt["model"].ToString().Trim();
-                    Communication.A1DetectionLevel = dt["A1DetectionValue"].ToString().Trim();
-                    Communication.A2DetectionLevel = dt["A2DetectionValue"].ToString().Trim();
-                    Communication.A1MinimumOffset = dt["A1MinimumOffset"].ToString().Trim();
-                    Communication.A1MaximumOffset = dt["A1MaximumOffset"].ToString().Trim();
-                    Communication.A2MinimumOffset = dt["A2MinimumOffset"].ToString().Trim();
-                    Communication.A2MaximumOffset = dt["A2MaximumOffset"].ToString().Trim();
-                    Communication.maxWeight = dt["maxWeight"].ToString().Trim();
-                    Communication.minWeight = dt["minWeight"].ToString().Trim();
-                    this.txtA1DetectionLevel.Text = dt["A1DetectionValue"].ToString().Trim();
-                    this.txtA2DetectionLevel.Text = dt["A2DetectionValue"].ToString().Trim();
-                    this.txtA1MinimumOffset.Text = dt["A1MinimumOffset"].ToString().Trim();
-                    this.txtA1MaximumOffset.Text = dt["A1MaximumOffset"].ToString().Trim();
-                    this.txtA2MinimumOffset.Text = dt["A2MinimumOffset"].ToString().Trim();
-                    this.txtA2MaximumOffset.Text = dt["A2MaximumOffset"].ToString().Trim();
-                    this.txtWeightMax.Text = dt["maxWeight"].ToString().Trim();
-                    this.txtWeightMin.Text = dt["minWeight"].ToString().Trim();
+                    cmd.Parameters.AddWithValue("@model", this.cmbModel.Text ?? string.Empty);
+                    using (SqlDataReader dt = cmd.ExecuteReader())
+                    {
+                        while (dt.Read())
+                        {
+                            Communication.model            = dt["model"].ToString().Trim();
+                            Communication.A1DetectionLevel = dt["A1DetectionValue"].ToString().Trim();
+                            Communication.A2DetectionLevel = dt["A2DetectionValue"].ToString().Trim();
+                            Communication.A1MinimumOffset  = dt["A1MinimumOffset"].ToString().Trim();
+                            Communication.A1MaximumOffset  = dt["A1MaximumOffset"].ToString().Trim();
+                            Communication.A2MinimumOffset  = dt["A2MinimumOffset"].ToString().Trim();
+                            Communication.A2MaximumOffset  = dt["A2MaximumOffset"].ToString().Trim();
+                            Communication.maxWeight        = dt["maxWeight"].ToString().Trim();
+                            Communication.minWeight        = dt["minWeight"].ToString().Trim();
+                            this.txtA1DetectionLevel.Text  = Communication.A1DetectionLevel;
+                            this.txtA2DetectionLevel.Text  = Communication.A2DetectionLevel;
+                            this.txtA1MinimumOffset.Text   = Communication.A1MinimumOffset;
+                            this.txtA1MaximumOffset.Text   = Communication.A1MaximumOffset;
+                            this.txtA2MinimumOffset.Text   = Communication.A2MinimumOffset;
+                            this.txtA2MaximumOffset.Text   = Communication.A2MaximumOffset;
+                            this.txtWeightMax.Text         = Communication.maxWeight;
+                            this.txtWeightMin.Text         = Communication.minWeight;
+                        }
+                    }
                 }
-                con.Close();
             }
             catch
             {
@@ -3478,43 +3501,25 @@ namespace Diameter_Checker
                 {
                 }
             }
-            if (cmbTimeToEnableRead.Text == "0.5")
+            int readInterval;
+            switch (cmbTimeToEnableRead.Text)
             {
-                tmrEnableReadA1Data.Interval = 500;
-                tmrEnableReadA2Data.Interval = 500;
+                case "0.5": readInterval = 500;  break;
+                case "1":   readInterval = 1000; break;
+                case "1.5": readInterval = 1500; break;
+                case "2":   readInterval = 2000; break;
+                case "2.5": readInterval = 2500; break;
+                case "3":   readInterval = 3000; break;
+                default:    readInterval = tmrEnableReadA1Data.Interval; break;
             }
-            if (cmbTimeToEnableRead.Text == "1")
-            {
-                tmrEnableReadA1Data.Interval = 1000;
-                tmrEnableReadA2Data.Interval = 1000;
-            }
-            if (cmbTimeToEnableRead.Text == "1.5")
-            {
-                tmrEnableReadA1Data.Interval = 1500;
-                tmrEnableReadA2Data.Interval = 1500;
-            }
-            if (cmbTimeToEnableRead.Text == "2")
-            {
-                tmrEnableReadA1Data.Interval = 2000;
-                tmrEnableReadA2Data.Interval = 2000;
-            }
-            if (cmbTimeToEnableRead.Text == "2.5")
-            {
-                tmrEnableReadA1Data.Interval = 2500;
-                tmrEnableReadA2Data.Interval = 2500;
-            }
-            if (cmbTimeToEnableRead.Text == "3")
-            {
-                tmrEnableReadA1Data.Interval = 3000;
-                tmrEnableReadA2Data.Interval = 3000;
-            }
+            tmrEnableReadA1Data.Interval = readInterval;
+            tmrEnableReadA2Data.Interval = readInterval;
         }
 
         private void tmrDateTime_Tick(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
             Communication.Date = now.ToString("yyyy-MM-dd");
-            now = DateTime.Now;
             Communication.Time = now.ToString("H:mm");
             this.lblDateTime.Text = Communication.Date + " " + Communication.Time;
         }

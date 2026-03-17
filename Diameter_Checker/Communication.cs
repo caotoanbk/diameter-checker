@@ -184,59 +184,77 @@ namespace Diameter_Checker
             A2Result = null;
         }
 
+        /// <summary>Creates and opens a new SqlConnection. Caller is responsible for disposing it.</summary>
+        public static SqlConnection CreateConnection()
+        {
+            var conn = new SqlConnection(con_string);
+            conn.Open();
+            return conn;
+        }
+
         public static bool connectDatabase()
         {
             try
             {
+                if (connect != null && connect.State == System.Data.ConnectionState.Open)
+                    return true;
+
                 connect = new SqlConnection(con_string);
                 connect.Open();
+                return true;
             }
             catch
             {
                 MessageBox.Show("Please check the connection to your Database!");
+                return false;
             }
-            return true;
+        }
+
+        private static bool ConnectSerialPort(SerialPort port, string comportName, string baudrate)
+        {
+            port.BaudRate = int.Parse(baudrate);
+            port.Parity = Parity.None;
+            port.StopBits = StopBits.One;
+            port.DataBits = 8;
+            port.Handshake = Handshake.None;
+            port.RtsEnable = true;
+            port.PortName = comportName;
+            port.Open();
+            return port.IsOpen;
         }
 
         public static bool ConnectSerial(string comportName_, string baudrate)
         {
-            serialport.BaudRate = Convert.ToInt32(baudrate);
-            serialport.Parity = Parity.None;
-            serialport.StopBits = StopBits.One;
-            serialport.DataBits = 8;
-            serialport.Handshake = Handshake.None;
-            serialport.RtsEnable = true;
-            serialport.PortName = comportName_;
-            serialport.Open();
-            return (serialport.IsOpen);
+            return ConnectSerialPort(serialport, comportName_, baudrate);
         }
 
         public static bool ConnectSerial2(string comportName_, string baudrate)
         {
-            serialport2.BaudRate = Convert.ToInt32(baudrate);
-            serialport2.Parity = Parity.None;
-            serialport2.StopBits = StopBits.One;
-            serialport2.DataBits = 8;
-            serialport2.Handshake = Handshake.None;
-            serialport2.RtsEnable = true;
-            serialport2.PortName = comportName_;
-            serialport2.Open();
-            return (serialport2.IsOpen);
+            return ConnectSerialPort(serialport2, comportName_, baudrate);
         }
 
         public static bool load_ComSetting()
         {
-            connectDatabase();
-            SqlDataReader myReader = new SqlCommand("SELECT * FROM ComportSetting", connect).ExecuteReader();
-            while (myReader.Read())
+            try
             {
-                comPort = myReader["comPort"].ToString();
-                baudrate = myReader["baudrate"].ToString();
-                comPort2 = myReader["comPort2"].ToString();
-                baudrate2 = myReader["baudrate2"].ToString();
+                using (var con = CreateConnection())
+                using (var cmd = new SqlCommand("SELECT comPort, baudrate, comPort2, baudrate2 FROM ComportSetting", con))
+                using (SqlDataReader myReader = cmd.ExecuteReader())
+                {
+                    while (myReader.Read())
+                    {
+                        comPort   = myReader["comPort"].ToString();
+                        baudrate  = myReader["baudrate"].ToString();
+                        comPort2  = myReader["comPort2"].ToString();
+                        baudrate2 = myReader["baudrate2"].ToString();
+                    }
+                }
+                return true;
             }
-            connect.Close();
-            return true;
+            catch
+            {
+                return false;
+            }
         }
     }
 }
