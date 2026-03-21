@@ -21,6 +21,7 @@ namespace Diameter_Checker
     {
         private string InputData = string.Empty;
         private string InputData2 = string.Empty;
+        private readonly object _inputData2Lock = new object();
         public static string strgetProcessorID;
         private string fistSubString;
         private string fistSubString2;
@@ -1012,14 +1013,13 @@ namespace Diameter_Checker
         {
             if (Communication.enableReceiveData)
             {
-                this.InputData2 = string.Concat(this.InputData2, Communication.serialport2.ReadExisting());
-                this.InputData2 = this.InputData2.Replace("\r", string.Empty);
-                this.InputData2 = this.InputData2.Replace("\n", string.Empty);
+                lock (_inputData2Lock)
+                {
+                    string received = Communication.serialport2.ReadExisting();
+                    received = received.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                    this.InputData2 = string.Concat(this.InputData2, received);
+                }
                 Communication.test2++;
-                //if (this.InputData2.Length >= Communication.charNumberOfCom_data2 )
-                //{
-                //    this.InputData2 = Communication.serialport2.ReadExisting();
-                //}
                 if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
                 {
                     this.SetText2(this.InputData2);
@@ -3318,33 +3318,33 @@ namespace Diameter_Checker
         {
             if (base.InvokeRequired)
             {
-                try
-                {
-                    frmMain.SetTextCallback d = new frmMain.SetTextCallback(this.SetText2);
-                    base.Invoke(d, new object[] { text });
-                }
-                catch (InvalidOperationException e)
-                {
-                }
+                // BeginInvoke (non-blocking): background serial thread returns immediately
+                // and does not stall while the UI thread is busy rendering or querying DB.
+                base.BeginInvoke(new frmMain.SetTextCallback(this.SetText2), new object[] { text });
                 return;
             }
 
-            if (this.InputData2.Length < Communication.charNumberOfCom_data2)
-                return;
+            string snapshot;
+            lock (_inputData2Lock)
+            {
+                if (this.InputData2.Length < Communication.charNumberOfCom_data2)
+                    return;
+                snapshot = this.InputData2;
+            }
 
-            this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
+            this.charNumberOfFirstString2 = snapshot.IndexOf(" ST,GS,+");
             if (this.charNumberOfFirstString2 <= 0)
             {
                 this.charNumberOfFirstString2 = 0;
             }
             else
             {
-                this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+                this.fistSubString2 = snapshot.Substring(0, this.charNumberOfFirstString2);
             }
 
-            if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
+            if (snapshot.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
             {
-                Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
+                Communication.serialData2 = snapshot.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
 
                 WeightReading reading = Communication.ParseWeightFrame(Communication.serialData2);
                 if (reading.IsValid)
@@ -3352,8 +3352,8 @@ namespace Diameter_Checker
                     if (!string.IsNullOrEmpty(btnJudge.Text))
                         ClearAllData();
 
-                    this.txtWeight.Text          = reading.RawText;
-                    Communication.Weight         = reading.RawText;
+                    this.txtWeight.Text             = reading.RawText;
+                    Communication.Weight            = reading.RawText;
                     Communication.receivedWeightFlg = true;
 
                     float minWeight = float.Parse(txtWeightMin.Text);
@@ -3371,9 +3371,12 @@ namespace Diameter_Checker
                     }
                 }
 
-                this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
-                this.lastSubString2  = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
-                this.InputData2      = string.Concat(this.fistSubString2, this.lastSubString2);
+                this.charNumberOfLastString2 = snapshot.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
+                this.lastSubString2 = snapshot.Substring(snapshot.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
+                lock (_inputData2Lock)
+                {
+                    this.InputData2 = string.Concat(this.fistSubString2, this.lastSubString2);
+                }
             }
         }
 
