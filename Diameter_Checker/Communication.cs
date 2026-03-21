@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
 using System.Management;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 
 
@@ -221,7 +223,7 @@ namespace Diameter_Checker
                 foreach (var line in lines)
                 {
                     if (!string.IsNullOrWhiteSpace(line))
-                        listProcessorId.Add(Base64Decode(line.Trim()));
+                        listProcessorId.Add(line.Trim());
                 }
             }
         }
@@ -229,19 +231,58 @@ namespace Diameter_Checker
         public static string Base64Decode(string base64EncodedData)
         {
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        // ── License verification ───────────────────────────────────────────────
+        // Secret key used to sign license entries in config.ini.
+        // Change this value before distributing the software.
+        // Format of each config.ini line:  <cpuId>:<hmac-sha256-hex>
+        private static readonly byte[] LicenseSecretKey =
+            Encoding.UTF8.GetBytes("D!@m3t3r#Ch3ck3r$2024");
+
+        /// <summary>
+        /// Computes HMAC-SHA256 of <paramref name="data"/> using <see cref="LicenseSecretKey"/>.
+        /// </summary>
+        private static string ComputeHmac(string data)
+        {
+            using (var hmac = new HMACSHA256(LicenseSecretKey))
+            {
+                byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
         }
 
         /// <summary>
-        /// Returns a machine fingerprint combining CPU ProcessorId and motherboard SerialNumber.
-        /// Format: "&lt;cpuId&gt;|&lt;mbSerial&gt;"
-        /// This is more unique than CPU ID alone and harder to spoof.
+        /// Verifies that a license entry from config.ini is valid for this machine.
+        /// Expected line format: <c>&lt;cpuId&gt;:&lt;hmac-sha256-hex&gt;</c>
+        /// Returns true only when the CPU ID matches this machine AND the HMAC is valid.
+        /// </summary>
+        public static bool VerifyLicense(string licenseLine, string machineCpuId)
+        {
+            if (string.IsNullOrWhiteSpace(licenseLine))
+                return false;
+
+            int sep = licenseLine.IndexOf(':');
+            if (sep < 0)
+                return false;
+
+            string cpuId = licenseLine.Substring(0, sep).Trim();
+            string storedHmac = licenseLine.Substring(sep + 1).Trim();
+
+            if (!string.Equals(cpuId, machineCpuId, System.StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            string expectedHmac = ComputeHmac(cpuId);
+            return string.Equals(storedHmac, expectedHmac, System.StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Returns the CPU ProcessorId of this machine.
         /// </summary>
         public static string GetMachineFingerprint()
         {
             string cpuId = string.Empty;
-            string mbSerial = string.Empty;
-
             using (ManagementClass mc = new ManagementClass("win32_processor"))
             using (ManagementObjectCollection col = mc.GetInstances())
             {
@@ -254,22 +295,7 @@ namespace Diameter_Checker
                     }
                 }
             }
-
-            using (ManagementClass mc = new ManagementClass("Win32_BaseBoard"))
-            using (ManagementObjectCollection col = mc.GetInstances())
-            {
-                foreach (ManagementObject mo in col)
-                {
-                    using (mo)
-                    {
-                        object val = mo.Properties["SerialNumber"].Value;
-                        mbSerial = val != null ? val.ToString().Trim() : string.Empty;
-                        break;
-                    }
-                }
-            }
-
-            return cpuId + "|" + mbSerial;
+            return cpuId;
         }
 
         public Communication()

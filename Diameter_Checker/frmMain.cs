@@ -1119,16 +1119,17 @@ namespace Diameter_Checker
             //A1, A2 roundness
             chartD1Setting();
             chartD2Setting();
-            using (ManagementObjectCollection.ManagementObjectEnumerator enumerator = (new ManagementClass("win32_processor")).GetInstances().GetEnumerator())
+            string machineCpuId = Communication.GetMachineFingerprint();
+            bool licensed = false;
+            foreach (string entry in Communication.listProcessorId)
             {
-                if (enumerator.MoveNext())
+                if (Communication.VerifyLicense(entry, machineCpuId))
                 {
-                    ManagementObject managObj = (ManagementObject)enumerator.Current;
-                    strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
+                    licensed = true;
+                    break;
                 }
             }
-            string machineFingerprint = Communication.GetMachineFingerprint();
-            if (!Communication.listProcessorId.Contains(machineFingerprint))
+            if (!licensed)
             {
                 MessageBox.Show("This machine is not licensed to run this software.", "Unlicensed Machine");
                 Application.Exit();
