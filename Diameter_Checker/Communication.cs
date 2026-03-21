@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
+
 
 namespace Diameter_Checker
 {
@@ -149,7 +151,7 @@ namespace Diameter_Checker
             subformIsOpen = false;
             serialport = new SerialPort();
             //con_string = "Data Source=.;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";//--DEBUG
-            con_string = "Data Source=.\\SQLEXPRESS;Initial Catalog=DB1;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            con_string = ConfigurationManager.ConnectionStrings["DB1"].ConnectionString;
             serialport2 = new SerialPort();
             cntProductInSet = 0;
             receivedWeightFlg = false;
