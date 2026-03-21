@@ -9,8 +9,64 @@ using System.Windows.Forms;
 
 namespace Diameter_Checker
 {
+    /// <summary>
+    /// Holds the result of parsing a single weight frame from the scale's serial output.
+    /// When changing the scale machine, update ParseWeightFrame() and these constants only.
+    /// </summary>
+    public struct WeightReading
+    {
+        /// <summary>Parsed weight value in the same unit as the min/max settings (e.g. grams).</summary>
+        public float Value;
+        /// <summary>Raw weight string stored to the database.</summary>
+        public string RawText;
+        /// <summary>True when the frame was valid and Value was successfully parsed.</summary>
+        public bool IsValid;
+    }
+
     public class Communication
     {
+        // ── Weight-scale serial protocol constants ────────────────────────────
+        // Change these when swapping the scale machine:
+        //   FrameHeader       : leading marker that identifies a stable-reading frame
+        //   FrameLength       : total expected character count of one frame
+        //   ValueOffset       : byte index where the numeric value starts inside the frame
+        //   ValueLength       : number of characters that make up the numeric value
+        //   UnitSuffix        : unit string appended by the scale (stripped before parsing)
+        //   ValueScaleDivisor : divisor applied after stripping decimals (e.g. "0123.4g" -> 1234 / 10)
+        private const string WeightFrameHeader    = " ST,GS,+";
+        private const int    WeightFrameLength    = 19;   // == charNumberOfCom_data2
+        private const int    WeightValueOffset    = 8;
+        private const int    WeightValueLength    = 11;
+        private const string WeightUnitSuffix     = "g";
+        private const float  WeightValueScaleDivisor = 10f;
+
+        /// <summary>
+        /// Parses a raw serial frame from the weight scale.
+        /// All machine-specific logic is isolated here — change only this method
+        /// (and the constants above) when swapping the scale hardware.
+        /// </summary>
+        /// <param name="raw">One complete frame as received from the serial port.</param>
+        /// <returns>A <see cref="WeightReading"/> with IsValid=false on any parse failure.</returns>
+        public static WeightReading ParseWeightFrame(string raw)
+        {
+            if (raw == null || raw.Length < WeightFrameLength ||
+                !raw.StartsWith(WeightFrameHeader))
+                return new WeightReading { IsValid = false };
+
+            string valueStr = raw.Substring(WeightValueOffset, WeightValueLength).Trim();
+            valueStr = valueStr.Replace(WeightUnitSuffix, "").Trim();
+
+            float numericValue;
+            if (!float.TryParse(valueStr.Replace(".", ""), out numericValue))
+                return new WeightReading { IsValid = false };
+
+            return new WeightReading
+            {
+                Value   = numericValue / WeightValueScaleDivisor,
+                RawText = valueStr,
+                IsValid = true
+            };
+        }
         public static int test;
         public static int test2;
         public static int charNumberOfCom_data;
@@ -109,8 +165,8 @@ namespace Diameter_Checker
             Weight = "0";
             test = 0;
             test2 = 0;
-            charNumberOfCom_data = 27;
-            charNumberOfCom_data2 = 19;
+            charNumberOfCom_data  = 27;
+            charNumberOfCom_data2 = WeightFrameLength;
             counter = 0;
             timer = 0;
             timer2 = 0;

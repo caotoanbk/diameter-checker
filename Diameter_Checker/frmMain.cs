@@ -3316,8 +3316,6 @@ namespace Diameter_Checker
 
         public void SetText2(string text)
         {
-            string weightResult;
-            float weight, minWeight, maxWeight;
             if (base.InvokeRequired)
             {
                 try
@@ -3328,65 +3326,54 @@ namespace Diameter_Checker
                 catch (InvalidOperationException e)
                 {
                 }
+                return;
+            }
+
+            if (this.InputData2.Length < Communication.charNumberOfCom_data2)
+                return;
+
+            this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
+            if (this.charNumberOfFirstString2 <= 0)
+            {
+                this.charNumberOfFirstString2 = 0;
             }
             else
             {
-                if (this.InputData2.Length >= Communication.charNumberOfCom_data2)
+                this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
+            }
+
+            if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
+            {
+                Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
+
+                WeightReading reading = Communication.ParseWeightFrame(Communication.serialData2);
+                if (reading.IsValid)
                 {
-                    this.charNumberOfFirstString2 = this.InputData2.IndexOf(" ST,GS,+");
-                    if (this.charNumberOfFirstString2 <= 0)
+                    if (!string.IsNullOrEmpty(btnJudge.Text))
+                        ClearAllData();
+
+                    this.txtWeight.Text          = reading.RawText;
+                    Communication.Weight         = reading.RawText;
+                    Communication.receivedWeightFlg = true;
+
+                    float minWeight = float.Parse(txtWeightMin.Text);
+                    float maxWeight = float.Parse(txtWeightMax.Text);
+
+                    if (reading.Value < minWeight || reading.Value > maxWeight)
                     {
-                        this.charNumberOfFirstString2 = 0;
+                        this.txtWeightResult.ForeColor = Color.Red;
+                        this.txtWeightResult.Text      = "NG";
                     }
                     else
                     {
-                        this.fistSubString2 = this.InputData2.Substring(0, this.charNumberOfFirstString2);
-                    }
-                    if (this.InputData2.Length >= this.charNumberOfFirstString2 + Communication.charNumberOfCom_data2)
-                    {
-                        Communication.serialData2 = this.InputData2.Substring(this.charNumberOfFirstString2, Communication.charNumberOfCom_data2);
-                        if (Communication.serialData2.Length == Communication.charNumberOfCom_data2 && Communication.serialData2.Substring(0, 8) == " ST,GS,+")
-                        {
-                            if (!string.IsNullOrEmpty(btnJudge.Text))
-                            {
-                                ClearAllData();
-                            }
-                            weightResult = this.txtWeight.Text = Communication.serialData2.Substring(8, 11).Trim();
-                            Communication.receivedWeightFlg = true;
-                            Communication.Weight = weightResult = weightResult.Replace("g", "").Trim();
-                            try
-                            {
-                                weight = float.Parse(weightResult.Replace(".", ""))/10f;
-                               
-                                minWeight = float.Parse(txtWeightMin.Text);
-                                maxWeight = float.Parse(txtWeightMax.Text);
-                                
-                                if (weight < minWeight || weight > maxWeight)
-                                {
-                                    this.txtWeightResult.ForeColor = Color.Red;
-                                    this.txtWeightResult.Text = "NG";
-                                }
-                                else
-                                {
-                                    this.txtWeightResult.ForeColor = Color.ForestGreen;
-                                    this.txtWeightResult.Text = "OK";
-                                }
-                            }
-                            catch (Exception e)
-                            {
-
-                                MessageBox.Show(e.Message);
-                            }
-                            //string format = string.Format("weight = {0}, min weight = {1}, max weight = {2}", weight.ToString(), minWeight.ToString(), maxWeight.ToString());
-                            //MessageBox.Show(format);
-                            //CheckAndMakeDecision();
-                            //ClearAllData();
-                        }
-                        this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
-                        this.lastSubString2 = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
-                        this.InputData2 = string.Concat(this.fistSubString2, this.lastSubString2);
+                        this.txtWeightResult.ForeColor = Color.ForestGreen;
+                        this.txtWeightResult.Text      = "OK";
                     }
                 }
+
+                this.charNumberOfLastString2 = this.InputData2.Length - this.charNumberOfFirstString2 - Communication.charNumberOfCom_data2;
+                this.lastSubString2  = this.InputData2.Substring(this.InputData2.Length - this.charNumberOfLastString2, this.charNumberOfLastString2);
+                this.InputData2      = string.Concat(this.fistSubString2, this.lastSubString2);
             }
         }
 
