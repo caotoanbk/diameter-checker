@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
+using System.Management;
 using System.Windows.Forms;
 
 
@@ -211,15 +212,16 @@ namespace Diameter_Checker
             serialport2 = new SerialPort();
             cntProductInSet = 0;
             receivedWeightFlg = false;
-            listProcessorId = new List<string> { "BFEBFBFF000306C3", "BFEBFBFF000906E9", "BFEBFBFF000A0653" };
+            listProcessorId = new List<string>();
 
             string configPath = @"config.ini";
             if (File.Exists(configPath))
             {
                 var lines = File.ReadAllLines(configPath);
-                for (var i = 0; i < lines.Length; i += 1)
+                foreach (var line in lines)
                 {
-                    listProcessorId.Add(Base64Decode(lines[i]));
+                    if (!string.IsNullOrWhiteSpace(line))
+                        listProcessorId.Add(Base64Decode(line.Trim()));
                 }
             }
         }
@@ -228,6 +230,46 @@ namespace Diameter_Checker
         {
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        /// <summary>
+        /// Returns a machine fingerprint combining CPU ProcessorId and motherboard SerialNumber.
+        /// Format: "&lt;cpuId&gt;|&lt;mbSerial&gt;"
+        /// This is more unique than CPU ID alone and harder to spoof.
+        /// </summary>
+        public static string GetMachineFingerprint()
+        {
+            string cpuId = string.Empty;
+            string mbSerial = string.Empty;
+
+            using (ManagementClass mc = new ManagementClass("win32_processor"))
+            using (ManagementObjectCollection col = mc.GetInstances())
+            {
+                foreach (ManagementObject mo in col)
+                {
+                    using (mo)
+                    {
+                        cpuId = mo.Properties["processorID"].Value.ToString().Trim();
+                        break;
+                    }
+                }
+            }
+
+            using (ManagementClass mc = new ManagementClass("Win32_BaseBoard"))
+            using (ManagementObjectCollection col = mc.GetInstances())
+            {
+                foreach (ManagementObject mo in col)
+                {
+                    using (mo)
+                    {
+                        object val = mo.Properties["SerialNumber"].Value;
+                        mbSerial = val != null ? val.ToString().Trim() : string.Empty;
+                        break;
+                    }
+                }
+            }
+
+            return cpuId + "|" + mbSerial;
         }
 
         public Communication()

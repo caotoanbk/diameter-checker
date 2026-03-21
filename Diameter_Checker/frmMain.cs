@@ -1127,10 +1127,12 @@ namespace Diameter_Checker
                     strgetProcessorID = managObj.Properties["processorID"].Value.ToString().Trim();
                 }
             }
-            if (!Communication.listProcessorId.Contains(strgetProcessorID))
+            string machineFingerprint = Communication.GetMachineFingerprint();
+            if (!Communication.listProcessorId.Contains(machineFingerprint))
             {
-                MessageBox.Show("System Error!", "WARNING!");
-                base.Dispose();
+                MessageBox.Show("This machine is not licensed to run this software.", "Unlicensed Machine");
+                Application.Exit();
+                return;
             }
             this.calculatePPandPPKvalue();
         }
